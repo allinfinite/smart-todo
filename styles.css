@@ -392,6 +392,13 @@ button:disabled {
   justify-items: end;
 }
 
+.summary-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .request-meta {
   display: flex;
   flex-wrap: wrap;
@@ -463,6 +470,25 @@ button:disabled {
   min-width: 78px;
   padding: 8px 14px;
   font-size: 0.84rem;
+}
+
+.request-action-btn {
+  padding: 8px 12px;
+  font-size: 0.8rem;
+}
+
+.request-action-btn.archive-btn {
+  background: rgba(27, 23, 20, 0.08);
+  color: var(--muted);
+}
+
+.request-action-btn.cancel-btn {
+  background: rgba(180, 76, 60, 0.12);
+  color: var(--fail);
+}
+
+.request-action-btn.cancel-btn:hover {
+  background: rgba(180, 76, 60, 0.2);
 }
 
 .request-detail {
@@ -835,6 +861,10 @@ button:disabled {
   }
 
   .request-meta {
+    justify-content: flex-start;
+  }
+
+  .summary-buttons {
     justify-content: flex-start;
   }
 

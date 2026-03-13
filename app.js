@@ -46,6 +46,8 @@ const DEFAULT_PORTAL_CONFIG = {
     addCustomExpert: "Add",
     detailOpen: "Open",
     detailHide: "Hide",
+    archive: "Archive",
+    cancelTask: "Cancel",
     replyDialogTitle: "Reply to Request",
     reply: "Reply",
     replyInMotion: "A reply is in motion",
@@ -69,6 +71,7 @@ const DEFAULT_PORTAL_CONFIG = {
     incorrectPassword: "Incorrect password.",
     blockedPublicText: "This item needs a bit of direction before it keeps moving.",
     failedPublicText: "This item hit a snag. Add a note and it can be reworked.",
+    canceledPublicText: "This item was canceled.",
     replyEmptyError: "Please enter a message or attach files.",
     replyMissingRequest: "Missing request ID.",
     replyError: "Unable to send reply.",
@@ -77,6 +80,10 @@ const DEFAULT_PORTAL_CONFIG = {
     completedToast: "Another item moved to done. Review the screenshot and follow-up options when ready.",
     followUpUnavailable: "That follow-up suggestion is no longer available.",
     followUpCreateError: "Unable to create follow-up todo.",
+    requestArchiveError: "Unable to archive todo.",
+    requestCancelError: "Unable to cancel todo.",
+    requestArchivedToast: "Todo archived.",
+    requestCanceledToast: "Todo canceled.",
   },
   hints: {
     customExpert: "Custom experts stay available on this device and can be reused on future tasks.",
@@ -94,6 +101,7 @@ const DEFAULT_PORTAL_CONFIG = {
     completed: "Done",
     failed: "Needs review",
     blocked: "Needs input",
+    canceled: "Canceled",
     running: "In motion",
     queued: "Queued",
   },
@@ -222,6 +230,7 @@ const flashedRequestIds = new Set();
 const flashTimeouts = new Map();
 const pendingAttentionRequestIds = new Set();
 const suggestionCreatesInFlight = new Set();
+const requestActionsInFlight = new Set();
 
 function setText(selector, value) {
   const element = document.querySelector(selector);
@@ -412,6 +421,7 @@ function isRequestCompleted(request) {
 function normalizeRequestState(request) {
   if (isRequestCompleted(request)) return "completed";
   const status = String(request?.status || "").toLowerCase();
+  if (status.includes("cancel")) return "canceled";
   if (status.includes("fail")) return "failed";
   if (status.includes("block") || status.includes("hold") || status.includes("input")) return "blocked";
   if (!status || status === "queued" || status === "pending" || status === "todo") return "queued";
@@ -477,6 +487,9 @@ function getPublicStatusLine(request) {
   if (state === "completed") {
     return getCompletionSummary(request);
   }
+  if (state === "canceled") {
+    return clampText(request?.public_status_text, 160) || PORTAL_CONFIG.messages.canceledPublicText;
+  }
   if (state === "blocked") {
     return clampText(request?.public_status_text, 160) || PORTAL_CONFIG.messages.blockedPublicText;
   }
@@ -484,6 +497,29 @@ function getPublicStatusLine(request) {
     return clampText(request?.public_status_text, 160) || PORTAL_CONFIG.messages.failedPublicText;
   }
   return getPublicWaitingMessage(request);
+}
+
+function getRequestActionKey(requestId, action) {
+  return `${requestId}:${action}`;
+}
+
+function getRequestActionEndpoint(requestId) {
+  return `${REQUESTS_ENDPOINT}/${encodeURIComponent(requestId)}/actions`;
+}
+
+function getAvailableRequestActions(request) {
+  const provided = Array.isArray(request?.available_actions) ? request.available_actions : null;
+  if (provided) {
+    return provided.map(value => String(value || "").toLowerCase()).filter(Boolean);
+  }
+  const state = normalizeRequestState(request);
+  if (state === "completed" || state === "failed" || state === "canceled" || state === "blocked") {
+    return ["archive"];
+  }
+  if (state === "queued" || state === "running") {
+    return ["cancel"];
+  }
+  return [];
 }
 
 function getPriorityLabel(priority) {
@@ -719,6 +755,31 @@ function renderFollowUpSuggestions(request) {
   `;
 }
 
+function renderCardActionButtons(request) {
+  const requestId = getRequestId(request);
+  const actions = getAvailableRequestActions(request);
+  if (!requestId || !actions.length) {
+    return "";
+  }
+
+  return actions.map(action => {
+    const actionKey = getRequestActionKey(requestId, action);
+    const busy = requestActionsInFlight.has(actionKey);
+    const isArchive = action === "archive";
+    return `
+      <button
+        class="secondary request-action-btn ${isArchive ? "archive-btn" : "cancel-btn"}"
+        type="button"
+        data-request-id="${escapeHtml(requestId)}"
+        data-request-action="${escapeHtml(action)}"
+        ${busy ? "disabled" : ""}
+      >
+        ${escapeHtml(isArchive ? PORTAL_CONFIG.buttons.archive : PORTAL_CONFIG.buttons.cancelTask)}
+      </button>
+    `;
+  }).join("");
+}
+
 function buildRequestCard(request) {
   const requestId = getRequestId(request);
   const domId = getDomSafeId(requestId || request.title || "request");
@@ -754,15 +815,18 @@ function buildRequestCard(request) {
             <span class="pill status-${state}">${escapeHtml(getStatusLabel(state))}</span>
             <span class="pill priority-${escapeHtml(String(request.priority || "normal").toLowerCase())}">${escapeHtml(getPriorityLabel(request.priority))}</span>
           </div>
-          <button
-            class="secondary card-toggle"
-            type="button"
-            data-request-id="${escapeHtml(requestId)}"
-            aria-expanded="${expanded ? "true" : "false"}"
-            aria-controls="${detailId}"
-          >
-            ${expanded ? escapeHtml(PORTAL_CONFIG.buttons.detailHide) : escapeHtml(PORTAL_CONFIG.buttons.detailOpen)}
-          </button>
+          <div class="summary-buttons">
+            ${renderCardActionButtons(request)}
+            <button
+              class="secondary card-toggle"
+              type="button"
+              data-request-id="${escapeHtml(requestId)}"
+              aria-expanded="${expanded ? "true" : "false"}"
+              aria-controls="${detailId}"
+            >
+              ${expanded ? escapeHtml(PORTAL_CONFIG.buttons.detailHide) : escapeHtml(PORTAL_CONFIG.buttons.detailOpen)}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -871,6 +935,10 @@ function attachQueueEventHandlers() {
 
   document.querySelectorAll(".follow-up-btn").forEach(button => {
     button.addEventListener("click", createFollowUpTodo);
+  });
+
+  document.querySelectorAll(".request-action-btn").forEach(button => {
+    button.addEventListener("click", handleRequestAction);
   });
 }
 
@@ -1195,6 +1263,60 @@ async function createFollowUpTodo(event) {
     showToast(error.message || PORTAL_CONFIG.messages.followUpCreateError, "warn");
   } finally {
     suggestionCreatesInFlight.delete(suggestionKey);
+    renderRequests(cachedRequests);
+  }
+}
+
+async function handleRequestAction(event) {
+  const button = event.currentTarget;
+  const requestId = String(button.dataset.requestId || "");
+  const action = String(button.dataset.requestAction || "").toLowerCase();
+  if (!requestId || !["archive", "cancel"].includes(action)) {
+    return;
+  }
+
+  const actionKey = getRequestActionKey(requestId, action);
+  if (requestActionsInFlight.has(actionKey)) {
+    return;
+  }
+
+  requestActionsInFlight.add(actionKey);
+  renderRequests(cachedRequests);
+
+  try {
+    const response = await fetch(getRequestActionEndpoint(requestId), {
+      method: "POST",
+      headers: {
+        ...authHeaders(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ action }),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      if (response.status === 401) {
+        setPortalPassword("");
+        setLockedState(true);
+        throw new Error(PORTAL_CONFIG.messages.passwordRequired);
+      }
+      throw new Error(
+        payload.error
+          || (action === "archive" ? PORTAL_CONFIG.messages.requestArchiveError : PORTAL_CONFIG.messages.requestCancelError)
+      );
+    }
+
+    showToast(
+      action === "archive" ? PORTAL_CONFIG.messages.requestArchivedToast : PORTAL_CONFIG.messages.requestCanceledToast,
+      action === "archive" ? "info" : "warn"
+    );
+    await fetchRequests();
+  } catch (error) {
+    showToast(
+      error.message || (action === "archive" ? PORTAL_CONFIG.messages.requestArchiveError : PORTAL_CONFIG.messages.requestCancelError),
+      "warn"
+    );
+  } finally {
+    requestActionsInFlight.delete(actionKey);
     renderRequests(cachedRequests);
   }
 }
