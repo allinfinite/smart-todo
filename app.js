@@ -40,7 +40,7 @@ const DEFAULT_PORTAL_CONFIG = {
     submit: "Queue task",
     submitBusy: "Queueing...",
     refresh: "Refresh",
-    detailOpen: "Open",
+    detailOpen: "View",
     detailHide: "Hide",
     archive: "Archive",
     cancelTask: "Cancel",
@@ -181,6 +181,11 @@ const queueList = document.querySelector("#queueList");
 const refreshButton = document.querySelector("#refreshButton");
 const apiBaseLabel = document.querySelector("#apiBaseLabel");
 const toastStack = document.querySelector("#toastStack");
+const requestModalShell = document.querySelector("#requestModalShell");
+const requestModalTitle = document.querySelector("#requestModalTitle");
+const requestModalMeta = document.querySelector("#requestModalMeta");
+const requestModalBody = document.querySelector("#requestModalBody");
+const requestModalCloseBtn = document.querySelector("#requestModalCloseBtn");
 
 const replyDialogShell = document.querySelector("#replyDialogShell");
 const replyDialogTitle = document.querySelector("#replyDialogTitle");
@@ -204,8 +209,8 @@ let lastRequestsSignature = "";
 let helperMessageTick = 0;
 let cachedRequests = [];
 let pendingRevealRequestId = "";
-
-const expandedRequestIds = new Set();
+let activeRequestModalId = "";
+let pendingModalOpenRequestId = "";
 const flashedRequestIds = new Set();
 const flashTimeouts = new Map();
 const pendingAttentionRequestIds = new Set();
@@ -632,30 +637,104 @@ function renderCardActionButtons(request) {
   }).join("");
 }
 
-function buildRequestCard(request) {
+function getRequestById(requestId) {
+  return cachedRequests.find(request => getRequestId(request) === requestId) || null;
+}
+
+function renderRequestDetailContent(request) {
   const requestId = getRequestId(request);
-  const domId = getDomSafeId(requestId || request.title || "request");
   const state = normalizeRequestState(request);
   const isCompleted = state === "completed";
   const canReply = isCompleted || Boolean(request.has_unprocessed_replies);
   const replies = Array.isArray(request.replies) ? request.replies : [];
   const attachments = Array.isArray(request.attachments) ? request.attachments : [];
   const completionScreenshot = request.completion_screenshot || null;
-  const detailId = `request-detail-${domId}`;
-  const expanded = expandedRequestIds.has(requestId);
-  const flashClass = flashedRequestIds.has(requestId) ? "flash" : "";
-  const detailHidden = expanded ? "" : "hidden";
 
   return `
-    <article class="request-card state-${state} ${expanded ? "expanded" : ""} ${flashClass}" data-request-id="${escapeHtml(requestId)}">
+    ${request.details ? `
+      <div class="detail-block">
+        <div class="section-label">${escapeHtml(PORTAL_CONFIG.sections.details)}</div>
+        <p class="request-note">${escapeHtml(request.details)}</p>
+      </div>
+    ` : ""}
+
+    ${isCompleted ? `
+      <div class="detail-block completion-block">
+        <div class="section-label">${escapeHtml(PORTAL_CONFIG.sections.accomplished)}</div>
+        <p class="completion-summary">${escapeHtml(getCompletionSummary(request))}</p>
+      </div>
+    ` : ""}
+
+    ${completionScreenshot?.url ? `
+      <div class="detail-block">
+        <div class="section-label">${escapeHtml(PORTAL_CONFIG.sections.screenshot)}</div>
+        <a class="completion-screenshot-link" href="${API_BASE}${escapeHtml(completionScreenshot.url)}" target="_blank" rel="noreferrer">
+          <img
+            class="completion-screenshot-image"
+            src="${API_BASE}${escapeHtml(completionScreenshot.url)}"
+            alt="Updated work screenshot for ${escapeHtml(request.title || "completed request")}"
+            loading="lazy"
+          />
+        </a>
+      </div>
+    ` : ""}
+
+    ${renderAttachments(attachments)}
+    ${renderFollowUpSuggestions(request)}
+
+    ${(canReply || replies.length || getAvailableRequestActions(request).length) ? `
+      <div class="detail-block">
+        <div class="request-actions">
+          ${renderCardActionButtons(request)}
+          ${canReply ? `
+            <button
+              class="reply-btn"
+              data-request-id="${escapeHtml(requestId)}"
+              data-request-title="${escapeHtml(request.title || "")}"
+              data-request-details="${escapeHtml(request.details || "")}"
+            >
+              ${escapeHtml(request.has_unprocessed_replies ? PORTAL_CONFIG.buttons.replyInMotion : PORTAL_CONFIG.buttons.reply)}
+            </button>
+          ` : ""}
+        </div>
+
+        ${replies.length ? `
+          <div class="reply-thread">
+            <div class="reply-header ${request.has_unprocessed_replies ? "agent-processing" : ""}">
+              ${escapeHtml(PORTAL_CONFIG.sections.replyThread)}${request.has_unprocessed_replies ? " • A response is in motion" : ""}
+            </div>
+            ${renderReplies(replies)}
+          </div>
+        ` : request.has_unprocessed_replies ? `
+          <div class="reply-thread">
+            <div class="reply-header agent-processing">${escapeHtml(PORTAL_CONFIG.sections.replyThread)} • A response is in motion</div>
+            <div class="empty-replies">${escapeHtml(PORTAL_CONFIG.messages.replyThreadWaiting)}</div>
+          </div>
+        ` : ""}
+      </div>
+    ` : ""}
+
+    <p class="mono request-footer">
+      Created ${escapeHtml(formatDate(request.created_at))}
+      ${request.completed_at ? ` • Completed ${escapeHtml(formatDate(request.completed_at))}` : ""}
+    </p>
+  `;
+}
+
+function buildRequestCard(request) {
+  const requestId = getRequestId(request);
+  const state = normalizeRequestState(request);
+  const isCompleted = state === "completed";
+  const flashClass = flashedRequestIds.has(requestId) ? "flash" : "";
+
+  return `
+    <article class="request-card state-${state} ${flashClass}" data-request-id="${escapeHtml(requestId)}">
       <div class="request-summary">
         <div class="request-summary-main">
           <div class="summary-title-row">
             <span class="checkbox ${isCompleted ? "done" : ""}">${isCompleted ? "✓" : ""}</span>
             <div class="summary-copy">
-              <div class="title-meta-row">
-                <h3 class="request-title">${escapeHtml(request.title || "Untitled request")}</h3>
-              </div>
+              <h3 class="request-title">${escapeHtml(request.title || "Untitled request")}</h3>
               <p class="request-public-line">${escapeHtml(getPublicStatusLine(request))}</p>
             </div>
           </div>
@@ -666,86 +745,16 @@ function buildRequestCard(request) {
             <span class="pill priority-${escapeHtml(String(request.priority || "normal").toLowerCase())}">${escapeHtml(getPriorityLabel(request.priority))}</span>
           </div>
           <div class="summary-buttons">
-            ${renderCardActionButtons(request)}
             <button
               class="secondary card-toggle"
               type="button"
               data-request-id="${escapeHtml(requestId)}"
-              aria-expanded="${expanded ? "true" : "false"}"
-              aria-controls="${detailId}"
+              aria-haspopup="dialog"
             >
-              ${expanded ? escapeHtml(PORTAL_CONFIG.buttons.detailHide) : escapeHtml(PORTAL_CONFIG.buttons.detailOpen)}
+              ${escapeHtml(PORTAL_CONFIG.buttons.detailOpen)}
             </button>
           </div>
         </div>
-      </div>
-
-      <div class="request-detail" id="${detailId}" ${detailHidden}>
-        ${request.details ? `
-          <div class="detail-block">
-            <div class="section-label">${escapeHtml(PORTAL_CONFIG.sections.details)}</div>
-            <p class="request-note">${escapeHtml(request.details)}</p>
-          </div>
-        ` : ""}
-
-        ${isCompleted ? `
-          <div class="detail-block completion-block">
-            <div class="section-label">${escapeHtml(PORTAL_CONFIG.sections.accomplished)}</div>
-            <p class="completion-summary">${escapeHtml(getCompletionSummary(request))}</p>
-          </div>
-        ` : ""}
-
-        ${completionScreenshot?.url ? `
-          <div class="detail-block">
-            <div class="section-label">${escapeHtml(PORTAL_CONFIG.sections.screenshot)}</div>
-            <a class="completion-screenshot-link" href="${API_BASE}${escapeHtml(completionScreenshot.url)}" target="_blank" rel="noreferrer">
-              <img
-                class="completion-screenshot-image"
-                src="${API_BASE}${escapeHtml(completionScreenshot.url)}"
-                alt="Updated work screenshot for ${escapeHtml(request.title || "completed request")}"
-                loading="lazy"
-              />
-            </a>
-          </div>
-        ` : ""}
-
-        ${renderAttachments(attachments)}
-        ${renderFollowUpSuggestions(request)}
-
-        ${(canReply || replies.length) ? `
-          <div class="detail-block">
-            <div class="request-actions">
-              <button
-                class="reply-btn"
-                data-request-id="${escapeHtml(requestId)}"
-                data-request-title="${escapeHtml(request.title || "")}"
-                data-request-details="${escapeHtml(request.details || "")}"
-                ${!canReply ? "disabled" : ""}
-              >
-                ${escapeHtml(request.has_unprocessed_replies ? PORTAL_CONFIG.buttons.replyInMotion : PORTAL_CONFIG.buttons.reply)}
-              </button>
-            </div>
-
-            ${replies.length ? `
-              <div class="reply-thread">
-                <div class="reply-header ${request.has_unprocessed_replies ? "agent-processing" : ""}">
-                  ${escapeHtml(PORTAL_CONFIG.sections.replyThread)}${request.has_unprocessed_replies ? " • A response is in motion" : ""}
-                </div>
-                ${renderReplies(replies)}
-              </div>
-            ` : request.has_unprocessed_replies ? `
-              <div class="reply-thread">
-                <div class="reply-header agent-processing">${escapeHtml(PORTAL_CONFIG.sections.replyThread)} • A response is in motion</div>
-                <div class="empty-replies">${escapeHtml(PORTAL_CONFIG.messages.replyThreadWaiting)}</div>
-              </div>
-            ` : ""}
-          </div>
-        ` : ""}
-
-        <p class="mono request-footer">
-          Created ${escapeHtml(formatDate(request.created_at))}
-          ${request.completed_at ? ` • Completed ${escapeHtml(formatDate(request.completed_at))}` : ""}
-        </p>
       </div>
     </article>
   `;
@@ -765,22 +774,66 @@ function focusPendingCard() {
   });
 }
 
-function attachQueueEventHandlers() {
-  document.querySelectorAll(".card-toggle").forEach(button => {
-    button.addEventListener("click", event => {
-      const requestId = event.currentTarget.dataset.requestId;
-      if (!requestId) return;
-      if (expandedRequestIds.has(requestId)) {
-        expandedRequestIds.delete(requestId);
-      } else {
-        expandedRequestIds.add(requestId);
-      }
-      renderRequests(cachedRequests);
-    });
+function attachRequestModalEventHandlers() {
+  requestModalBody.querySelectorAll(".reply-btn").forEach(button => {
+    button.addEventListener("click", openReplyDialog);
   });
 
-  document.querySelectorAll(".reply-btn:not([disabled])").forEach(button => {
-    button.addEventListener("click", openReplyDialog);
+  requestModalBody.querySelectorAll(".follow-up-btn").forEach(button => {
+    button.addEventListener("click", createFollowUpTodo);
+  });
+
+  requestModalBody.querySelectorAll(".request-action-btn").forEach(button => {
+    button.addEventListener("click", handleRequestAction);
+  });
+}
+
+function renderRequestModal(request) {
+  const state = normalizeRequestState(request);
+  requestModalTitle.textContent = request.title || "Request details";
+  requestModalMeta.innerHTML = `
+    <span class="pill status-${state}">${escapeHtml(getStatusLabel(state))}</span>
+    <span class="pill priority-${escapeHtml(String(request.priority || "normal").toLowerCase())}">${escapeHtml(getPriorityLabel(request.priority))}</span>
+  `;
+  requestModalBody.innerHTML = renderRequestDetailContent(request);
+  attachRequestModalEventHandlers();
+}
+
+function syncRequestModal() {
+  if (!activeRequestModalId) return;
+  const request = getRequestById(activeRequestModalId);
+  if (!request) {
+    closeRequestModal();
+    return;
+  }
+  renderRequestModal(request);
+}
+
+function openRequestModal(eventOrRequestId) {
+  const requestId = typeof eventOrRequestId === "string"
+    ? eventOrRequestId
+    : String(eventOrRequestId?.currentTarget?.dataset?.requestId || "");
+  if (!requestId) return;
+
+  const request = getRequestById(requestId);
+  if (!request) return;
+
+  activeRequestModalId = requestId;
+  renderRequestModal(request);
+  requestModalShell.classList.remove("hidden");
+}
+
+function closeRequestModal() {
+  requestModalShell.classList.add("hidden");
+  activeRequestModalId = "";
+  requestModalTitle.textContent = "Request details";
+  requestModalMeta.innerHTML = "";
+  requestModalBody.innerHTML = "";
+}
+
+function attachQueueEventHandlers() {
+  document.querySelectorAll(".card-toggle").forEach(button => {
+    button.addEventListener("click", openRequestModal);
   });
 
   document.querySelectorAll(".follow-up-btn").forEach(button => {
@@ -795,11 +848,18 @@ function attachQueueEventHandlers() {
 function renderRequests(requests) {
   if (!Array.isArray(requests) || !requests.length) {
     renderEmpty(PORTAL_CONFIG.messages.queueEmpty);
+    syncRequestModal();
     return;
   }
 
   queueList.innerHTML = requests.map(buildRequestCard).join("");
   attachQueueEventHandlers();
+  syncRequestModal();
+  if (pendingModalOpenRequestId) {
+    const requestId = pendingModalOpenRequestId;
+    pendingModalOpenRequestId = "";
+    openRequestModal(requestId);
+  }
   focusPendingCard();
 }
 
@@ -837,7 +897,8 @@ function handleRequestTransitions(nextRequests) {
 
     const previous = previousById.get(requestId);
     if (!isRequestCompleted(previous) && isRequestCompleted(request)) {
-      expandedRequestIds.add(requestId);
+      activeRequestModalId = requestId;
+      pendingModalOpenRequestId = requestId;
       pendingRevealRequestId = requestId;
       clearFlashLater(requestId);
       showToast(PORTAL_CONFIG.messages.completedToast, "success");
@@ -951,6 +1012,7 @@ function openReplyDialog(event) {
 
   if (!requestId) return;
 
+  closeRequestModal();
   currentReplyRequestId = requestId;
   replyRequestInput.value = requestId;
   replyDialogTitle.textContent = requestTitle;
@@ -1160,7 +1222,11 @@ function startPolling() {
     window.clearInterval(pollTimer);
   }
   pollTimer = window.setInterval(() => {
-    if (document.visibilityState === "hidden" || !replyDialogShell.classList.contains("hidden")) {
+    if (
+      document.visibilityState === "hidden"
+      || !replyDialogShell.classList.contains("hidden")
+      || !requestModalShell.classList.contains("hidden")
+    ) {
       return;
     }
     void fetchRequests();
@@ -1209,6 +1275,7 @@ refreshButton.addEventListener("click", () => {
 authForm.addEventListener("submit", unlockPortal);
 replyCloseBtn.addEventListener("click", closeReplyDialog);
 replyCancelButton.addEventListener("click", closeReplyDialog);
+requestModalCloseBtn.addEventListener("click", closeRequestModal);
 
 replyDialogShell.addEventListener("click", event => {
   if (event.target === replyDialogShell) {
@@ -1216,9 +1283,20 @@ replyDialogShell.addEventListener("click", event => {
   }
 });
 
+requestModalShell.addEventListener("click", event => {
+  if (event.target === requestModalShell) {
+    closeRequestModal();
+  }
+});
+
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && !replyDialogShell.classList.contains("hidden")) {
+  if (event.key !== "Escape") return;
+  if (!replyDialogShell.classList.contains("hidden")) {
     closeReplyDialog();
+    return;
+  }
+  if (!requestModalShell.classList.contains("hidden")) {
+    closeRequestModal();
   }
 });
 
