@@ -82,18 +82,14 @@ function buildConfig(env) {
     PORTAL_DETAILS_LABEL: "labels.details",
     PORTAL_PRIORITY_LABEL: "labels.priority",
     PORTAL_FILES_LABEL: "labels.files",
-    PORTAL_EXPERT_LABEL: "labels.expert",
-    PORTAL_CUSTOM_EXPERT_LABEL: "labels.customExpert",
     PORTAL_REPLY_LABEL: "labels.reply",
     PORTAL_TITLE_PLACEHOLDER: "placeholders.title",
     PORTAL_DETAILS_PLACEHOLDER: "placeholders.details",
-    PORTAL_CUSTOM_EXPERT_PLACEHOLDER: "placeholders.customExpert",
     PORTAL_REPLY_PLACEHOLDER: "placeholders.reply",
     PORTAL_UNLOCK_LABEL: "buttons.unlock",
     PORTAL_SUBMIT_LABEL: "buttons.submit",
     PORTAL_SUBMIT_BUSY_LABEL: "buttons.submitBusy",
     PORTAL_REFRESH_LABEL: "buttons.refresh",
-    PORTAL_ADD_CUSTOM_EXPERT_LABEL: "buttons.addCustomExpert",
     PORTAL_DETAIL_OPEN_LABEL: "buttons.detailOpen",
     PORTAL_DETAIL_HIDE_LABEL: "buttons.detailHide",
     PORTAL_REPLY_DIALOG_TITLE: "buttons.replyDialogTitle",
@@ -111,7 +107,6 @@ function buildConfig(env) {
     PORTAL_REQUEST_QUEUED_TEXT: "messages.requestQueued",
     PORTAL_REQUEST_QUEUED_TOAST: "messages.requestQueuedToast",
     PORTAL_FOLLOWUP_CREATED_TOAST: "messages.followUpCreatedToast",
-    PORTAL_ADD_CUSTOM_EXPERT_FIRST_TEXT: "messages.addCustomExpertFirst",
     PORTAL_PASSWORD_REQUIRED_TEXT: "messages.passwordRequired",
     PORTAL_INCORRECT_PASSWORD_TEXT: "messages.incorrectPassword",
     PORTAL_REPLY_EMPTY_ERROR_TEXT: "messages.replyEmptyError",
@@ -121,7 +116,6 @@ function buildConfig(env) {
     PORTAL_COMPLETED_TOAST_TEXT: "messages.completedToast",
     PORTAL_FOLLOWUP_UNAVAILABLE_TEXT: "messages.followUpUnavailable",
     PORTAL_FOLLOWUP_CREATE_ERROR_TEXT: "messages.followUpCreateError",
-    PORTAL_CUSTOM_EXPERT_HINT: "hints.customExpert",
     PORTAL_FOLLOWUP_HINT: "hints.followUp",
     PORTAL_SECTION_DETAILS: "sections.details",
     PORTAL_SECTION_ACCOMPLISHED: "sections.accomplished",
@@ -145,9 +139,6 @@ function buildConfig(env) {
   }
   if (env.PORTAL_THEME_JSON) {
     config.theme = parseJsonEnv(env.PORTAL_THEME_JSON, {});
-  }
-  if (env.PORTAL_EXPERTS_JSON) {
-    config.experts = parseJsonEnv(env.PORTAL_EXPERTS_JSON, []);
   }
   if (env.PORTAL_WAITING_MESSAGES_JSON) {
     config.waitingMessages = parseJsonEnv(env.PORTAL_WAITING_MESSAGES_JSON, []);

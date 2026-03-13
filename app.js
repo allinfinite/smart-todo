@@ -14,7 +14,7 @@ const DEFAULT_PORTAL_CONFIG = {
   authCopy: "Enter the portal password to view and submit work requests.",
   heroEyebrow: "Client Delivery Portal",
   heroTitle: "Send work, watch it move, and keep the list growing.",
-  heroCopy: "Add a task, assign the right expert, and keep building your list while work moves in the background.",
+  heroCopy: "Add a task and keep building your list while work moves in the background.",
   composerEyebrow: "New Request",
   composerTitle: "Send work to the team",
   boardEyebrow: "Todo List",
@@ -28,14 +28,11 @@ const DEFAULT_PORTAL_CONFIG = {
     details: "Details",
     priority: "Priority",
     files: "Files or references",
-    expert: "Expert",
-    customExpert: "Custom expert",
     reply: "Your Reply",
   },
   placeholders: {
     title: "Describe the next update you want made",
     details: "Explain the change, desired outcome, and anything that should stay the same.",
-    customExpert: "Add a custom expert name",
     reply: "Add your response, feedback, or clarification...",
   },
   buttons: {
@@ -43,7 +40,6 @@ const DEFAULT_PORTAL_CONFIG = {
     submit: "Queue task",
     submitBusy: "Queueing...",
     refresh: "Refresh",
-    addCustomExpert: "Add",
     detailOpen: "Open",
     detailHide: "Hide",
     archive: "Archive",
@@ -64,9 +60,6 @@ const DEFAULT_PORTAL_CONFIG = {
     requestQueued: "Todo item queued. It is in motion.",
     requestQueuedToast: "New todo item added. You can keep adding while work moves.",
     followUpCreatedToast: "New todo item created from that suggestion.",
-    customExpertExists: "is already available.",
-    customExpertAdded: "added to your expert list.",
-    addCustomExpertFirst: "Add a name for the custom expert first.",
     passwordRequired: "Enter the password.",
     incorrectPassword: "Incorrect password.",
     blockedPublicText: "This item needs a bit of direction before it keeps moving.",
@@ -86,7 +79,6 @@ const DEFAULT_PORTAL_CONFIG = {
     requestCanceledToast: "Todo canceled.",
   },
   hints: {
-    customExpert: "Custom experts stay available on this device and can be reused on future tasks.",
     followUp: "Click once to create the next todo item from this suggestion.",
   },
   sections: {
@@ -110,13 +102,6 @@ const DEFAULT_PORTAL_CONFIG = {
     { value: "high", label: "High" },
     { value: "urgent", label: "Urgent" },
     { value: "low", label: "Low" },
-  ],
-  experts: [
-    { key: "launch-lead", label: "Launch Lead", type: "catalog", description: "Best for end-to-end site changes and coordination." },
-    { key: "design-polish", label: "Design Polish", type: "catalog", description: "Best for layout, spacing, and visual refinements." },
-    { key: "copy-crafter", label: "Copy Crafter", type: "catalog", description: "Best for messaging, headlines, and clarity edits." },
-    { key: "growth-builder", label: "Growth Builder", type: "catalog", description: "Best for conversion, forms, and funnel improvements." },
-    { key: "qa-guardian", label: "QA Guardian", type: "catalog", description: "Best for bug hunts, cleanup, and release confidence." },
   ],
   waitingMessages: [
     "It is in motion. You can add another item to the list while this moves.",
@@ -175,8 +160,6 @@ function mergePortalConfig(base, override) {
 const PORTAL_CONFIG = mergePortalConfig(DEFAULT_PORTAL_CONFIG, window.PORTAL_TEMPLATE_CONFIG || {});
 const STORAGE_NAMESPACE = String(PORTAL_CONFIG.storageNamespace || "client-portal-template");
 const PASSWORD_STORAGE_KEY = `${STORAGE_NAMESPACE}:password`;
-const CUSTOM_EXPERTS_STORAGE_KEY = `${STORAGE_NAMESPACE}:custom-experts`;
-const SELECTED_EXPERT_STORAGE_KEY = `${STORAGE_NAMESPACE}:selected-expert`;
 const API_BASE_STORAGE_KEY = `${STORAGE_NAMESPACE}:api-base`;
 const API_BASE = window.localStorage.getItem(API_BASE_STORAGE_KEY) || PORTAL_CONFIG.apiBase;
 const REQUESTS_ENDPOINT = `${API_BASE}${PORTAL_CONFIG.requestsPath}`;
@@ -191,9 +174,6 @@ const titleInput = document.querySelector("#titleInput");
 const detailsInput = document.querySelector("#detailsInput");
 const priorityInput = document.querySelector("#priorityInput");
 const imagesInput = document.querySelector("#imagesInput");
-const expertInput = document.querySelector("#expertInput");
-const customExpertInput = document.querySelector("#customExpertInput");
-const addCustomExpertButton = document.querySelector("#addCustomExpertButton");
 const selectedFiles = document.querySelector("#selectedFiles");
 const formStatus = document.querySelector("#formStatus");
 const submitButton = document.querySelector("#submitButton");
@@ -306,10 +286,6 @@ function applyPortalConfig() {
   setText("#detailsLabel", PORTAL_CONFIG.labels.details);
   setText("#priorityLabel", PORTAL_CONFIG.labels.priority);
   setText("#filesLabel", PORTAL_CONFIG.labels.files);
-  setText("#expertLabel", PORTAL_CONFIG.labels.expert);
-  setText("#customExpertLabel", PORTAL_CONFIG.labels.customExpert);
-  setText("#customExpertHint", PORTAL_CONFIG.hints.customExpert);
-  setText("#addCustomExpertButton", PORTAL_CONFIG.buttons.addCustomExpert);
   setText("#submitButton", PORTAL_CONFIG.buttons.submit);
   setText("#refreshButton", PORTAL_CONFIG.buttons.refresh);
   setText("#replyDialogHeading", PORTAL_CONFIG.buttons.replyDialogTitle);
@@ -319,7 +295,6 @@ function applyPortalConfig() {
   setText("#replySubmitButton", PORTAL_CONFIG.buttons.replySubmit);
   setPlaceholder("#titleInput", PORTAL_CONFIG.placeholders.title);
   setPlaceholder("#detailsInput", PORTAL_CONFIG.placeholders.details);
-  setPlaceholder("#customExpertInput", PORTAL_CONFIG.placeholders.customExpert);
   setPlaceholder("#replyTextArea", PORTAL_CONFIG.placeholders.reply);
   renderPriorityOptions();
   applyTheme();
@@ -441,29 +416,6 @@ function getPublicWaitingMessage(request) {
   return waitingMessages[index];
 }
 
-function getAssignedExpert(request) {
-  const assigned = request?.assigned_expert;
-  if (assigned && typeof assigned === "object") {
-    return {
-      key: String(assigned.key || assigned.expert_key || slugify(assigned.label || assigned.name || "expert")),
-      label: String(assigned.label || assigned.name || "Expert"),
-      type: String(assigned.type || assigned.expert_type || "catalog"),
-    };
-  }
-
-  const label = request?.expert_label || request?.expert_name;
-  const key = request?.expert_key;
-  if (label || key) {
-    return {
-      key: String(key || slugify(label)),
-      label: String(label || key || "Expert"),
-      type: String(request?.expert_type || "catalog"),
-    };
-  }
-
-  return null;
-}
-
 function getCompletionSummary(request) {
   if (!isRequestCompleted(request)) return "";
   const explicitSummary = clampText(request?.completion_summary, 220);
@@ -526,106 +478,6 @@ function getPriorityLabel(priority) {
   const value = String(priority || "normal").toLowerCase();
   const configured = (PORTAL_CONFIG.priorityOptions || []).find(option => option.value === value);
   return configured?.label || toTitleCase(value);
-}
-
-function getDefaultExperts() {
-  return Array.isArray(PORTAL_CONFIG.experts) && PORTAL_CONFIG.experts.length
-    ? PORTAL_CONFIG.experts
-    : DEFAULT_PORTAL_CONFIG.experts;
-}
-
-function getCustomExperts() {
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(CUSTOM_EXPERTS_STORAGE_KEY) || "[]");
-    if (!Array.isArray(parsed)) return [];
-    return parsed
-      .filter(expert => expert && (expert.key || expert.label))
-      .map(expert => ({
-        key: String(expert.key || slugify(expert.label)),
-        label: String(expert.label || expert.key || "Custom Expert"),
-        type: "custom",
-        description: String(expert.description || "Custom expert"),
-      }));
-  } catch {
-    return [];
-  }
-}
-
-function saveCustomExperts(experts) {
-  window.localStorage.setItem(CUSTOM_EXPERTS_STORAGE_KEY, JSON.stringify(experts));
-}
-
-function getExpertCatalog() {
-  return [...getDefaultExperts(), ...getCustomExperts()];
-}
-
-function getSavedExpertKey() {
-  return window.localStorage.getItem(SELECTED_EXPERT_STORAGE_KEY) || getDefaultExperts()[0].key;
-}
-
-function saveSelectedExpertKey(value) {
-  if (value) {
-    window.localStorage.setItem(SELECTED_EXPERT_STORAGE_KEY, value);
-  }
-}
-
-function renderExpertOptions(selectedKey = getSavedExpertKey()) {
-  const catalogExperts = getDefaultExperts();
-  const customExperts = getCustomExperts();
-  const defaultOptions = catalogExperts
-    .map(expert => `<option value="${escapeHtml(expert.key)}">${escapeHtml(expert.label)}</option>`)
-    .join("");
-  const customOptions = customExperts
-    .map(expert => `<option value="${escapeHtml(expert.key)}">${escapeHtml(expert.label)}</option>`)
-    .join("");
-
-  expertInput.innerHTML = `
-    <optgroup label="Expert Team">
-      ${defaultOptions}
-    </optgroup>
-    ${customOptions ? `
-      <optgroup label="Custom Experts">
-        ${customOptions}
-      </optgroup>
-    ` : ""}
-  `;
-
-  const availableKeys = new Set(getExpertCatalog().map(expert => expert.key));
-  expertInput.value = availableKeys.has(selectedKey) ? selectedKey : catalogExperts[0].key;
-  saveSelectedExpertKey(expertInput.value);
-}
-
-function getSelectedExpert() {
-  const key = expertInput.value;
-  return getExpertCatalog().find(expert => expert.key === key) || getDefaultExperts()[0];
-}
-
-function addCustomExpert() {
-  const label = customExpertInput.value.trim().replace(/\s+/g, " ");
-  if (!label) {
-    showToast(PORTAL_CONFIG.messages.addCustomExpertFirst, "warn");
-    return;
-  }
-
-  const currentExperts = getCustomExperts();
-  const duplicate = currentExperts.find(expert => expert.label.toLowerCase() === label.toLowerCase());
-  if (duplicate) {
-    renderExpertOptions(duplicate.key);
-    customExpertInput.value = "";
-    showToast(`${duplicate.label} ${PORTAL_CONFIG.messages.customExpertExists}`, "info");
-    return;
-  }
-
-  const expert = {
-    key: `custom-${slugify(label)}-${Date.now().toString(36).slice(-4)}`,
-    label,
-    type: "custom",
-    description: "Custom expert",
-  };
-  saveCustomExperts([...currentExperts, expert]);
-  renderExpertOptions(expert.key);
-  customExpertInput.value = "";
-  showToast(`${expert.label} ${PORTAL_CONFIG.messages.customExpertAdded}`, "success");
 }
 
 function updateSelectedFiles() {
@@ -788,7 +640,6 @@ function buildRequestCard(request) {
   const canReply = isCompleted || Boolean(request.has_unprocessed_replies);
   const replies = Array.isArray(request.replies) ? request.replies : [];
   const attachments = Array.isArray(request.attachments) ? request.attachments : [];
-  const expert = getAssignedExpert(request);
   const completionScreenshot = request.completion_screenshot || null;
   const detailId = `request-detail-${domId}`;
   const expanded = expandedRequestIds.has(requestId);
@@ -804,7 +655,6 @@ function buildRequestCard(request) {
             <div class="summary-copy">
               <div class="title-meta-row">
                 <h3 class="request-title">${escapeHtml(request.title || "Untitled request")}</h3>
-                ${expert ? `<span class="expert-chip ${expert.type === "custom" ? "custom" : ""}">${escapeHtml(expert.label)}</span>` : ""}
               </div>
               <p class="request-public-line">${escapeHtml(getPublicStatusLine(request))}</p>
             </div>
@@ -1048,14 +898,10 @@ async function submitRequest(event) {
   submitButton.textContent = PORTAL_CONFIG.buttons.submitBusy;
 
   try {
-    const selectedExpert = getSelectedExpert();
     const formData = new FormData();
     formData.set("title", titleInput.value.trim());
     formData.set("details", detailsInput.value.trim());
     formData.set("priority", priorityInput.value);
-    formData.set("expert_key", selectedExpert.key);
-    formData.set("expert_label", selectedExpert.label);
-    formData.set("expert_type", selectedExpert.type);
 
     Array.from(imagesInput.files || []).forEach(file => {
       formData.append("images", file);
@@ -1082,10 +928,8 @@ async function submitRequest(event) {
       pendingAttentionRequestIds.add(createdRequestId);
     }
 
-    const selectedExpertKey = expertInput.value;
     requestForm.reset();
     renderPriorityOptions();
-    renderExpertOptions(selectedExpertKey);
     updateSelectedFiles();
     formStatus.textContent = PORTAL_CONFIG.messages.requestQueued;
     showToast(PORTAL_CONFIG.messages.requestQueuedToast, "success");
@@ -1218,20 +1062,10 @@ async function createFollowUpTodo(event) {
   renderRequests(cachedRequests);
 
   try {
-    const fallbackExpert = getAssignedExpert(request) || getSelectedExpert();
-    const expert = {
-      key: suggestion.expert_key || fallbackExpert.key,
-      label: suggestion.expert_label || fallbackExpert.label,
-      type: suggestion.expert_type || fallbackExpert.type,
-    };
-
     const formData = new FormData();
     formData.set("title", String(suggestion.title || suggestion.label || `Follow-up for ${request.title}`));
     formData.set("details", String(suggestion.details || `Follow-up to ${request.title}`));
     formData.set("priority", String(suggestion.priority || request.priority || "normal"));
-    formData.set("expert_key", expert.key);
-    formData.set("expert_label", expert.label);
-    formData.set("expert_type", expert.type);
     formData.set("source_request_id", requestId);
     if (suggestion.suggestion_id) {
       formData.set("source_suggestion_id", String(suggestion.suggestion_id));
@@ -1375,16 +1209,6 @@ refreshButton.addEventListener("click", () => {
 authForm.addEventListener("submit", unlockPortal);
 replyCloseBtn.addEventListener("click", closeReplyDialog);
 replyCancelButton.addEventListener("click", closeReplyDialog);
-expertInput.addEventListener("change", event => {
-  saveSelectedExpertKey(event.currentTarget.value);
-});
-addCustomExpertButton.addEventListener("click", addCustomExpert);
-customExpertInput.addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    addCustomExpert();
-  }
-});
 
 replyDialogShell.addEventListener("click", event => {
   if (event.target === replyDialogShell) {
@@ -1400,7 +1224,6 @@ document.addEventListener("keydown", event => {
 
 applyPortalConfig();
 renderPriorityOptions();
-renderExpertOptions();
 updateSelectedFiles();
 updateReplySelectedFiles();
 setLockedState(!getPortalPassword());
