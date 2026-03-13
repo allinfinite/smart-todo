@@ -5,6 +5,10 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
+concurrency:
+  group: dokku-smart-todo
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
