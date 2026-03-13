@@ -8,6 +8,8 @@ const DEFAULT_PORTAL_CONFIG = {
   apiBase: LOCAL_API_BASE,
   requestsPath: "/api/portal/gray/requests",
   repliesPath: "/api/portal/gray/replies",
+  workspacePath: "",
+  siteActionsPath: "",
   showApiBaseLabel: true,
   authEyebrow: "Protected Portal",
   authTitle: "Project updates",
@@ -39,6 +41,10 @@ const DEFAULT_PORTAL_CONFIG = {
     unlock: "Unlock portal",
     submit: "Queue task",
     submitBusy: "Queueing...",
+    preview: "Preview",
+    previewBusy: "Starting preview...",
+    deploy: "Deploy",
+    deployBusy: "Deploying...",
     refresh: "Refresh",
     detailOpen: "View",
     detailHide: "Hide",
@@ -71,6 +77,10 @@ const DEFAULT_PORTAL_CONFIG = {
     replySuccess: "Reply sent. A refreshed response and screenshot will land here when ready.",
     replyThreadWaiting: "You will see the latest reply here when it lands.",
     completedToast: "Another item moved to done. Review the screenshot and follow-up options when ready.",
+    previewError: "Unable to start preview.",
+    previewReadyToast: "Preview is ready.",
+    deployError: "Unable to deploy.",
+    deploySuccessToast: "Deploy pushed to GitHub.",
     followUpUnavailable: "That follow-up suggestion is no longer available.",
     followUpCreateError: "Unable to create follow-up todo.",
     requestArchiveError: "Unable to archive todo.",
@@ -164,6 +174,12 @@ const API_BASE_STORAGE_KEY = `${STORAGE_NAMESPACE}:api-base`;
 const API_BASE = window.localStorage.getItem(API_BASE_STORAGE_KEY) || PORTAL_CONFIG.apiBase;
 const REQUESTS_ENDPOINT = `${API_BASE}${PORTAL_CONFIG.requestsPath}`;
 const REPLY_ENDPOINT = `${API_BASE}${PORTAL_CONFIG.repliesPath}`;
+const WORKSPACE_ENDPOINT = PORTAL_CONFIG.workspacePath
+  ? `${API_BASE}${PORTAL_CONFIG.workspacePath}`
+  : REQUESTS_ENDPOINT;
+const SITE_ACTIONS_ENDPOINT = PORTAL_CONFIG.siteActionsPath
+  ? `${API_BASE}${PORTAL_CONFIG.siteActionsPath}`
+  : "";
 
 const authShell = document.querySelector("#authShell");
 const authForm = document.querySelector("#authForm");
@@ -178,6 +194,8 @@ const selectedFiles = document.querySelector("#selectedFiles");
 const formStatus = document.querySelector("#formStatus");
 const submitButton = document.querySelector("#submitButton");
 const queueList = document.querySelector("#queueList");
+const previewButton = document.querySelector("#previewButton");
+const deployButton = document.querySelector("#deployButton");
 const refreshButton = document.querySelector("#refreshButton");
 const apiBaseLabel = document.querySelector("#apiBaseLabel");
 const toastStack = document.querySelector("#toastStack");
@@ -208,6 +226,7 @@ let requestsFetchInFlight = false;
 let lastRequestsSignature = "";
 let helperMessageTick = 0;
 let cachedRequests = [];
+let cachedWorkspace = null;
 let pendingRevealRequestId = "";
 let activeRequestModalId = "";
 let pendingModalOpenRequestId = "";
@@ -216,6 +235,7 @@ const flashTimeouts = new Map();
 const pendingAttentionRequestIds = new Set();
 const suggestionCreatesInFlight = new Set();
 const requestActionsInFlight = new Set();
+const workspaceActionsInFlight = new Set();
 
 function setText(selector, value) {
   const element = document.querySelector(selector);
@@ -292,6 +312,8 @@ function applyPortalConfig() {
   setText("#priorityLabel", PORTAL_CONFIG.labels.priority);
   setText("#filesLabel", PORTAL_CONFIG.labels.files);
   setText("#submitButton", PORTAL_CONFIG.buttons.submit);
+  setText("#previewButton", PORTAL_CONFIG.buttons.preview);
+  setText("#deployButton", PORTAL_CONFIG.buttons.deploy);
   setText("#refreshButton", PORTAL_CONFIG.buttons.refresh);
   setText("#replyDialogHeading", PORTAL_CONFIG.buttons.replyDialogTitle);
   setText("#replyInputLabel", PORTAL_CONFIG.labels.reply);
@@ -460,6 +482,10 @@ function getRequestActionKey(requestId, action) {
   return `${requestId}:${action}`;
 }
 
+function getWorkspaceActionKey(action) {
+  return String(action || "").toLowerCase().trim();
+}
+
 function getRequestActionEndpoint(requestId) {
   return `${REQUESTS_ENDPOINT}/${encodeURIComponent(requestId)}/actions`;
 }
@@ -497,6 +523,54 @@ function updateReplySelectedFiles() {
   replySelectedFiles.textContent = files.length
     ? files.map(file => `${file.name} (${Math.round(file.size / 1024)} KB)`).join(" • ")
     : PORTAL_CONFIG.messages.noFilesSelected;
+}
+
+function supportsWorkspaceActions() {
+  return Boolean(SITE_ACTIONS_ENDPOINT);
+}
+
+function getWorkspaceAvailableActions() {
+  if (!supportsWorkspaceActions()) return [];
+  const provided = Array.isArray(cachedWorkspace?.available_actions)
+    ? cachedWorkspace.available_actions
+    : [];
+  const normalized = provided
+    .map(value => String(value || "").toLowerCase().trim())
+    .filter(Boolean);
+  if (normalized.length) {
+    return normalized;
+  }
+  return ["preview"];
+}
+
+function syncWorkspace(workspace) {
+  cachedWorkspace = isPlainObject(workspace) ? { ...workspace } : null;
+  renderWorkspaceActions();
+}
+
+function renderWorkspaceActions() {
+  const supported = supportsWorkspaceActions();
+  previewButton.classList.toggle("hidden", !supported);
+  deployButton.classList.toggle("hidden", !supported);
+  if (!supported) {
+    previewButton.disabled = true;
+    deployButton.disabled = true;
+    return;
+  }
+
+  const actions = new Set(getWorkspaceAvailableActions());
+  const previewBusy = workspaceActionsInFlight.has("preview");
+  const deployBusy = workspaceActionsInFlight.has("deploy");
+
+  previewButton.disabled = previewBusy || !actions.has("preview");
+  previewButton.textContent = previewBusy
+    ? PORTAL_CONFIG.buttons.previewBusy
+    : PORTAL_CONFIG.buttons.preview;
+
+  deployButton.disabled = deployBusy || !Boolean(cachedWorkspace?.dirty) || !actions.has("deploy");
+  deployButton.textContent = deployBusy
+    ? PORTAL_CONFIG.buttons.deployBusy
+    : PORTAL_CONFIG.buttons.deploy;
 }
 
 function showToast(message, tone = "info") {
@@ -932,6 +1006,7 @@ async function fetchRequests() {
 
     setLockedState(false);
     const requests = Array.isArray(payload.requests) ? payload.requests : [];
+    syncWorkspace(payload.workspace);
     const signature = JSON.stringify(requests);
 
     handleRequestTransitions(requests);
@@ -950,6 +1025,28 @@ async function fetchRequests() {
   } finally {
     requestsFetchInFlight = false;
   }
+}
+
+async function fetchWorkspace() {
+  if (!supportsWorkspaceActions() || WORKSPACE_ENDPOINT === REQUESTS_ENDPOINT) {
+    return;
+  }
+
+  const response = await fetch(WORKSPACE_ENDPOINT, {
+    cache: "no-store",
+    headers: authHeaders(),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    if (response.status === 401) {
+      setPortalPassword("");
+      setLockedState(true);
+      throw new Error(PORTAL_CONFIG.messages.passwordRequired);
+    }
+    throw new Error(payload.error || PORTAL_CONFIG.messages.loadError);
+  }
+
+  syncWorkspace(payload.workspace);
 }
 
 async function submitRequest(event) {
@@ -1217,6 +1314,66 @@ async function handleRequestAction(event) {
   }
 }
 
+async function handleWorkspaceAction(event) {
+  const action = getWorkspaceActionKey(event.currentTarget?.dataset?.workspaceAction);
+  if (!supportsWorkspaceActions() || !["preview", "deploy"].includes(action)) {
+    return;
+  }
+  if (workspaceActionsInFlight.has(action)) {
+    return;
+  }
+
+  workspaceActionsInFlight.add(action);
+  renderWorkspaceActions();
+
+  try {
+    const response = await fetch(SITE_ACTIONS_ENDPOINT, {
+      method: "POST",
+      headers: {
+        ...authHeaders(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ action }),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      if (response.status === 401) {
+        setPortalPassword("");
+        setLockedState(true);
+        throw new Error(PORTAL_CONFIG.messages.passwordRequired);
+      }
+      throw new Error(
+        payload.error || (action === "preview" ? PORTAL_CONFIG.messages.previewError : PORTAL_CONFIG.messages.deployError)
+      );
+    }
+
+    syncWorkspace(payload.workspace);
+
+    if (action === "preview") {
+      const previewUrl = String(payload.workspace?.preview?.url || cachedWorkspace?.preview?.url || "").trim();
+      if (previewUrl) {
+        window.open(previewUrl, "_blank", "noopener,noreferrer");
+      }
+      showToast(PORTAL_CONFIG.messages.previewReadyToast, "success");
+    } else {
+      showToast(PORTAL_CONFIG.messages.deploySuccessToast, "success");
+    }
+
+    await fetchRequests();
+    if (WORKSPACE_ENDPOINT !== REQUESTS_ENDPOINT) {
+      await fetchWorkspace();
+    }
+  } catch (error) {
+    showToast(
+      error.message || (action === "preview" ? PORTAL_CONFIG.messages.previewError : PORTAL_CONFIG.messages.deployError),
+      "warn"
+    );
+  } finally {
+    workspaceActionsInFlight.delete(action);
+    renderWorkspaceActions();
+  }
+}
+
 function startPolling() {
   if (pollTimer) {
     window.clearInterval(pollTimer);
@@ -1269,8 +1426,15 @@ imagesInput.addEventListener("change", updateSelectedFiles);
 replyFilesInput.addEventListener("change", updateReplySelectedFiles);
 requestForm.addEventListener("submit", submitRequest);
 replyForm.addEventListener("submit", submitReply);
+previewButton.dataset.workspaceAction = "preview";
+deployButton.dataset.workspaceAction = "deploy";
+previewButton.addEventListener("click", handleWorkspaceAction);
+deployButton.addEventListener("click", handleWorkspaceAction);
 refreshButton.addEventListener("click", () => {
   void fetchRequests();
+  if (WORKSPACE_ENDPOINT !== REQUESTS_ENDPOINT) {
+    void fetchWorkspace();
+  }
 });
 authForm.addEventListener("submit", unlockPortal);
 replyCloseBtn.addEventListener("click", closeReplyDialog);
@@ -1304,10 +1468,14 @@ applyPortalConfig();
 renderPriorityOptions();
 updateSelectedFiles();
 updateReplySelectedFiles();
+renderWorkspaceActions();
 setLockedState(!getPortalPassword());
 
 if (getPortalPassword()) {
   void fetchRequests();
+  if (WORKSPACE_ENDPOINT !== REQUESTS_ENDPOINT) {
+    void fetchWorkspace();
+  }
 }
 
 startPolling();

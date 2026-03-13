@@ -107,3 +107,11 @@ This template expects a compatible API that serves:
 - `POST <repliesPath>`
 
 The response/request shapes match the current Gray portal contract already used by this app.
+
+Optional workspace actions:
+
+- `GET <requestsPath>` may also return a `workspace` object
+- `GET <workspacePath>` may return `{ workspace }` when configured separately
+- `POST <siteActionsPath>` accepts `{ "action": "preview" }` or `{ "action": "deploy" }`
+
+When `siteActionsPath` is configured, the board header shows global `Preview` and `Deploy` controls. Older backends remain compatible because the buttons stay hidden unless the action path is configured.

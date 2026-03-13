@@ -172,6 +172,14 @@ a {
   margin-bottom: 10px;
 }
 
+.panel-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .panel-head h2 {
   margin: 4px 0 0;
   font-size: 1.02rem;

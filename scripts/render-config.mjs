@@ -35,8 +35,15 @@ function readEnv() {
 
 function parseJsonEnv(value, fallback) {
   if (!value) return fallback;
+  let normalized = String(value).trim();
+  if ((normalized.startsWith('"') && normalized.endsWith('"')) || (normalized.startsWith("'") && normalized.endsWith("'"))) {
+    normalized = normalized.slice(1, -1);
+  }
+  while (normalized.endsWith("\\n")) {
+    normalized = normalized.slice(0, -2).trimEnd();
+  }
   try {
-    return JSON.parse(value);
+    return JSON.parse(normalized);
   } catch (error) {
     throw new Error(`Invalid JSON config: ${error.message}`);
   }
@@ -64,6 +71,8 @@ function buildConfig(env) {
     PORTAL_API_BASE: "apiBase",
     PORTAL_REQUESTS_PATH: "requestsPath",
     PORTAL_REPLIES_PATH: "repliesPath",
+    PORTAL_WORKSPACE_PATH: "workspacePath",
+    PORTAL_SITE_ACTIONS_PATH: "siteActionsPath",
     PORTAL_AUTH_EYEBROW: "authEyebrow",
     PORTAL_AUTH_TITLE: "authTitle",
     PORTAL_AUTH_COPY: "authCopy",
@@ -89,6 +98,10 @@ function buildConfig(env) {
     PORTAL_UNLOCK_LABEL: "buttons.unlock",
     PORTAL_SUBMIT_LABEL: "buttons.submit",
     PORTAL_SUBMIT_BUSY_LABEL: "buttons.submitBusy",
+    PORTAL_PREVIEW_LABEL: "buttons.preview",
+    PORTAL_PREVIEW_BUSY_LABEL: "buttons.previewBusy",
+    PORTAL_DEPLOY_LABEL: "buttons.deploy",
+    PORTAL_DEPLOY_BUSY_LABEL: "buttons.deployBusy",
     PORTAL_REFRESH_LABEL: "buttons.refresh",
     PORTAL_DETAIL_OPEN_LABEL: "buttons.detailOpen",
     PORTAL_DETAIL_HIDE_LABEL: "buttons.detailHide",
@@ -114,6 +127,10 @@ function buildConfig(env) {
     PORTAL_REPLY_ERROR_TEXT: "messages.replyError",
     PORTAL_REPLY_SUCCESS_TEXT: "messages.replySuccess",
     PORTAL_COMPLETED_TOAST_TEXT: "messages.completedToast",
+    PORTAL_PREVIEW_ERROR_TEXT: "messages.previewError",
+    PORTAL_PREVIEW_READY_TOAST: "messages.previewReadyToast",
+    PORTAL_DEPLOY_ERROR_TEXT: "messages.deployError",
+    PORTAL_DEPLOY_SUCCESS_TOAST: "messages.deploySuccessToast",
     PORTAL_FOLLOWUP_UNAVAILABLE_TEXT: "messages.followUpUnavailable",
     PORTAL_FOLLOWUP_CREATE_ERROR_TEXT: "messages.followUpCreateError",
     PORTAL_FOLLOWUP_HINT: "hints.followUp",
