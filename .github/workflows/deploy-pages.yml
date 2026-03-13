@@ -15,18 +15,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  skip-pages:
+    if: ${{ vars.ENABLE_GITHUB_PAGES != '1' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "GitHub Pages is disabled for this repo. Set ENABLE_GITHUB_PAGES=1 and enable Pages in repository settings to publish with this workflow."
+
   build:
+    if: ${{ vars.ENABLE_GITHUB_PAGES == '1' }}
     runs-on: ubuntu-latest
     env:
       PORTAL_TEMPLATE_CONFIG_JSON: ${{ vars.PORTAL_TEMPLATE_CONFIG_JSON }}
       PORTAL_THEME_JSON: ${{ vars.PORTAL_THEME_JSON }}
-      PORTAL_EXPERTS_JSON: ${{ vars.PORTAL_EXPERTS_JSON }}
       PORTAL_WAITING_MESSAGES_JSON: ${{ vars.PORTAL_WAITING_MESSAGES_JSON }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
@@ -34,6 +40,7 @@ jobs:
           path: .
 
   deploy:
+    if: ${{ vars.ENABLE_GITHUB_PAGES == '1' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

@@ -80,15 +80,16 @@ See [.env.example](/Users/daniellevy/Code/Cowork/gray-portal/.env.example) for t
 
 ## GitHub Pages deployment
 
-This repo includes a Pages workflow at [.github/workflows/deploy-pages.yml](/Users/daniellevy/Code/Cowork/gray-portal/.github/workflows/deploy-pages.yml).
+This repo includes an optional Pages workflow at [.github/workflows/deploy-pages.yml](/Users/daniellevy/Code/smart-todo/.github/workflows/deploy-pages.yml).
 
 Set these GitHub repository variables:
 
+- `ENABLE_GITHUB_PAGES=1`
 - `PORTAL_TEMPLATE_CONFIG_JSON`
 - optionally `PORTAL_THEME_JSON`
 - optionally `PORTAL_WAITING_MESSAGES_JSON`
 
-Then enable GitHub Pages with GitHub Actions as the source.
+Then enable GitHub Pages with GitHub Actions as the source. If `ENABLE_GITHUB_PAGES` is not set to `1`, the workflow exits cleanly without trying to configure Pages.
 
 ## Vercel deployment
 
