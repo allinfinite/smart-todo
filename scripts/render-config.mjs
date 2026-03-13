@@ -66,6 +66,7 @@ function buildConfig(env) {
   const config = typeof fromJson === "object" && fromJson && !Array.isArray(fromJson) ? { ...fromJson } : {};
 
   const mappings = {
+    PORTAL_APP_MODE: "appMode",
     PORTAL_TITLE: "portalTitle",
     PORTAL_STORAGE_NAMESPACE: "storageNamespace",
     PORTAL_API_BASE: "apiBase",
@@ -98,6 +99,8 @@ function buildConfig(env) {
     PORTAL_UNLOCK_LABEL: "buttons.unlock",
     PORTAL_SUBMIT_LABEL: "buttons.submit",
     PORTAL_SUBMIT_BUSY_LABEL: "buttons.submitBusy",
+    PORTAL_SYNC_LABEL: "buttons.sync",
+    PORTAL_SYNC_BUSY_LABEL: "buttons.syncBusy",
     PORTAL_PREVIEW_LABEL: "buttons.preview",
     PORTAL_PREVIEW_BUSY_LABEL: "buttons.previewBusy",
     PORTAL_DEPLOY_LABEL: "buttons.deploy",
@@ -122,6 +125,8 @@ function buildConfig(env) {
     PORTAL_FOLLOWUP_CREATED_TOAST: "messages.followUpCreatedToast",
     PORTAL_PASSWORD_REQUIRED_TEXT: "messages.passwordRequired",
     PORTAL_INCORRECT_PASSWORD_TEXT: "messages.incorrectPassword",
+    PORTAL_SYNC_ERROR_TEXT: "messages.syncError",
+    PORTAL_SYNC_SUCCESS_TOAST: "messages.syncSuccessToast",
     PORTAL_REPLY_EMPTY_ERROR_TEXT: "messages.replyEmptyError",
     PORTAL_REPLY_MISSING_REQUEST_TEXT: "messages.replyMissingRequest",
     PORTAL_REPLY_ERROR_TEXT: "messages.replyError",
@@ -153,6 +158,9 @@ function buildConfig(env) {
 
   if (env.PORTAL_SHOW_API_BASE) {
     config.showApiBaseLabel = !["0", "false", "no"].includes(String(env.PORTAL_SHOW_API_BASE).toLowerCase());
+  }
+  if (config.appMode === "shared") {
+    config.storageNamespace = config.storageNamespace || "smart-todo-shared-app";
   }
   if (env.PORTAL_THEME_JSON) {
     config.theme = parseJsonEnv(env.PORTAL_THEME_JSON, {});

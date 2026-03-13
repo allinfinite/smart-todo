@@ -1,0 +1,12 @@
+.git
+.github
+.env.local
+.env.production
+.env.production.local
+node_modules
+npm-debug.log
+.vercel
+scripts/__pycache__
+tasks
+skills
+instances

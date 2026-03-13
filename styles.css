@@ -1050,3 +1050,178 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 }
+
+.shared-shell {
+  gap: 24px;
+}
+
+.shared-hero {
+  display: grid;
+  grid-template-columns: 1.6fr minmax(280px, 0.8fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.shared-session-card,
+.shared-admin-form,
+.shared-members,
+.shared-audit-log,
+.shared-request-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+.shared-session-card {
+  padding: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.shared-user-line {
+  font-weight: 700;
+}
+
+.shared-tenant-switch,
+.shared-admin-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.shared-session-actions,
+.shared-workspace-meta,
+.shared-request-top,
+.shared-member-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.shared-layout {
+  align-items: start;
+}
+
+.shared-workspace-meta {
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.shared-request-card {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.shared-request-card h3,
+.shared-admin-form h3,
+.shared-members h3,
+.shared-audit-log h3 {
+  margin: 0;
+}
+
+.shared-request-meta,
+.shared-request-note,
+.shared-request-details,
+.shared-reply p,
+.shared-audit-row p {
+  margin: 0;
+}
+
+.shared-request-status {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--line);
+  text-transform: capitalize;
+  font-size: 0.82rem;
+}
+
+.shared-status-completed {
+  background: rgba(44, 139, 87, 0.14);
+  color: var(--ok);
+}
+
+.shared-status-running,
+.shared-status-queued {
+  background: rgba(216, 106, 56, 0.14);
+  color: var(--accent-dark);
+}
+
+.shared-status-failed,
+.shared-status-blocked {
+  background: rgba(180, 76, 60, 0.14);
+  color: var(--fail);
+}
+
+.shared-replies {
+  display: grid;
+  gap: 10px;
+}
+
+.shared-reply {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--paper-strong);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 4px;
+}
+
+.shared-reply strong {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.shared-reply-form,
+.shared-admin-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.shared-admin-panel {
+  grid-column: 1 / -1;
+}
+
+.shared-admin-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 18px;
+}
+
+.shared-admin-form,
+.shared-members,
+.shared-audit-log {
+  padding: 16px;
+}
+
+.shared-checkbox-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.shared-audit-log,
+.shared-members {
+  margin-top: 16px;
+}
+
+.shared-audit-row {
+  padding-block: 10px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 4px;
+}
+
+.shared-audit-row:first-of-type,
+.shared-member-row:first-of-type {
+  border-top: 0;
+}
+
+@media (max-width: 960px) {
+  .shared-hero,
+  .shared-admin-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,3 +1,4 @@
+if (window.PORTAL_TEMPLATE_CONFIG?.appMode !== "shared") {
 const LOCAL_API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
   ? "http://127.0.0.1:4173"
   : "https://example-api.your-domain.com";
@@ -41,6 +42,8 @@ const DEFAULT_PORTAL_CONFIG = {
     unlock: "Unlock portal",
     submit: "Queue task",
     submitBusy: "Queueing...",
+    sync: "Sync",
+    syncBusy: "Syncing...",
     preview: "Preview",
     previewBusy: "Starting preview...",
     deploy: "Deploy",
@@ -77,6 +80,8 @@ const DEFAULT_PORTAL_CONFIG = {
     replySuccess: "Reply sent. A refreshed response and screenshot will land here when ready.",
     replyThreadWaiting: "You will see the latest reply here when it lands.",
     completedToast: "Another item moved to done. Review the screenshot and follow-up options when ready.",
+    syncError: "Unable to sync from GitHub.",
+    syncSuccessToast: "Preview server synced from GitHub.",
     previewError: "Unable to start preview.",
     previewReadyToast: "Preview is ready.",
     deployError: "Unable to deploy.",
@@ -194,6 +199,7 @@ const selectedFiles = document.querySelector("#selectedFiles");
 const formStatus = document.querySelector("#formStatus");
 const submitButton = document.querySelector("#submitButton");
 const queueList = document.querySelector("#queueList");
+const syncButton = document.querySelector("#syncButton");
 const previewButton = document.querySelector("#previewButton");
 const deployButton = document.querySelector("#deployButton");
 const refreshButton = document.querySelector("#refreshButton");
@@ -312,6 +318,7 @@ function applyPortalConfig() {
   setText("#priorityLabel", PORTAL_CONFIG.labels.priority);
   setText("#filesLabel", PORTAL_CONFIG.labels.files);
   setText("#submitButton", PORTAL_CONFIG.buttons.submit);
+  setText("#syncButton", PORTAL_CONFIG.buttons.sync);
   setText("#previewButton", PORTAL_CONFIG.buttons.preview);
   setText("#deployButton", PORTAL_CONFIG.buttons.deploy);
   setText("#refreshButton", PORTAL_CONFIG.buttons.refresh);
@@ -550,18 +557,25 @@ function syncWorkspace(workspace) {
 
 function renderWorkspaceActions() {
   const supported = supportsWorkspaceActions();
+  syncButton.classList.toggle("hidden", !supported);
   previewButton.classList.toggle("hidden", !supported);
   deployButton.classList.toggle("hidden", !supported);
   if (!supported) {
+    syncButton.disabled = true;
     previewButton.disabled = true;
     deployButton.disabled = true;
     return;
   }
 
   const actions = new Set(getWorkspaceAvailableActions());
+  const syncBusy = workspaceActionsInFlight.has("sync");
   const previewBusy = workspaceActionsInFlight.has("preview");
   const deployBusy = workspaceActionsInFlight.has("deploy");
 
+  syncButton.disabled = syncBusy || !actions.has("sync");
+  syncButton.textContent = syncBusy
+    ? PORTAL_CONFIG.buttons.syncBusy
+    : PORTAL_CONFIG.buttons.sync;
   previewButton.disabled = previewBusy || !actions.has("preview");
   previewButton.textContent = previewBusy
     ? PORTAL_CONFIG.buttons.previewBusy
@@ -1316,7 +1330,7 @@ async function handleRequestAction(event) {
 
 async function handleWorkspaceAction(event) {
   const action = getWorkspaceActionKey(event.currentTarget?.dataset?.workspaceAction);
-  if (!supportsWorkspaceActions() || !["preview", "deploy"].includes(action)) {
+  if (!supportsWorkspaceActions() || !["sync", "preview", "deploy"].includes(action)) {
     return;
   }
   if (workspaceActionsInFlight.has(action)) {
@@ -1343,13 +1357,20 @@ async function handleWorkspaceAction(event) {
         throw new Error(PORTAL_CONFIG.messages.passwordRequired);
       }
       throw new Error(
-        payload.error || (action === "preview" ? PORTAL_CONFIG.messages.previewError : PORTAL_CONFIG.messages.deployError)
+        payload.error
+          || (action === "sync"
+            ? PORTAL_CONFIG.messages.syncError
+            : action === "preview"
+              ? PORTAL_CONFIG.messages.previewError
+              : PORTAL_CONFIG.messages.deployError)
       );
     }
 
     syncWorkspace(payload.workspace);
 
-    if (action === "preview") {
+    if (action === "sync") {
+      showToast(PORTAL_CONFIG.messages.syncSuccessToast, "success");
+    } else if (action === "preview") {
       const previewUrl = String(payload.workspace?.preview?.url || cachedWorkspace?.preview?.url || "").trim();
       if (previewUrl) {
         window.open(previewUrl, "_blank", "noopener,noreferrer");
@@ -1365,7 +1386,12 @@ async function handleWorkspaceAction(event) {
     }
   } catch (error) {
     showToast(
-      error.message || (action === "preview" ? PORTAL_CONFIG.messages.previewError : PORTAL_CONFIG.messages.deployError),
+      error.message
+        || (action === "sync"
+          ? PORTAL_CONFIG.messages.syncError
+          : action === "preview"
+            ? PORTAL_CONFIG.messages.previewError
+            : PORTAL_CONFIG.messages.deployError),
       "warn"
     );
   } finally {
@@ -1426,8 +1452,10 @@ imagesInput.addEventListener("change", updateSelectedFiles);
 replyFilesInput.addEventListener("change", updateReplySelectedFiles);
 requestForm.addEventListener("submit", submitRequest);
 replyForm.addEventListener("submit", submitReply);
+syncButton.dataset.workspaceAction = "sync";
 previewButton.dataset.workspaceAction = "preview";
 deployButton.dataset.workspaceAction = "deploy";
+syncButton.addEventListener("click", handleWorkspaceAction);
 previewButton.addEventListener("click", handleWorkspaceAction);
 deployButton.addEventListener("click", handleWorkspaceAction);
 refreshButton.addEventListener("click", () => {
@@ -1480,3 +1508,4 @@ if (getPortalPassword()) {
 
 startPolling();
 startHelperMessageRotation();
+}

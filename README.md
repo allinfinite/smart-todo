@@ -4,6 +4,11 @@ Static client portal template for collecting work requests, showing compact task
 
 This frontend is template-ready. You can brand it and point it at any compatible API entirely through env vars at build time.
 
+The repo now supports two runtime modes:
+
+- `legacy`: the existing per-client branded portal driven by slug-scoped API paths and portal passwords
+- `shared`: a shared authenticated multi-tenant app backed by Cowork auth, tenant membership, and admin endpoints
+
 ## How it works
 
 - The app loads `portal.config.js` before `app.js`.
@@ -98,6 +103,12 @@ Set the same env vars in Vercel and use:
 - Build command: `npm run build`
 - Output directory: `.`
 
+For the shared app, also set:
+
+- `PORTAL_APP_MODE=shared`
+- `PORTAL_API_BASE=https://cowork-api.dnalevity.com`
+- optionally `PORTAL_TITLE` and `PORTAL_STORAGE_NAMESPACE`
+
 ## Backend contract
 
 This template expects a compatible API that serves:
@@ -112,6 +123,24 @@ Optional workspace actions:
 
 - `GET <requestsPath>` may also return a `workspace` object
 - `GET <workspacePath>` may return `{ workspace }` when configured separately
-- `POST <siteActionsPath>` accepts `{ "action": "preview" }` or `{ "action": "deploy" }`
+- `POST <siteActionsPath>` accepts `{ "action": "sync" }`, `{ "action": "preview" }`, or `{ "action": "deploy" }`
 
-When `siteActionsPath` is configured, the board header shows global `Preview` and `Deploy` controls. Older backends remain compatible because the buttons stay hidden unless the action path is configured.
+When `siteActionsPath` is configured, the board header shows global `Sync`, `Preview`, and `Deploy` controls. Older backends remain compatible because the buttons stay hidden unless the action path is configured.
+
+## Shared App Backend Contract
+
+When `PORTAL_APP_MODE=shared`, the frontend uses authenticated tenant-aware endpoints instead:
+
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `GET /api/auth/me`
+- `GET /api/app/tenants`
+- `GET|POST /api/app/tenants/:tenantId/requests`
+- `POST /api/app/tenants/:tenantId/replies`
+- `GET /api/app/tenants/:tenantId/workspace`
+- `POST /api/app/tenants/:tenantId/actions`
+- `GET|POST /api/app/admin/tenants`
+- `PATCH /api/app/admin/tenants/:tenantId`
+- `POST /api/app/admin/tenants/:tenantId/users`
+- `PATCH /api/app/admin/users/:userId`
+- `GET /api/app/admin/audit-log`
