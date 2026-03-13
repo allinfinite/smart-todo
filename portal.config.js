@@ -1,0 +1,1 @@
+window.PORTAL_TEMPLATE_CONFIG = {};

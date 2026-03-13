@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client Work Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <section class="auth-shell" id="authShell">
+        <div class="auth-card">
+          <p class="eyebrow" id="authEyebrow">Protected Portal</p>
+          <h2 id="authTitle">Project updates</h2>
+          <p class="hero-copy" id="authCopy">
+            Enter the portal password to view and submit work requests.
+          </p>
+          <form id="authForm" class="auth-form">
+            <label>
+              <span id="passwordLabel">Password</span>
+              <input id="passwordInput" type="password" autocomplete="current-password" required />
+            </label>
+            <div class="form-actions">
+              <button id="unlockButton" type="submit">Unlock portal</button>
+              <p class="form-status" id="authStatus"></p>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <header class="hero">
+        <p class="eyebrow" id="heroEyebrow">Client Delivery Portal</p>
+        <h1 id="heroTitle">Send work, watch it move, and keep the list growing.</h1>
+        <p class="hero-copy" id="heroCopy">
+          Add a task, assign the right expert, and keep building your list while work moves in the background.
+        </p>
+      </header>
+
+      <main class="layout">
+        <section class="panel composer-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow" id="composerEyebrow">New Request</p>
+              <h2 id="composerTitle">Send work to the team</h2>
+            </div>
+            <span class="mono" id="apiBaseLabel"></span>
+          </div>
+
+          <form id="requestForm" class="request-form">
+            <label>
+              <span id="titleLabel">Title</span>
+              <input id="titleInput" name="title" maxlength="140" placeholder="Describe the next update you want made" required />
+            </label>
+
+            <label>
+              <span id="detailsLabel">Details</span>
+              <textarea
+                id="detailsInput"
+                name="details"
+                rows="7"
+                placeholder="Explain the change, desired outcome, and anything that should stay the same."
+              ></textarea>
+            </label>
+
+            <div class="row">
+              <label>
+                <span id="priorityLabel">Priority</span>
+                <select id="priorityInput" name="priority"></select>
+              </label>
+
+              <label>
+                <span id="filesLabel">Files or references</span>
+                <input id="imagesInput" name="images" type="file" multiple />
+              </label>
+            </div>
+
+            <div class="row expert-row">
+              <label>
+                <span id="expertLabel">Expert</span>
+                <select id="expertInput" name="expert"></select>
+              </label>
+
+              <div class="custom-expert">
+                <span id="customExpertLabel">Custom expert</span>
+                <div class="inline-field">
+                  <input
+                    id="customExpertInput"
+                    type="text"
+                    maxlength="80"
+                    placeholder="Add a custom expert name"
+                  />
+                  <button class="secondary inline-action" id="addCustomExpertButton" type="button">Add</button>
+                </div>
+                <p class="input-hint" id="customExpertHint">
+                  Custom experts stay available on this device and can be reused on future tasks.
+                </p>
+              </div>
+            </div>
+
+            <div class="selected-files" id="selectedFiles">No files selected.</div>
+
+            <div class="form-actions">
+              <button id="submitButton" type="submit">Queue task</button>
+              <p class="form-status" id="formStatus"></p>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel queue-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow" id="boardEyebrow">Todo List</p>
+              <h2 id="boardTitle">Work board</h2>
+            </div>
+            <button class="secondary" id="refreshButton" type="button">Refresh</button>
+          </div>
+          <div class="queue-list" id="queueList"></div>
+        </section>
+      </main>
+    </div>
+
+    <div class="reply-dialog-shell hidden" id="replyDialogShell">
+      <div class="reply-dialog" id="replyDialog">
+        <div class="reply-dialog-header">
+          <h3 id="replyDialogHeading">Reply to Request</h3>
+          <button class="reply-close-btn" id="replyCloseBtn" type="button">×</button>
+        </div>
+        <div class="reply-dialog-content" id="replyDialogContent">
+          <div class="reply-dialog-title" id="replyDialogTitle"></div>
+          <div class="reply-dialog-details" id="replyDialogDetails"></div>
+        </div>
+        <form id="replyForm" class="reply-dialog-form">
+          <input id="replyRequestInput" type="hidden" name="request_id" />
+          <label>
+            <span class="reply-input-label" id="replyInputLabel">Your Reply</span>
+            <textarea
+              id="replyTextArea"
+              name="text"
+              rows="5"
+              placeholder="Add your response, feedback, or clarification..."
+              class="reply-textarea"
+            ></textarea>
+          </label>
+          <label class="reply-file-label">
+            <span id="replyAttachLabel">Attach files (optional)</span>
+            <input id="replyFilesInput" name="files" type="file" multiple style="display: none;" />
+          </label>
+          <div class="reply-selected-files" id="replySelectedFiles">No files selected.</div>
+          <div class="reply-form-status" id="replyFormStatus"></div>
+          <div class="reply-dialog-actions">
+            <button class="secondary" id="replyCancelButton" type="button">Cancel</button>
+            <button id="replySubmitButton" type="submit">Send Reply</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="./portal.config.js"></script>
+    <script src="./app.js" defer></script>
+  </body>
+</html>
