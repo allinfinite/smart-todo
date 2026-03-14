@@ -20,7 +20,10 @@
     workspace: null,
     auditLog: [],
     adminTenants: [],
+    adminOpen: false,
     creatingTenant: false,
+    composerOpen: false,
+    expandedRequestId: "",
   };
 
   function escapeHtml(value) {
@@ -132,40 +135,94 @@
     return parsed.toLocaleString();
   }
 
+  function requestState(request) {
+    return String(request.status || "queued").trim().toLowerCase();
+  }
+
+  function requestPriority(request) {
+    return String(request.priority || "normal").trim().toLowerCase();
+  }
+
+  function requestStatusLabel(request) {
+    const stateValue = requestState(request);
+    if (stateValue === "completed") return "Done";
+    if (stateValue === "failed") return "Failed";
+    if (stateValue === "blocked") return "Blocked";
+    if (stateValue === "running") return "In Progress";
+    return "Queued";
+  }
+
+  function requestPriorityLabel(request) {
+    const priority = requestPriority(request);
+    if (priority === "urgent") return "Urgent";
+    if (priority === "high") return "High";
+    if (priority === "low") return "Low";
+    return "Normal";
+  }
+
   function requestCard(request) {
+    const requestId = String(request.request_id || request.id || "");
     const replies = Array.isArray(request.replies) ? request.replies : [];
-    const actions = request.latest_message ? `<p class="shared-request-note">${escapeHtml(request.latest_message)}</p>` : "";
+    const isExpanded = requestId && requestId === state.expandedRequestId;
+    const status = requestState(request);
+    const priority = requestPriority(request);
+    const latestMessage = request.latest_message
+      ? `<p class="shared-request-note">${escapeHtml(request.latest_message)}</p>`
+      : "";
     return `
-      <article class="shared-request-card">
-        <div class="shared-request-top">
-          <div>
-            <h3>${escapeHtml(request.title)}</h3>
-            <p class="shared-request-meta">${escapeHtml(request.priority || "normal")} · ${escapeHtml(request.status || "queued")} · ${escapeHtml(formatDate(request.created_at || request.createdAt))}</p>
+      <article class="request-card state-${escapeHtml(status)} shared-request-card ${isExpanded ? "is-expanded" : ""}">
+        <div class="request-summary">
+          <div class="request-summary-main">
+            <div class="summary-title-row">
+              <span class="checkbox ${status === "completed" ? "done" : ""}">${status === "completed" ? "✓" : ""}</span>
+              <div class="summary-copy">
+                <h3 class="request-title">${escapeHtml(request.title || "Untitled request")}</h3>
+              </div>
+            </div>
           </div>
-          <span class="shared-request-status shared-status-${escapeHtml(request.status || "queued")}">${escapeHtml(request.status || "queued")}</span>
+          <div class="request-summary-side">
+            <div class="request-meta">
+              <span class="pill status-${escapeHtml(status)}">${escapeHtml(requestStatusLabel(request))}</span>
+              <span class="pill priority-${escapeHtml(priority)}">${escapeHtml(requestPriorityLabel(request))}</span>
+            </div>
+            <div class="summary-buttons">
+              <button class="secondary card-toggle" type="button" data-request-id="${escapeHtml(requestId)}">${isExpanded ? "Hide" : "View"}</button>
+            </div>
+          </div>
         </div>
-        <p class="shared-request-details">${escapeHtml(request.details || "")}</p>
-        ${actions}
         ${
-          replies.length
-            ? `<div class="shared-replies">${replies
-                .slice(-4)
-                .map(
-                  reply => `
-                    <div class="shared-reply">
-                      <strong>${escapeHtml(reply.author || "user")}</strong>
-                      <span>${escapeHtml(formatDate(reply.created_at || reply.createdAt))}</span>
-                      <p>${escapeHtml(reply.text || "")}</p>
-                    </div>
-                  `
-                )
-                .join("")}</div>`
+          isExpanded
+            ? `
+              <div class="shared-request-detail">
+                <p class="shared-request-meta">${escapeHtml(formatDate(request.created_at || request.createdAt))}</p>
+                ${request.details ? `<p class="shared-request-details">${escapeHtml(request.details)}</p>` : ""}
+                ${latestMessage}
+                ${
+                  replies.length
+                    ? `<div class="shared-replies">${replies
+                        .slice(-4)
+                        .map(
+                          reply => `
+                            <div class="shared-reply">
+                              <strong>${escapeHtml(reply.author || "user")}</strong>
+                              <span>${escapeHtml(formatDate(reply.created_at || reply.createdAt))}</span>
+                              <p>${escapeHtml(reply.text || "")}</p>
+                            </div>
+                          `
+                        )
+                        .join("")}</div>`
+                    : ""
+                }
+                <form class="shared-reply-form" data-request-id="${escapeHtml(requestId)}">
+                  <textarea name="reply" rows="3" placeholder="Add a reply or clarification"></textarea>
+                  <div class="form-actions">
+                    <button type="submit">Send Reply</button>
+                  </div>
+                </form>
+              </div>
+            `
             : ""
         }
-        <form class="shared-reply-form" data-request-id="${escapeHtml(request.request_id || request.id)}">
-          <textarea name="reply" rows="3" placeholder="Add a reply or clarification"></textarea>
-          <button type="submit">Send Reply</button>
-        </form>
       </article>
     `;
   }
@@ -178,9 +235,10 @@
     const workspace = state.workspace || {};
     const enabledActions = Array.isArray(workspace.enabledActions) ? workspace.enabledActions : ["preview", "sync", "deploy"];
     return `
-      <button class="secondary" data-workspace-action="preview" ${enabledActions.includes("preview") ? "" : "disabled"}>Preview</button>
-      <button class="secondary" data-workspace-action="sync" ${enabledActions.includes("sync") ? "" : "disabled"}>Sync</button>
-      <button class="secondary" data-workspace-action="deploy" ${enabledActions.includes("deploy") ? "" : "disabled"}>Deploy</button>
+      <button class="board-action" data-workspace-action="sync" ${enabledActions.includes("sync") ? "" : "disabled"}>Sync</button>
+      <button class="board-action" data-workspace-action="preview" ${enabledActions.includes("preview") ? "" : "disabled"}>Preview</button>
+      <button class="board-action" data-workspace-action="deploy" ${enabledActions.includes("deploy") ? "" : "disabled"}>Deploy</button>
+      <button class="board-action" id="refreshWorkspaceButton" type="button">Refresh</button>
     `;
   }
 
@@ -238,36 +296,31 @@
     document.title = tenant?.displayName ? `${tenant.displayName} · Smart Todo` : (config.portalTitle || "Smart Todo");
     document.body.innerHTML = `
       <div class="page-shell shared-shell">
-        <header class="hero shared-hero">
-          <div>
-            <p class="eyebrow">${escapeHtml(tenant?.displayName || config.heroEyebrow || "Smart Todo")}</p>
-            <h1>${escapeHtml(tenant?.copy?.heroTitle || config.heroTitle || "Shared Smart Todo")}</h1>
-            <p class="hero-copy">${escapeHtml(tenant?.copy?.heroCopy || config.heroCopy || "Manage requests, previews, and deployments from one authenticated workspace.")}</p>
-          </div>
-          <div class="shared-session-card">
-            <div class="shared-user-line">${escapeHtml(state.user?.name || state.user?.email || "")}</div>
-            <label class="shared-tenant-switch">
-              <span>Workspace</span>
-              <select id="tenantSwitch">${state.tenants.map(tenantOption).join("")}</select>
-            </label>
-            <div class="shared-session-actions">
-              <button class="secondary" id="refreshWorkspaceButton" type="button">Refresh</button>
-              ${userIsAdmin() ? '<button class="secondary" id="toggleAdminButton" type="button">Admin</button>' : ""}
-              <button class="secondary" id="logoutButton" type="button">Logout</button>
+        <main class="panel shared-board">
+          <header class="shared-board-header">
+            <p class="eyebrow">${escapeHtml(config.heroEyebrow || "Todo List")}</p>
+            <div class="shared-board-topline">
+              <h1>${escapeHtml(tenant?.displayName || "Workspace")} todo board</h1>
+              <div class="shared-session-line">${escapeHtml(state.user?.name || state.user?.email || "")}</div>
             </div>
-          </div>
-        </header>
-
-        <main class="layout shared-layout">
-          <section class="panel composer-panel">
-            <div class="panel-head">
-              <div>
-                <p class="eyebrow">New Request</p>
-                <h2>${escapeHtml(tenant?.displayName || "Workspace")} request board</h2>
+            <div class="shared-board-controls">
+              <label class="shared-tenant-switch">
+                <span>Workspace</span>
+                <select id="tenantSwitch">${state.tenants.map(tenantOption).join("")}</select>
+              </label>
+              <div class="shared-utility-actions">
+                <button class="secondary" id="toggleComposerButton" type="button">${state.composerOpen ? "Hide Request" : "New Request"}</button>
+                ${userIsAdmin() ? `<button class="secondary" id="toggleAdminButton" type="button">${state.adminOpen ? "Hide Admin" : "Admin"}</button>` : ""}
+                <button class="secondary" id="logoutButton" type="button">Logout</button>
               </div>
-              <span class="mono">${escapeHtml(String(apiBase).replace(/^https?:\/\//, ""))}</span>
             </div>
-            <form id="sharedRequestForm" class="request-form">
+            <div class="shared-board-actions">
+              ${workspaceActionsMarkup()}
+            </div>
+          </header>
+
+          <section class="shared-drawer ${state.composerOpen ? "" : "hidden"}" id="sharedComposerPanel">
+            <form id="sharedRequestForm" class="request-form shared-inline-form">
               <label>
                 <span>Title</span>
                 <input name="title" maxlength="140" required />
@@ -292,33 +345,13 @@
             </form>
           </section>
 
-          <section class="panel queue-panel">
-            <div class="panel-head">
-              <div>
-                <p class="eyebrow">Workspace Board</p>
-                <h2>${escapeHtml(tenant?.displayName || "Tenant")} work</h2>
-              </div>
-              <div class="panel-actions">
-                ${workspaceActionsMarkup()}
-              </div>
-            </div>
-            <div class="shared-workspace-meta">
-              <span>Repo: ${escapeHtml(state.workspace?.repo_path || state.workspace?.repoPath || "n/a")}</span>
-              <span>Branch: ${escapeHtml(state.workspace?.branch || "n/a")}</span>
-              <span>Preview: ${escapeHtml(state.workspace?.preview?.url || "n/a")}</span>
-            </div>
-            <div class="queue-list">${state.requests.length ? state.requests.map(requestCard).join("") : '<div class="empty-state">No requests yet.</div>'}</div>
-          </section>
-
           ${
             userIsAdmin()
               ? `
-                <section class="panel shared-admin-panel ${state.adminOpen ? "" : "hidden"}" id="sharedAdminPanel">
-                  <div class="panel-head">
-                    <div>
-                      <p class="eyebrow">Admin</p>
-                      <h2>Tenant and account management</h2>
-                    </div>
+                <section class="shared-drawer shared-admin-panel ${state.adminOpen ? "" : "hidden"}" id="sharedAdminPanel">
+                  <div class="shared-admin-head">
+                    <p class="eyebrow">Admin</p>
+                    <h2>Tenant and account management</h2>
                   </div>
                   <div class="shared-admin-grid">
                     <form id="tenantForm" class="shared-admin-form">
@@ -395,6 +428,13 @@
               `
               : ""
           }
+
+          <div class="shared-workspace-meta">
+            <span>Repo: ${escapeHtml(state.workspace?.repo_path || state.workspace?.repoPath || "n/a")}</span>
+            <span>Branch: ${escapeHtml(state.workspace?.branch || "n/a")}</span>
+            <span>Preview: ${escapeHtml(state.workspace?.preview?.url || "n/a")}</span>
+          </div>
+          <section class="queue-list shared-board-list">${state.requests.length ? state.requests.map(requestCard).join("") : '<div class="empty-state">No requests yet.</div>'}</section>
         </main>
       </div>
     `;
@@ -419,6 +459,13 @@
       renderLogin();
     });
     document.querySelector("#refreshWorkspaceButton").addEventListener("click", () => loadTenantData());
+    const toggleComposerButton = document.querySelector("#toggleComposerButton");
+    if (toggleComposerButton) {
+      toggleComposerButton.addEventListener("click", () => {
+        state.composerOpen = !state.composerOpen;
+        renderApp();
+      });
+    }
     const toggleAdminButton = document.querySelector("#toggleAdminButton");
     if (toggleAdminButton) {
       toggleAdminButton.addEventListener("click", () => {
@@ -427,6 +474,13 @@
       });
     }
     document.querySelector("#sharedRequestForm").addEventListener("submit", submitRequest);
+    document.querySelectorAll(".card-toggle").forEach(button => {
+      button.addEventListener("click", event => {
+        const requestId = String(event.currentTarget.dataset.requestId || "");
+        state.expandedRequestId = state.expandedRequestId === requestId ? "" : requestId;
+        renderApp();
+      });
+    });
     document.querySelectorAll("[data-workspace-action]").forEach(button => {
       button.addEventListener("click", event => runWorkspaceAction(event.currentTarget.dataset.workspaceAction));
     });
