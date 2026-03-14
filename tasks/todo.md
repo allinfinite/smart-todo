@@ -481,8 +481,26 @@
 ## Plan
 
 - [x] Inspect the shared desktop layout rules controlling viewport height and overflow.
-- [ ] Patch shared-mode desktop layout so the board can grow and the page scrolls normally.
-- [ ] Build, deploy, and verify desktop scrolling on the live shared app.
+- [x] Patch shared-mode desktop layout so the board can grow and the page scrolls normally.
+- [x] Build, deploy, and verify desktop scrolling on the live shared app.
+
+## Review
+
+- Patched [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) to tag shared mode on `document.body` with `shared-mode`.
+- Patched [styles.css](/Users/daniellevy/Code/smart-todo/styles.css) so shared mode opts out of the old desktop split-layout lock:
+  - `body.shared-mode` now allows vertical scrolling on desktop
+  - `.page-shell.shared-shell` no longer forces `height: 100vh`
+  - the shared board still keeps a minimum viewport-filling height without trapping overflow
+- Verification:
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - `npm run build` in `/Users/daniellevy/Code/smart-todo`
+  - pushed commit `ffaf36c`
+  - Dokku deploy run `23079690657` completed successfully
+  - live Chrome verification on the `Soulfire` tenant at [http://smart-todo.dnalevity.com](http://smart-todo.dnalevity.com):
+    - `window.innerHeight` was `648`
+    - `document.documentElement.scrollHeight` was `2758`
+    - programmatic scroll moved `window.scrollY` to `1400`
+    - the board visibly scrolled down into lower request cards on desktop
 
 ### Review
 
