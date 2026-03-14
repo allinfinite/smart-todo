@@ -774,4 +774,19 @@
 
 - [x] Inspect the mobile breakpoint overrides that still make shared workspace buttons oversized on phones.
 - [x] Replace the mobile full-width action layout with a compact wrapping layout.
-- [ ] Verify the updated sizing in a narrow mobile viewport and document the result.
+- [x] Verify the updated sizing in a narrow mobile viewport and document the result.
+
+## Review
+
+- Updated the mobile breakpoint in [styles.css](/Users/daniellevy/Code/smart-todo/styles.css) so shared workspace actions no longer force `width: 100%` on phones.
+- Changed mobile `.board-action` sizing to a compact two-up wrapping layout with:
+  - `flex: 1 1 calc(50% - 6px)`
+  - `min-height: 54px`
+  - tighter horizontal padding
+- Verification:
+  - `npm run build`
+  - pushed commit `3de96fd` to `main`
+  - confirmed the live stylesheet at [https://smart-todo.dnalevity.com/styles.css](https://smart-todo.dnalevity.com/styles.css) serves the new mobile rules:
+    - `width: auto`
+    - `flex: 1 1 calc(50% - 6px)`
+    - `min-height: 54px`
