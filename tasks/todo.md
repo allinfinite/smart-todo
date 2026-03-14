@@ -454,8 +454,27 @@
 ## Plan
 
 - [x] Reproduce the Soulfire preview redirect and determine whether it comes from the live server or browser state.
-- [ ] Patch the shared preview flow so preview openings and links bypass the stale cached redirect path.
-- [ ] Build, deploy, and verify the Soulfire preview path from the shared app in the live browser.
+- [x] Patch the shared preview flow so preview openings and links bypass the stale cached redirect path.
+- [x] Build, deploy, and verify the Soulfire preview path from the shared app in the live browser.
+
+## Review
+
+- Investigation showed the Soulfire preview route itself is healthy:
+  - raw HTTP requests to [https://piko.dnalevity.com/preview/soulfire](https://piko.dnalevity.com/preview/soulfire) returned `200`
+  - the live preview process on `dna@piko.local` was serving correctly on `127.0.0.1:3102`
+  - a clean headless Chrome profile loaded the same preview URL without redirecting to `:2083`
+- The `:2083` jump reproduced only in the active Chrome profile for the exact bare Soulfire preview path, which indicates a stale cached browser redirect rather than a bad live preview server.
+- Patched [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) to harden preview openings and links with a cache-busting `_preview=<timestamp>` query parameter.
+  - preview button openings now use the cache-safe preview URL
+  - preview links shown in the board status and workspace metadata now use the same cache-safe URL
+- Verification:
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - `npm run build` in `/Users/daniellevy/Code/smart-todo`
+  - pushed commit `6585fb4`
+  - Dokku deploy run `23079614381` completed successfully
+  - live Chrome verification on the shared board for the `Soulfire` tenant after refresh:
+    - clicking `Preview` opened [https://piko.dnalevity.com/preview/soulfire?_preview=1773459834005](https://piko.dnalevity.com/preview/soulfire?_preview=1773459834005)
+    - the board status rendered the same cache-safe Soulfire preview URL as a clickable link
 
 ### Review
 
