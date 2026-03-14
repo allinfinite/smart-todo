@@ -401,8 +401,27 @@
 ## Plan
 
 - [x] Reproduce the live shared-app button failures and separate backend failures from client-side regression handling.
-- [ ] Patch the shared client so admin endpoint failures do not break board refresh and workspace action conflicts are shown inline.
-- [ ] Build, deploy, and verify the shared app buttons on the live hosted page.
+- [x] Patch the shared client so admin endpoint failures do not break board refresh and workspace action conflicts are shown inline.
+- [x] Build, deploy, and verify the shared app buttons on the live hosted page.
+
+## Review
+
+- Patched [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so the shared board now:
+  - shows inline board status messages for workspace actions instead of relying on alerts
+  - treats admin endpoint failures as non-fatal, keeping the board usable even if admin data cannot load
+  - disables action buttons while a workspace action is in flight
+  - clears expired sessions back to login instead of leaving the board in a bad state
+- Added board-status styling in [styles.css](/Users/daniellevy/Code/smart-todo/styles.css) so success, warning, and error responses are visible on the page.
+- Verification:
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - `npm run build` in `/Users/daniellevy/Code/smart-todo`
+  - pushed commit `499ae68`
+  - Dokku deploy run `23079344425` completed successfully
+  - live browser verification at [http://smart-todo.dnalevity.com](http://smart-todo.dnalevity.com):
+    - `Preview` now shows `Preview ready at https://piko.dnalevity.com/preview/booch-bar`
+    - `Sync` now surfaces the real repo conflict: `Local branch has diverged from origin/main. Reconcile it before syncing.`
+    - `Deploy` now surfaces the real repo state: `Working tree is clean. Nothing to deploy.`
+    - `Admin` opens and renders members plus audit log for the active tenant
 
 ### Review
 
