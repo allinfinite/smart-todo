@@ -34,6 +34,13 @@
     activeAction: "",
   };
 
+  class AuthExpiredError extends Error {
+    constructor(message = "Session expired. Sign in again.") {
+      super(message);
+      this.name = "AuthExpiredError";
+    }
+  }
+
   function escapeHtml(value) {
     return String(value || "")
       .replaceAll("&", "&amp;")
@@ -67,6 +74,24 @@
 
   function activeRole() {
     return String(activeTenant()?.role || "").trim().toLowerCase();
+  }
+
+  function handleUnauthorized(message = "Session expired. Sign in again.") {
+    state.user = null;
+    state.tenants = [];
+    state.requests = [];
+    state.workspace = null;
+    state.auditLog = [];
+    state.adminTenants = [];
+    state.adminStatus = "";
+    state.creatingTenant = false;
+    state.composerOpen = false;
+    state.expandedRequestId = "";
+    state.activeAction = "";
+    setWorkspaceStatus("");
+    setToken("");
+    setActiveTenantId("");
+    renderLogin(message);
   }
 
   function applyAuthenticatedUser(user) {
@@ -143,10 +168,8 @@
       await loadTenantData();
     } catch (error) {
       const message = String(error?.message || "Unable to refresh workspace.");
-      if (/unauthorized/i.test(message)) {
-        setToken("");
-        setActiveTenantId("");
-        renderLogin("Session expired. Sign in again.");
+      if (error instanceof AuthExpiredError || /unauthorized/i.test(message)) {
+        handleUnauthorized("Session expired. Sign in again.");
         return;
       }
       setWorkspaceStatus(message, "error");
@@ -169,6 +192,10 @@
     });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
+      if (response.status === 401 && path !== "/api/auth/login") {
+        handleUnauthorized("Session expired. Sign in again.");
+        throw new AuthExpiredError(payload.error || "Session expired. Sign in again.");
+      }
       throw new Error(payload.error || `Request failed (${response.status})`);
     }
     return payload;
@@ -452,7 +479,7 @@
         setToken(payload.token);
         await bootstrapAuthenticatedState(payload.user);
       } catch (error) {
-        renderLogin(error.message);
+        renderLogin(error instanceof AuthExpiredError ? "Session expired. Sign in again." : error.message);
       }
     });
   }
@@ -908,9 +935,10 @@
 
   if (state.token) {
     bootstrapAuthenticatedState().catch(error => {
-      setToken("");
-      setActiveTenantId("");
-      renderLogin(error.message);
+      if (error instanceof AuthExpiredError) {
+        return;
+      }
+      handleUnauthorized(error.message);
     });
   } else {
     renderLogin();
