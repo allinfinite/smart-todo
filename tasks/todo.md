@@ -368,8 +368,8 @@
 ### Plan
 
 - [x] Inspect the legacy single-tenant portal layout and styles so the shared app can mirror its visual language.
-- [ ] Update the shared-app markup and CSS to match the old portal look while preserving multi-tenant behavior.
-- [ ] Build and verify the updated shared frontend, then document what now matches and any intentional differences.
+- [x] Update the shared-app markup and CSS to match the old portal look while preserving multi-tenant behavior.
+- [x] Build and verify the updated shared frontend, then document what now matches and any intentional differences.
 - Shared frontend capabilities now include:
   - email/password login
   - tenant switching for multi-tenant users
@@ -395,6 +395,33 @@
   - shared-app request/reply flow supports JSON text requests and replies only; file uploads for the new shared endpoints are not wired yet
   - password reset is intentionally not implemented in this first pass
   - verification artifacts created during backend smoke testing were removed from the tenant/site records after the test run, but the new runtime JSON state files under Cowork `.dashboard_state/` now exist as part of the feature
+
+### Review
+
+- Reworked the shared authenticated UI in [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so it renders as a single legacy-style todo board instead of the newer split dashboard:
+  - old-style board heading and eyebrow
+  - top utility buttons for `New Request`, `Admin`, and `Logout`
+  - large pill actions for `Sync`, `Preview`, `Deploy`, and `Refresh`
+  - compact request cards with status and priority pills plus a `View` toggle
+  - composer and admin tools moved into collapsible drawers so they do not dominate the page by default
+- Added shared-mode visual overrides in [styles.css](/Users/daniellevy/Code/smart-todo/styles.css) that reuse the old portal’s visual language:
+  - rounded board container
+  - pale paper background and green border treatment
+  - large neutral action pills
+  - compact request rows with stronger typography and old-style metadata chips
+  - responsive behavior that keeps the legacy board feel on smaller screens
+- Verification:
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - `npm run build` in `/Users/daniellevy/Code/smart-todo`
+  - pushed commit `da55a2b` to `main`
+  - GitHub Actions deploy run `23079203471` completed successfully for Dokku
+  - live browser verification at [http://smart-todo.dnalevity.com](http://smart-todo.dnalevity.com) after login confirmed:
+    - the shared app now opens on a single rounded todo board
+    - the large action pills match the old layout
+    - the tenant board header and request list read like the old individual portal rather than the newer admin dashboard
+- Intentional differences that remain:
+  - the tenant switcher and admin toggle stay visible because the shared app is multi-tenant
+  - request details and replies expand inline instead of using the exact old modal flow
 
 # Booch-Bar Preview Recovery
 
