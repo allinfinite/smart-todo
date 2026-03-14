@@ -16,3 +16,4 @@
 - In the shared client, handle `401` centrally inside the fetch wrapper; otherwise individual actions like request submit or workspace load can keep firing with stale auth and leave the UI in a broken half-logged-in state.
 - When matching the old portal look in shared mode, do not assume the workspace action buttons should fill a multi-column desktop grid; verify the visual density in a real browser and keep these controls compact unless the user explicitly wants oversized hero buttons.
 - After a desktop sizing fix, re-check the narrow breakpoint separately; mobile-only `width: 100%` overrides can silently keep shared workspace actions oversized on phones.
+- For shared auth on a separate API subdomain, do not rely on `localStorage` alone; send `credentials: "include"` and issue an API-domain session cookie so refreshes survive Safari/local-storage edge cases.

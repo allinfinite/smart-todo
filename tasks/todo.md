@@ -853,6 +853,30 @@
 
 ## Plan
 
-- [ ] Inspect the shared login flow, token storage, and backend auth session behavior to find why users are logged out after refresh.
-- [ ] Fix the persistence path so a successful login survives reloads.
-- [ ] Verify the live shared app keeps the session through a browser refresh and document the result.
+- [x] Inspect the shared login flow, token storage, and backend auth session behavior to find why users are logged out after refresh.
+- [x] Fix the persistence path so a successful login survives reloads.
+- [x] Verify the live shared app keeps the session through a browser refresh and document the result.
+
+## Review
+
+- Root cause:
+  - the shared app relied on `localStorage` bearer-token persistence only
+  - the backend persisted sessions correctly in `/home/dna/Code/Cowork/.dashboard_state/portal_sessions.json`, but the browser had no cookie-backed auth fallback for refresh/storage edge cases
+- Frontend fix in [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js):
+  - added safe local-storage wrappers so storage access failures do not break login state handling
+  - all shared API fetches now use `credentials: "include"`
+- Backend fix in [dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py):
+  - `/api/auth/login` now sets an HttpOnly `cowork_portal_session` cookie on `cowork-api.dnalevity.com`
+  - `/api/auth/logout` clears that cookie
+  - authenticated requests now accept either:
+    - `Authorization: Bearer <token>`
+    - the session cookie
+  - CORS responses now include `Access-Control-Allow-Credentials: true`
+- Live verification:
+  - the deployed shared bundle serves `credentials: "include"` and the safe storage helpers
+  - the live backend session file exists and contains persisted sessions at `/home/dna/Code/Cowork/.dashboard_state/portal_sessions.json`
+  - in a real browser session:
+    - signed in at [https://smart-todo.dnalevity.com](https://smart-todo.dnalevity.com)
+    - confirmed `localStorage` held `smart-todo-shared:token`
+    - confirmed the browser cookie jar held an HttpOnly `cowork_portal_session` cookie for `cowork-api.dnalevity.com`
+    - refreshed the page and remained logged into the Ariya board
