@@ -597,3 +597,23 @@
 - [x] Check whether the requested site already exists as a tenant in the live shared app data.
 - [x] Use the live browser admin flow to create or update the tenant for ariya.sisociety.world and add erinsarahsteph@gmail.com with manager-level access (`internal_operator`).
 - [x] Verify in the browser and API data that the new user membership exists for the correct tenant and not others.
+
+## Review
+
+- Used the live shared-app admin UI at [http://smart-todo.dnalevity.com](http://smart-todo.dnalevity.com) to create the new tenant:
+  - `displayName`: `Ariya`
+  - `slug`: `ariya`
+  - `publicUrl`: `https://ariya.sisociety.world/`
+- Added `erinsarahsteph@gmail.com` to the `Ariya` tenant with role `internal_operator`, which is the app’s tenant-scoped manager/admin role.
+- Verified via API that Erin has membership only on `ariya` and no other tenant:
+  - `[{\"tenant\": \"ariya\", \"role\": \"internal_operator\"}]`
+- Found and fixed a shared-app regression in the admin browser flow:
+  - [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) now captures the form element before the async save so successful browser saves no longer throw `Cannot read properties of null (reading 'reset')`
+- Verification:
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - `npm run build` in `/Users/daniellevy/Code/smart-todo`
+  - pushed commit `e3cd10a`
+  - Dokku deploy run `23080084207` completed successfully
+  - live browser verification after deploy showed the `Ariya` members list containing:
+    - `Workspace Owner / me@dnalevity.com / owner`
+    - `Erin / erinsarahsteph@gmail.com / internal_operator`
