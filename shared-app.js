@@ -879,7 +879,8 @@
   async function saveUser(event) {
     event.preventDefault();
     const statusNode = document.querySelector("#userFormStatus");
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     statusNode.textContent = "Saving...";
     try {
       await apiFetch(`/api/app/admin/tenants/${state.activeTenantId}/users`, {
@@ -891,7 +892,7 @@
           role: formData.get("role"),
         }),
       });
-      event.currentTarget.reset();
+      form.reset();
       statusNode.textContent = "Saved.";
       await reloadBoard();
     } catch (error) {

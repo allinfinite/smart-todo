@@ -590,3 +590,10 @@
   - `node --check /home/dna/telegram-bot/bot.js` passes on piko
 - Operational note:
   - the piko Booch-Bar checkout is still on commit `84f7356` with local modifications to `package.json` and `package-lock.json`; the working tree now behaves correctly, but the checkout itself has not been fast-forwarded to local/GitHub `main` because that would require resolving or committing those existing local modifications first
+# Browser User Add Test
+
+## Plan
+
+- [x] Check whether the requested site already exists as a tenant in the live shared app data.
+- [x] Use the live browser admin flow to create or update the tenant for ariya.sisociety.world and add erinsarahsteph@gmail.com with manager-level access (`internal_operator`).
+- [x] Verify in the browser and API data that the new user membership exists for the correct tenant and not others.
