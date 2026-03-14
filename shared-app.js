@@ -627,6 +627,7 @@
   if (state.token) {
     bootstrapAuthenticatedState().catch(error => {
       setToken("");
+      setActiveTenantId("");
       renderLogin(error.message);
     });
   } else {
