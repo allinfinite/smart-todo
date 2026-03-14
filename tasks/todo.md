@@ -423,6 +423,14 @@
     - `Deploy` now surfaces the real repo state: `Working tree is clean. Nothing to deploy.`
     - `Admin` opens and renders members plus audit log for the active tenant
 
+# Preview Link Polish
+
+## Plan
+
+- [x] Confirm how preview success is currently rendered in the shared board.
+- [ ] Patch the preview success status so it renders a clickable link and opens the preview automatically when ready.
+- [ ] Build, deploy, and verify the hosted preview flow in the browser.
+
 ### Review
 
 - Reworked the shared authenticated UI in [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so it renders as a single legacy-style todo board instead of the newer split dashboard:

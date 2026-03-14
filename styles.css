@@ -1334,6 +1334,14 @@ button:disabled {
   color: var(--fail);
 }
 
+.shared-board-status a {
+  color: inherit;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+  word-break: break-word;
+}
+
 .board-action,
 .shared-utility-actions button.secondary,
 .summary-buttons .secondary {

@@ -27,6 +27,8 @@
     expandedRequestId: "",
     workspaceStatus: "",
     workspaceStatusTone: "",
+    workspaceStatusLinkHref: "",
+    workspaceStatusLinkLabel: "",
     activeAction: "",
   };
 
@@ -82,23 +84,41 @@
     return ["owner", "internal_operator"].includes(activeRole());
   }
 
-  function setWorkspaceStatus(message, tone = "info") {
+  function setWorkspaceStatus(message, tone = "info", options = {}) {
     state.workspaceStatus = String(message || "").trim();
     state.workspaceStatusTone = state.workspaceStatus ? String(tone || "info") : "";
+    state.workspaceStatusLinkHref = state.workspaceStatus ? String(options.href || "").trim() : "";
+    state.workspaceStatusLinkLabel = state.workspaceStatusLinkHref
+      ? String(options.label || options.href || "").trim()
+      : "";
   }
 
   function messageFromActionResult(action, payload) {
     if (action === "preview") {
       const previewUrl = payload?.workspace?.preview?.url;
-      return previewUrl ? `Preview ready at ${previewUrl}` : "Preview started.";
+      return {
+        text: previewUrl ? "Preview ready at" : "Preview started.",
+        href: previewUrl || "",
+        label: previewUrl || "",
+      };
     }
     if (action === "sync") {
-      return String(payload?.sync?.summary || "").trim() || "Sync finished.";
+      return { text: String(payload?.sync?.summary || "").trim() || "Sync finished." };
     }
     if (action === "deploy") {
-      return String(payload?.deploy?.summary || "").trim() || "Deploy finished.";
+      return { text: String(payload?.deploy?.summary || "").trim() || "Deploy finished." };
     }
-    return "Action completed.";
+    return { text: "Action completed." };
+  }
+
+  function workspaceStatusMarkup() {
+    if (!state.workspaceStatus) {
+      return "";
+    }
+    const linkMarkup = state.workspaceStatusLinkHref
+      ? ` <a href="${escapeHtml(state.workspaceStatusLinkHref)}" target="_blank" rel="noreferrer">${escapeHtml(state.workspaceStatusLinkLabel || state.workspaceStatusLinkHref)}</a>`
+      : "";
+    return `<p class="shared-board-status tone-${escapeHtml(state.workspaceStatusTone || "info")}">${escapeHtml(state.workspaceStatus)}${linkMarkup}</p>`;
   }
 
   async function reloadBoard() {
@@ -357,7 +377,7 @@
             <div class="shared-board-actions">
               ${workspaceActionsMarkup()}
             </div>
-            ${state.workspaceStatus ? `<p class="shared-board-status tone-${escapeHtml(state.workspaceStatusTone || "info")}">${escapeHtml(state.workspaceStatus)}</p>` : ""}
+            ${workspaceStatusMarkup()}
           </header>
 
           <section class="shared-drawer ${state.composerOpen ? "" : "hidden"}" id="sharedComposerPanel">
@@ -661,6 +681,7 @@
   async function runWorkspaceAction(action) {
     const tenant = activeTenant();
     if (!tenant) return;
+    const previewWindow = action === "preview" ? window.open("", "_blank", "noopener") : null;
     state.activeAction = action;
     setWorkspaceStatus(`${action[0].toUpperCase()}${action.slice(1)} in progress...`);
     renderApp();
@@ -669,9 +690,23 @@
         method: "POST",
         body: JSON.stringify({ action }),
       });
-      setWorkspaceStatus(messageFromActionResult(action, payload), "success");
+      const actionMessage = messageFromActionResult(action, payload);
+      setWorkspaceStatus(actionMessage.text, "success", {
+        href: actionMessage.href,
+        label: actionMessage.label,
+      });
+      if (previewWindow) {
+        if (actionMessage.href) {
+          previewWindow.location = actionMessage.href;
+        } else {
+          previewWindow.close();
+        }
+      }
       await reloadBoard();
     } catch (error) {
+      if (previewWindow) {
+        previewWindow.close();
+      }
       setWorkspaceStatus(error.message, "warn");
       renderApp();
     } finally {
