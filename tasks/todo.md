@@ -476,6 +476,14 @@
     - clicking `Preview` opened [https://piko.dnalevity.com/preview/soulfire?_preview=1773459834005](https://piko.dnalevity.com/preview/soulfire?_preview=1773459834005)
     - the board status rendered the same cache-safe Soulfire preview URL as a clickable link
 
+# Desktop Scroll Regression
+
+## Plan
+
+- [x] Inspect the shared desktop layout rules controlling viewport height and overflow.
+- [ ] Patch shared-mode desktop layout so the board can grow and the page scrolls normally.
+- [ ] Build, deploy, and verify desktop scrolling on the live shared app.
+
 ### Review
 
 - Reworked the shared authenticated UI in [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so it renders as a single legacy-style todo board instead of the newer split dashboard:

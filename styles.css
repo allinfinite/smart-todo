@@ -1577,3 +1577,21 @@ button:disabled {
     justify-content: flex-start;
   }
 }
+
+@media (min-width: 1021px) {
+  body.shared-mode {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .page-shell.shared-shell {
+    height: auto;
+    min-height: 100vh;
+    display: block;
+    padding: 18px 20px 28px;
+  }
+
+  .shared-shell .panel.shared-board {
+    min-height: calc(100vh - 40px);
+  }
+}

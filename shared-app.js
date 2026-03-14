@@ -10,6 +10,8 @@
   const tenantKey = `${storageNamespace}:tenant-id`;
   const defaultTheme = config.theme || {};
 
+  document.body.classList.add("shared-mode");
+
   const state = {
     token: window.localStorage.getItem(tokenKey) || "",
     user: null,
