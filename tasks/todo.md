@@ -507,8 +507,25 @@
 ## Plan
 
 - [x] Inspect the completed request payload and legacy portal card rendering for accomplishment summaries and screenshots.
-- [ ] Patch shared completed-card details to show plain-language accomplishment text and a screenshot thumbnail.
-- [ ] Build, deploy, and verify the updated completed cards on the live shared app.
+- [x] Patch shared completed-card details to show plain-language accomplishment text and a screenshot thumbnail.
+- [x] Build, deploy, and verify the updated completed cards on the live shared app.
+
+## Review
+
+- Patched [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so completed cards in shared mode now:
+  - prefer the completion-specific public fields over the raw technical task log
+  - sanitize completion wording into a client-facing “What was done” sentence
+  - show the completion screenshot as a thumbnail link when available
+- Patched [styles.css](/Users/daniellevy/Code/smart-todo/styles.css) with completed-card detail styling for the new summary block and screenshot thumbnail.
+- Verification:
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - `npm run build` in `/Users/daniellevy/Code/smart-todo`
+  - pushed commits `aed813c` and `53672ae`
+  - Dokku deploy run `23079759495` completed successfully for the initial completed-card rendering
+  - Dokku deploy run `23079818945` completed successfully for the summary wording cleanup
+  - live Chrome verification on the `Soulfire` tenant at [http://smart-todo.dnalevity.com](http://smart-todo.dnalevity.com):
+    - the completed card for `Change the Roaming Entertainment and Costume Character photo` rendered `Replaced the Soulfire “Roaming Entertainment and Costume Characters” image with the new uploaded image.`
+    - the card rendered a screenshot thumbnail sourced from `https://cowork-api.dnalevity.com/soulfire-portal-assets/ee288b26-a781-4f75-917a-e7a2002876ec-completion-screenshot.png`
 
 ### Review
 
