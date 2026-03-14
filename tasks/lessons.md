@@ -13,3 +13,5 @@
 - In the shared app, `client_user` must not see tenant/account management controls; treat the admin drawer as owner/internal-operator only and verify that in a browser session after role changes.
 - For new shared-app tenants on piko, preview is not done when the dev server starts; verify the nginx preview route snippet exists too, or the browser will still see a public `404`.
 - For preview-patched Next apps, fixing `<img>` tags is not enough; audit inline `backgroundImage`, stylesheet `url(...)` assets, video sources, and any SSR-time `Math.random()` output or the preview will still show 404s and hydration warnings.
+- In the shared client, handle `401` centrally inside the fetch wrapper; otherwise individual actions like request submit or workspace load can keep firing with stale auth and leave the UI in a broken half-logged-in state.
+- When matching the old portal look in shared mode, do not assume the workspace action buttons should fill a multi-column desktop grid; verify the visual density in a real browser and keep these controls compact unless the user explicitly wants oversized hero buttons.

@@ -695,3 +695,64 @@
 - Result:
   - new shared tenants no longer need a separate manual nginx route step
   - the remaining preview-specific work is app-level compatibility, not server route plumbing
+
+# Shared Auth Recovery
+
+## Plan
+
+- [x] Make expired shared-app sessions recover cleanly from any API path, not just initial board refresh.
+- [x] Verify stale token + stale tenant browser state drops back to login instead of continuing unauthorized tenant calls.
+
+## Review
+
+- Updated [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so `401` responses outside `/api/auth/login` are handled centrally.
+- Added a dedicated `AuthExpiredError` flow that:
+  - clears stored token and tenant ID
+  - clears in-memory tenant/workspace/admin state
+  - immediately renders the login screen with `Session expired. Sign in again.`
+- Verified live after deploy:
+  - injected a fake token and stale tenant ID into `localStorage`
+  - reloaded [https://smart-todo.dnalevity.com](https://smart-todo.dnalevity.com)
+  - the app returned directly to login with `Session expired. Sign in again.`
+- The `bootstrap-autofill-overlay.js` console errors reported alongside the `401`s are browser-extension script failures, not errors from the shared app bundle.
+
+# Portal Onboarding Texts
+
+## Plan
+
+- [x] Confirm Gray, Kaia, and Ariya contact details plus the existing shared-app accounts for each tenant.
+- [x] Create any missing tenant-scoped user accounts and record the live login credentials.
+- [x] Send the onboarding text messages with the shared portal link and per-user credentials.
+- [x] Verify the texts were sent from this machine and document the final state.
+
+## Review
+
+- Contact lookup used local Address Book data for:
+  - Ariya: `+17638989755`, `erinsarahsteph@gmail.com`
+  - Kaia: `+18086518228`
+- Gray's published Samanayo contact details were confirmed from the repo:
+  - `info@samanayo.com`
+  - `+15305755106`
+- Created tenant-scoped shared-app users for:
+  - `info@samanayo.com` on `samanayo` as `client_user`
+  - `kaia@soulfireproductions.com` on `soulfire` as `client_user`
+- Reused the existing Ariya account:
+  - `erinsarahsteph@gmail.com` on `ariya` as `client_user`
+- Text messages were sent from Messages.app with the live shared portal link:
+  - `https://smart-todo.dnalevity.com`
+- Credentials sent:
+  - Gray / Samanayo: `info@samanayo.com` / `Tmp-PP2jRnvIQqBN!`
+  - Kaia / Soulfire: `kaia@soulfireproductions.com` / `Tmp-YCfGAdE1Jl6l!`
+  - Ariya: `erinsarahsteph@gmail.com` / `Tmp-UaN2ZYXo7aCU!`
+- Visual verification:
+  - `/tmp/messages-gray-confirmed.png` shows Gray's text in the thread
+  - `/tmp/messages-kaia-sent.png` shows Kaia's text in the thread
+  - `/tmp/messages-ariya-final.png` shows Ariya's text in the thread
+
+# Shared Board Action Sizing
+
+## Plan
+
+- [x] Inspect the shared board action layout and identify why the workspace buttons are rendering oversized on desktop.
+- [x] Reduce the shared board action sizing without changing the legacy request-card pills or the utility buttons.
+- [ ] Verify the updated sizing in a browser and document the result.

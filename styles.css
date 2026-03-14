@@ -1303,10 +1303,10 @@ button:disabled {
 }
 
 .shared-board-actions {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  align-items: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
 }
 
 .shared-board-status {
@@ -1345,15 +1345,21 @@ button:disabled {
 .board-action,
 .shared-utility-actions button.secondary,
 .summary-buttons .secondary {
-  min-height: 92px;
+  min-height: 54px;
   border-radius: 999px;
   border: 0;
   background: rgba(228, 222, 214, 0.76);
   color: var(--ink);
   box-shadow: none;
-  font-size: clamp(1rem, 2vw, 1.22rem);
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
   font-weight: 800;
   letter-spacing: -0.02em;
+}
+
+.board-action {
+  flex: 0 0 auto;
+  min-width: 164px;
+  padding: 0 24px;
 }
 
 .shared-utility-actions button.secondary,
@@ -1593,11 +1599,12 @@ button:disabled {
   }
 
   .shared-board-actions {
-    grid-template-columns: 1fr;
+    width: 100%;
   }
 
   .board-action {
-    min-height: 72px;
+    width: 100%;
+    min-height: 60px;
   }
 
   .shared-request-card {
