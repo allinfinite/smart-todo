@@ -240,9 +240,12 @@
     }
     let simplified = sentence
       .replace(/\b(No Cowork changes were made\.?)$/i, "")
+      .replace(/\bby overwriting [^.]+?\bwith\b/i, "with")
       .replace(/\boverwriting [^.]+?\bwith\b/i, "with")
       .replace(/\bby updating [^.]+$/i, "")
       .replace(/\bby overwriting [^.]+$/i, "")
+      .replace(/\buploaded portal reference\b/gi, "new uploaded image")
+      .replace(/\buploaded [A-Za-z0-9._-]+ asset\b/gi, "new uploaded image")
       .replace(/\bpassed in [^.]+$/i, "")
       .replace(/\bcommitted and pushed[^.]*$/i, "")
       .replace(/\bnpm run build\b/gi, "")
