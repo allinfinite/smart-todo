@@ -21,9 +21,13 @@
     auditLog: [],
     adminTenants: [],
     adminOpen: false,
+    adminStatus: "",
     creatingTenant: false,
     composerOpen: false,
     expandedRequestId: "",
+    workspaceStatus: "",
+    workspaceStatusTone: "",
+    activeAction: "",
   };
 
   function escapeHtml(value) {
@@ -76,6 +80,41 @@
 
   function userIsAdmin() {
     return ["owner", "internal_operator"].includes(activeRole());
+  }
+
+  function setWorkspaceStatus(message, tone = "info") {
+    state.workspaceStatus = String(message || "").trim();
+    state.workspaceStatusTone = state.workspaceStatus ? String(tone || "info") : "";
+  }
+
+  function messageFromActionResult(action, payload) {
+    if (action === "preview") {
+      const previewUrl = payload?.workspace?.preview?.url;
+      return previewUrl ? `Preview ready at ${previewUrl}` : "Preview started.";
+    }
+    if (action === "sync") {
+      return String(payload?.sync?.summary || "").trim() || "Sync finished.";
+    }
+    if (action === "deploy") {
+      return String(payload?.deploy?.summary || "").trim() || "Deploy finished.";
+    }
+    return "Action completed.";
+  }
+
+  async function reloadBoard() {
+    try {
+      await loadTenantData();
+    } catch (error) {
+      const message = String(error?.message || "Unable to refresh workspace.");
+      if (/unauthorized/i.test(message)) {
+        setToken("");
+        setActiveTenantId("");
+        renderLogin("Session expired. Sign in again.");
+        return;
+      }
+      setWorkspaceStatus(message, "error");
+      renderApp();
+    }
   }
 
   function authHeaders() {
@@ -234,11 +273,12 @@
   function workspaceActionsMarkup() {
     const workspace = state.workspace || {};
     const enabledActions = Array.isArray(workspace.enabledActions) ? workspace.enabledActions : ["preview", "sync", "deploy"];
+    const actionInFlight = String(state.activeAction || "");
     return `
-      <button class="board-action" data-workspace-action="sync" ${enabledActions.includes("sync") ? "" : "disabled"}>Sync</button>
-      <button class="board-action" data-workspace-action="preview" ${enabledActions.includes("preview") ? "" : "disabled"}>Preview</button>
-      <button class="board-action" data-workspace-action="deploy" ${enabledActions.includes("deploy") ? "" : "disabled"}>Deploy</button>
-      <button class="board-action" id="refreshWorkspaceButton" type="button">Refresh</button>
+      <button class="board-action" data-workspace-action="sync" ${(enabledActions.includes("sync") && !actionInFlight) ? "" : "disabled"}>${actionInFlight === "sync" ? "Syncing..." : "Sync"}</button>
+      <button class="board-action" data-workspace-action="preview" ${(enabledActions.includes("preview") && !actionInFlight) ? "" : "disabled"}>${actionInFlight === "preview" ? "Starting..." : "Preview"}</button>
+      <button class="board-action" data-workspace-action="deploy" ${(enabledActions.includes("deploy") && !actionInFlight) ? "" : "disabled"}>${actionInFlight === "deploy" ? "Deploying..." : "Deploy"}</button>
+      <button class="board-action" id="refreshWorkspaceButton" type="button" ${actionInFlight ? "disabled" : ""}>Refresh</button>
     `;
   }
 
@@ -317,6 +357,7 @@
             <div class="shared-board-actions">
               ${workspaceActionsMarkup()}
             </div>
+            ${state.workspaceStatus ? `<p class="shared-board-status tone-${escapeHtml(state.workspaceStatusTone || "info")}">${escapeHtml(state.workspaceStatus)}</p>` : ""}
           </header>
 
           <section class="shared-drawer ${state.composerOpen ? "" : "hidden"}" id="sharedComposerPanel">
@@ -353,6 +394,7 @@
                     <p class="eyebrow">Admin</p>
                     <h2>Tenant and account management</h2>
                   </div>
+                  ${state.adminStatus ? `<p class="shared-board-status tone-warn">${escapeHtml(state.adminStatus)}</p>` : ""}
                   <div class="shared-admin-grid">
                     <form id="tenantForm" class="shared-admin-form">
                       <h3>${state.creatingTenant ? "Create Tenant" : "Edit Active Tenant"}</h3>
@@ -442,7 +484,7 @@
     document.querySelector("#tenantSwitch").value = state.activeTenantId;
     document.querySelector("#tenantSwitch").addEventListener("change", async event => {
       setActiveTenantId(event.currentTarget.value);
-      await loadTenantData();
+      await reloadBoard();
     });
     document.querySelector("#logoutButton").addEventListener("click", async () => {
       try {
@@ -458,10 +500,11 @@
       state.workspace = null;
       renderLogin();
     });
-    document.querySelector("#refreshWorkspaceButton").addEventListener("click", () => loadTenantData());
+    document.querySelector("#refreshWorkspaceButton").addEventListener("click", () => reloadBoard());
     const toggleComposerButton = document.querySelector("#toggleComposerButton");
     if (toggleComposerButton) {
       toggleComposerButton.addEventListener("click", () => {
+        setWorkspaceStatus("");
         state.composerOpen = !state.composerOpen;
         renderApp();
       });
@@ -469,6 +512,7 @@
     const toggleAdminButton = document.querySelector("#toggleAdminButton");
     if (toggleAdminButton) {
       toggleAdminButton.addEventListener("click", () => {
+        setWorkspaceStatus("");
         state.adminOpen = !state.adminOpen;
         renderApp();
       });
@@ -540,16 +584,26 @@
     }
     state.requests = Array.isArray(requestsPayload.requests) ? requestsPayload.requests : [];
     state.workspace = workspacePayload.workspace || requestsPayload.workspace || null;
+    state.adminStatus = "";
     if (userIsAdmin()) {
-      const [tenantsPayload, auditPayload] = await Promise.all([
-        apiFetch("/api/app/admin/tenants"),
-        apiFetch("/api/app/admin/audit-log"),
-      ]);
-      if (loadRequestId !== state.loadRequestId || String(state.activeTenantId) !== requestedTenantId) {
-        return;
+      try {
+        const [tenantsPayload, auditPayload] = await Promise.all([
+          apiFetch("/api/app/admin/tenants"),
+          apiFetch("/api/app/admin/audit-log"),
+        ]);
+        if (loadRequestId !== state.loadRequestId || String(state.activeTenantId) !== requestedTenantId) {
+          return;
+        }
+        state.adminTenants = Array.isArray(tenantsPayload.tenants) ? tenantsPayload.tenants : [];
+        state.auditLog = Array.isArray(auditPayload.entries) ? auditPayload.entries : [];
+      } catch (error) {
+        if (loadRequestId !== state.loadRequestId || String(state.activeTenantId) !== requestedTenantId) {
+          return;
+        }
+        state.adminTenants = [];
+        state.auditLog = [];
+        state.adminStatus = String(error?.message || "").trim() || "Admin tools are unavailable right now.";
       }
-      state.adminTenants = Array.isArray(tenantsPayload.tenants) ? tenantsPayload.tenants : [];
-      state.auditLog = Array.isArray(auditPayload.entries) ? auditPayload.entries : [];
     } else {
       if (loadRequestId !== state.loadRequestId || String(state.activeTenantId) !== requestedTenantId) {
         return;
@@ -578,7 +632,7 @@
       });
       event.currentTarget.reset();
       statusNode.textContent = "Request queued.";
-      await loadTenantData();
+      await reloadBoard();
     } catch (error) {
       statusNode.textContent = error.message;
     }
@@ -597,7 +651,8 @@
         method: "POST",
         body: JSON.stringify({ requestId, text }),
       });
-      await loadTenantData();
+      setWorkspaceStatus("Reply added.", "success");
+      await reloadBoard();
     } catch (error) {
       window.alert(error.message);
     }
@@ -606,14 +661,24 @@
   async function runWorkspaceAction(action) {
     const tenant = activeTenant();
     if (!tenant) return;
+    state.activeAction = action;
+    setWorkspaceStatus(`${action[0].toUpperCase()}${action.slice(1)} in progress...`);
+    renderApp();
     try {
-      await apiFetch(`/api/app/tenants/${tenant.id}/actions`, {
+      const payload = await apiFetch(`/api/app/tenants/${tenant.id}/actions`, {
         method: "POST",
         body: JSON.stringify({ action }),
       });
-      await loadTenantData();
+      setWorkspaceStatus(messageFromActionResult(action, payload), "success");
+      await reloadBoard();
     } catch (error) {
-      window.alert(error.message);
+      setWorkspaceStatus(error.message, "warn");
+      renderApp();
+    } finally {
+      state.activeAction = "";
+      if (state.user) {
+        renderApp();
+      }
     }
   }
 
@@ -679,7 +744,7 @@
       });
       event.currentTarget.reset();
       statusNode.textContent = "Saved.";
-      await loadTenantData();
+      await reloadBoard();
     } catch (error) {
       statusNode.textContent = error.message;
     }

@@ -396,6 +396,14 @@
   - password reset is intentionally not implemented in this first pass
   - verification artifacts created during backend smoke testing were removed from the tenant/site records after the test run, but the new runtime JSON state files under Cowork `.dashboard_state/` now exist as part of the feature
 
+# Shared Button Regression
+
+## Plan
+
+- [x] Reproduce the live shared-app button failures and separate backend failures from client-side regression handling.
+- [ ] Patch the shared client so admin endpoint failures do not break board refresh and workspace action conflicts are shown inline.
+- [ ] Build, deploy, and verify the shared app buttons on the live hosted page.
+
 ### Review
 
 - Reworked the shared authenticated UI in [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so it renders as a single legacy-style todo board instead of the newer split dashboard:

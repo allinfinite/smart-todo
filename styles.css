@@ -1309,6 +1309,31 @@ button:disabled {
   align-items: stretch;
 }
 
+.shared-board-status {
+  margin: -4px 0 0;
+  padding: 12px 18px;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: rgba(228, 222, 214, 0.44);
+  color: var(--ink);
+}
+
+.shared-board-status.tone-success {
+  background: rgba(44, 139, 87, 0.12);
+  color: var(--ok);
+}
+
+.shared-board-status.tone-warn {
+  background: rgba(183, 120, 24, 0.14);
+  color: var(--warn);
+}
+
+.shared-board-status.tone-error {
+  background: rgba(180, 73, 61, 0.14);
+  color: var(--fail);
+}
+
 .board-action,
 .shared-utility-actions button.secondary,
 .summary-buttons .secondary {
