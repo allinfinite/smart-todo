@@ -15,6 +15,7 @@
     user: null,
     tenants: [],
     activeTenantId: window.localStorage.getItem(tenantKey) || "",
+    loadRequestId: 0,
     requests: [],
     workspace: null,
     auditLog: [],
@@ -462,12 +463,15 @@
       renderLogin("No tenant selected.");
       return;
     }
+    const requestedTenantId = String(tenant.id);
+    const loadRequestId = state.loadRequestId + 1;
+    state.loadRequestId = loadRequestId;
     let requestsPayload;
     let workspacePayload;
     try {
       [requestsPayload, workspacePayload] = await Promise.all([
-        apiFetch(`/api/app/tenants/${tenant.id}/requests`),
-        apiFetch(`/api/app/tenants/${tenant.id}/workspace`),
+        apiFetch(`/api/app/tenants/${requestedTenantId}/requests`),
+        apiFetch(`/api/app/tenants/${requestedTenantId}/workspace`),
       ]);
     } catch (error) {
       if (retryOnTenantNotFound && /tenant not found/i.test(String(error?.message || ""))) {
@@ -477,6 +481,9 @@
       }
       throw error;
     }
+    if (loadRequestId !== state.loadRequestId || String(state.activeTenantId) !== requestedTenantId) {
+      return;
+    }
     state.requests = Array.isArray(requestsPayload.requests) ? requestsPayload.requests : [];
     state.workspace = workspacePayload.workspace || requestsPayload.workspace || null;
     if (userIsAdmin()) {
@@ -484,12 +491,17 @@
         apiFetch("/api/app/admin/tenants"),
         apiFetch("/api/app/admin/audit-log"),
       ]);
+      if (loadRequestId !== state.loadRequestId || String(state.activeTenantId) !== requestedTenantId) {
+        return;
+      }
       state.adminTenants = Array.isArray(tenantsPayload.tenants) ? tenantsPayload.tenants : [];
       state.auditLog = Array.isArray(auditPayload.entries) ? auditPayload.entries : [];
     } else {
+      if (loadRequestId !== state.loadRequestId || String(state.activeTenantId) !== requestedTenantId) {
+        return;
+      }
       state.adminTenants = [];
       state.auditLog = [];
-      state.adminOpen = false;
     }
     renderApp();
   }
