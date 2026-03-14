@@ -428,8 +428,26 @@
 ## Plan
 
 - [x] Confirm how preview success is currently rendered in the shared board.
-- [ ] Patch the preview success status so it renders a clickable link and opens the preview automatically when ready.
-- [ ] Build, deploy, and verify the hosted preview flow in the browser.
+- [x] Patch the preview success status so it renders a clickable link and opens the preview automatically when ready.
+- [x] Build, deploy, and verify the hosted preview flow in the browser.
+
+## Review
+
+- Patched [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so preview success now:
+  - stores a real link target in the board status state
+  - renders the preview URL as a clickable anchor in the success banner
+  - opens a new preview tab immediately on click and redirects that tab to the ready preview URL after the backend confirms success
+- Added anchor styling to [styles.css](/Users/daniellevy/Code/smart-todo/styles.css) so the preview URL reads like a real link inside the success banner.
+- Verification:
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - `npm run build` in `/Users/daniellevy/Code/smart-todo`
+  - pushed commits `59e796b` and `3aa4cdb`
+  - Dokku deploy run `23079470491` succeeded for the link rendering change
+  - Dokku deploy run `23079504906` succeeded for the pre-opened preview tab change
+  - live Chrome verification at [http://smart-todo.dnalevity.com](http://smart-todo.dnalevity.com):
+    - clicking `Preview` increased the tab count from `3` to `4`
+    - the new active tab opened at [https://piko.dnalevity.com/preview/booch-bar](https://piko.dnalevity.com/preview/booch-bar)
+    - the board status now renders `Preview ready at` followed by a clickable link to the same preview URL
 
 ### Review
 
