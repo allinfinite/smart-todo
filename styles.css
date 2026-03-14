@@ -1515,6 +1515,42 @@ button:disabled {
   line-height: 1.55;
 }
 
+.shared-detail-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+}
+
+.shared-completion-block,
+.shared-completion-media {
+  display: grid;
+  gap: 10px;
+}
+
+.shared-completion-summary {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.shared-completion-shot {
+  display: block;
+  width: min(100%, 420px);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(191, 211, 195, 0.9);
+  box-shadow: 0 10px 24px rgba(74, 57, 41, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.shared-completion-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .shared-replies {
   gap: 12px;
 }

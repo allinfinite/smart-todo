@@ -211,6 +211,69 @@
     return parsed.toLocaleString();
   }
 
+  function assetUrl(path) {
+    const raw = String(path || "").trim();
+    if (!raw) return "";
+    if (/^https?:\/\//i.test(raw)) {
+      return raw;
+    }
+    return `${apiBase}${raw.startsWith("/") ? raw : `/${raw}`}`;
+  }
+
+  function firstReadableSentence(text) {
+    const normalized = String(text || "")
+      .replace(/\[[^\]]+\]\([^)]+\)/g, "$1")
+      .replace(/`+/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!normalized) {
+      return "";
+    }
+    const sentence = normalized.split(/(?<=[.!?])\s+/)[0] || normalized;
+    return sentence.trim();
+  }
+
+  function simplifyCompletionCopy(text, fallbackTitle = "") {
+    const sentence = firstReadableSentence(text);
+    if (!sentence) {
+      return fallbackTitle ? `Updated ${fallbackTitle.toLowerCase()}.` : "The update is complete and ready to review.";
+    }
+    let simplified = sentence
+      .replace(/\b(No Cowork changes were made\.?)$/i, "")
+      .replace(/\boverwriting [^.]+?\bwith\b/i, "with")
+      .replace(/\bby updating [^.]+$/i, "")
+      .replace(/\bby overwriting [^.]+$/i, "")
+      .replace(/\bpassed in [^.]+$/i, "")
+      .replace(/\bcommitted and pushed[^.]*$/i, "")
+      .replace(/\bnpm run build\b/gi, "")
+      .replace(/\/[A-Za-z0-9._/-]+/g, "")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+    simplified = simplified.replace(/[,:;\-–]\s*$/, "").trim();
+    if (!simplified) {
+      return fallbackTitle ? `Updated ${fallbackTitle.toLowerCase()}.` : "The update is complete and ready to review.";
+    }
+    return simplified;
+  }
+
+  function completedRequestSummary(request) {
+    const explicitSummary = String(request?.completion_summary || "").trim();
+    const genericSummary = explicitSummary && /was completed and is ready to review\.?$/i.test(explicitSummary);
+    if (explicitSummary && !genericSummary) {
+      return explicitSummary;
+    }
+    const latestMessageSummary = simplifyCompletionCopy(request?.latest_message, request?.title || "");
+    if (latestMessageSummary) {
+      return latestMessageSummary;
+    }
+    if (explicitSummary) {
+      return explicitSummary;
+    }
+    return request?.completion_screenshot?.url
+      ? "The requested update is complete and a fresh screenshot is ready to review."
+      : "The requested update is complete and ready to review.";
+  }
+
   function requestState(request) {
     return String(request.status || "queued").trim().toLowerCase();
   }
@@ -242,8 +305,20 @@
     const isExpanded = requestId && requestId === state.expandedRequestId;
     const status = requestState(request);
     const priority = requestPriority(request);
+    const isCompleted = status === "completed";
     const latestMessage = request.latest_message
       ? `<p class="shared-request-note">${escapeHtml(request.latest_message)}</p>`
+      : "";
+    const completionScreenshot = request?.completion_screenshot?.url
+      ? `
+        <a class="shared-completion-shot" href="${escapeHtml(assetUrl(request.completion_screenshot.url))}" target="_blank" rel="noreferrer">
+          <img
+            src="${escapeHtml(assetUrl(request.completion_screenshot.url))}"
+            alt="Updated preview for ${escapeHtml(request.title || "completed request")}"
+            loading="lazy"
+          />
+        </a>
+      `
       : "";
     return `
       <article class="request-card state-${escapeHtml(status)} shared-request-card ${isExpanded ? "is-expanded" : ""}">
@@ -272,7 +347,22 @@
               <div class="shared-request-detail">
                 <p class="shared-request-meta">${escapeHtml(formatDate(request.created_at || request.createdAt))}</p>
                 ${request.details ? `<p class="shared-request-details">${escapeHtml(request.details)}</p>` : ""}
-                ${latestMessage}
+                ${
+                  isCompleted
+                    ? `
+                      <div class="shared-completion-block">
+                        <div class="shared-detail-label">What was done</div>
+                        <p class="shared-completion-summary">${escapeHtml(completedRequestSummary(request))}</p>
+                      </div>
+                      ${completionScreenshot ? `
+                        <div class="shared-completion-media">
+                          <div class="shared-detail-label">Screenshot</div>
+                          ${completionScreenshot}
+                        </div>
+                      ` : ""}
+                    `
+                    : latestMessage
+                }
                 ${
                   replies.length
                     ? `<div class="shared-replies">${replies

@@ -502,6 +502,14 @@
     - programmatic scroll moved `window.scrollY` to `1400`
     - the board visibly scrolled down into lower request cards on desktop
 
+# Completed Card Polish
+
+## Plan
+
+- [x] Inspect the completed request payload and legacy portal card rendering for accomplishment summaries and screenshots.
+- [ ] Patch shared completed-card details to show plain-language accomplishment text and a screenshot thumbnail.
+- [ ] Build, deploy, and verify the updated completed cards on the live shared app.
+
 ### Review
 
 - Reworked the shared authenticated UI in [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so it renders as a single legacy-style todo board instead of the newer split dashboard:
