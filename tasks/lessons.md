@@ -15,3 +15,4 @@
 - For preview-patched Next apps, fixing `<img>` tags is not enough; audit inline `backgroundImage`, stylesheet `url(...)` assets, video sources, and any SSR-time `Math.random()` output or the preview will still show 404s and hydration warnings.
 - In the shared client, handle `401` centrally inside the fetch wrapper; otherwise individual actions like request submit or workspace load can keep firing with stale auth and leave the UI in a broken half-logged-in state.
 - When matching the old portal look in shared mode, do not assume the workspace action buttons should fill a multi-column desktop grid; verify the visual density in a real browser and keep these controls compact unless the user explicitly wants oversized hero buttons.
+- After a desktop sizing fix, re-check the narrow breakpoint separately; mobile-only `width: 100%` overrides can silently keep shared workspace actions oversized on phones.

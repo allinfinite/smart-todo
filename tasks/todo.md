@@ -767,3 +767,11 @@
   - pushed commit `186b015` to `main`
   - confirmed the live stylesheet at [https://smart-todo.dnalevity.com/styles.css](https://smart-todo.dnalevity.com/styles.css) contains the compact `.board-action` rules
   - verified in a live Playwright browser session after sign-in that `Sync`, `Preview`, `Deploy`, and `Refresh` now render as small pills on desktop instead of oversized tiles
+
+# Shared Mobile Action Sizing
+
+## Plan
+
+- [x] Inspect the mobile breakpoint overrides that still make shared workspace buttons oversized on phones.
+- [x] Replace the mobile full-width action layout with a compact wrapping layout.
+- [ ] Verify the updated sizing in a narrow mobile viewport and document the result.
