@@ -617,3 +617,54 @@
   - live browser verification after deploy showed the `Ariya` members list containing:
     - `Workspace Owner / me@dnalevity.com / owner`
     - `Erin / erinsarahsteph@gmail.com / internal_operator`
+
+# Ariya GitHub Connection
+
+## Plan
+
+- [x] Fix the shared-app browser issues blocking Ariya tenant edits and actions:
+  - allow `PATCH` in shared-app CORS preflight
+  - ensure data-backed tenants emit a real default preview command
+- [x] Connect the `ariya` tenant to the target repo and preview path:
+  - repo `git@github.com:allinfinite/Elfina-Coaching.git`
+  - app path `/home/dna/Code/Elfina-Coaching`
+  - preview path `/preview/ariya`
+  - preview port `3105`
+- [x] Patch the Ariya Next.js app so it runs under the piko preview base path.
+- [x] Verify the live Ariya workspace actions and board in the browser.
+- [ ] Fix the remaining shared-app request composer regression and redeploy the frontend.
+
+## Review
+
+- Fixed live Cowork backend behavior in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py):
+  - shared-app CORS now allows `PATCH`
+  - tenant-backed site definitions now fall back to a default preview command when no builtin command exists
+- Synced the backend fix to `dna@piko.local` and restarted `cowork-dashboard.service`.
+- Updated the live `ariya` tenant configuration so Cowork persists:
+  - `repoPath=/home/dna/Code/Elfina-Coaching`
+  - `appPath=/home/dna/Code/Elfina-Coaching`
+  - `previewBasePath=/preview/ariya`
+  - `previewPort=3105`
+- Connected the piko checkout to GitHub over SSH:
+  - `git@github.com:allinfinite/Elfina-Coaching.git`
+  - current deployed preview-support commit on `main`: `39abda9`
+- Patched the Ariya app repo for preview-path support:
+  - added [next.config.mjs](/private/tmp/Elfina-Coaching-codex/next.config.mjs)
+  - updated [pages/_app.tsx](/private/tmp/Elfina-Coaching-codex/pages/_app.tsx)
+  - updated [components/Header.tsx](/private/tmp/Elfina-Coaching-codex/components/Header.tsx)
+  - updated [components/Footer.tsx](/private/tmp/Elfina-Coaching-codex/components/Footer.tsx)
+  - updated [pages/_document.tsx](/private/tmp/Elfina-Coaching-codex/pages/_document.tsx)
+- Added the missing piko nginx preview route for Ariya at `/etc/nginx/snippets/piko-preview-routes/ariya.conf` on `dna@piko.local` and reloaded nginx.
+- Verified live API/workspace behavior for Ariya:
+  - `POST /api/app/tenants/<ariya>/actions` with `preview` returns `200`
+  - `POST /api/app/tenants/<ariya>/actions` with `sync` returns `200` and `Already up to date.`
+  - `POST /api/app/tenants/<ariya>/actions` with `deploy` returned `200` and pushed the preview-path patch to GitHub
+  - [https://piko.dnalevity.com/preview/ariya](https://piko.dnalevity.com/preview/ariya) now returns `200`
+- Browser verification in Chrome for the Ariya tenant confirmed:
+  - the board loads with `Repo: /home/dna/Code/Elfina-Coaching`
+  - `Preview` opens the Ariya preview site in a new tab
+  - `Sync` shows `Already up to date.`
+  - `Deploy` shows `Working tree is clean. Nothing to deploy.`
+- Found one remaining frontend regression during the browser pass:
+  - queuing a new request creates the request, but [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) still tried to use `event.currentTarget` after `await`, which left `Cannot read properties of null (reading 'reset')`
+  - fixed locally by capturing the request form element before the async call

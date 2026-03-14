@@ -747,7 +747,8 @@
   async function submitRequest(event) {
     event.preventDefault();
     const tenant = activeTenant();
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const statusNode = document.querySelector("#sharedRequestStatus");
     if (!tenant) return;
     statusNode.textContent = "Saving...";
@@ -760,7 +761,7 @@
           priority: formData.get("priority"),
         }),
       });
-      event.currentTarget.reset();
+      form.reset();
       statusNode.textContent = "Request queued.";
       await reloadBoard();
     } catch (error) {
