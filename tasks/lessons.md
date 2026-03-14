@@ -7,3 +7,4 @@
 - When repairing the live Cowork backend, verify the exact shared-app API route on the deployed service with a direct request before assuming the frontend is at fault.
 - For shared-app button regressions, verify the exact live response codes for `preview`, `sync`, `deploy`, and admin endpoints before saying buttons are broken; treat `409` workspace conflicts as user-facing status, not generic failure.
 - When a shared-app success message includes a URL, render it as a real link and wire the primary success path directly to that destination if it is the expected next step, especially for preview startup.
+- If a preview route works in raw HTTP and a clean browser profile but fails in the active browser session, treat it as stale browser redirect/cache state and harden the product path with a cache-busting preview URL instead of changing a healthy server route.

@@ -93,13 +93,28 @@
       : "";
   }
 
+  function cacheSafePreviewUrl(url) {
+    const raw = String(url || "").trim();
+    if (!raw) {
+      return "";
+    }
+    try {
+      const resolved = new URL(raw, window.location.href);
+      resolved.searchParams.set("_preview", String(Date.now()));
+      return resolved.toString();
+    } catch (_error) {
+      return raw;
+    }
+  }
+
   function messageFromActionResult(action, payload) {
     if (action === "preview") {
       const previewUrl = payload?.workspace?.preview?.url;
+      const safePreviewUrl = cacheSafePreviewUrl(previewUrl);
       return {
         text: previewUrl ? "Preview ready at" : "Preview started.",
-        href: previewUrl || "",
-        label: previewUrl || "",
+        href: safePreviewUrl,
+        label: safePreviewUrl || previewUrl || "",
       };
     }
     if (action === "sync") {
@@ -494,7 +509,7 @@
           <div class="shared-workspace-meta">
             <span>Repo: ${escapeHtml(state.workspace?.repo_path || state.workspace?.repoPath || "n/a")}</span>
             <span>Branch: ${escapeHtml(state.workspace?.branch || "n/a")}</span>
-            <span>Preview: ${escapeHtml(state.workspace?.preview?.url || "n/a")}</span>
+            <span>Preview: ${state.workspace?.preview?.url ? `<a href="${escapeHtml(cacheSafePreviewUrl(state.workspace.preview.url))}" target="_blank" rel="noreferrer">${escapeHtml(state.workspace.preview.url)}</a>` : "n/a"}</span>
           </div>
           <section class="queue-list shared-board-list">${state.requests.length ? state.requests.map(requestCard).join("") : '<div class="empty-state">No requests yet.</div>'}</section>
         </main>

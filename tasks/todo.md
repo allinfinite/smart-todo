@@ -449,6 +449,14 @@
     - the new active tab opened at [https://piko.dnalevity.com/preview/booch-bar](https://piko.dnalevity.com/preview/booch-bar)
     - the board status now renders `Preview ready at` followed by a clickable link to the same preview URL
 
+# Soulfire Preview Redirect
+
+## Plan
+
+- [x] Reproduce the Soulfire preview redirect and determine whether it comes from the live server or browser state.
+- [ ] Patch the shared preview flow so preview openings and links bypass the stale cached redirect path.
+- [ ] Build, deploy, and verify the Soulfire preview path from the shared app in the live browser.
+
 ### Review
 
 - Reworked the shared authenticated UI in [shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so it renders as a single legacy-style todo board instead of the newer split dashboard:
