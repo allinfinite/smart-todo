@@ -790,3 +790,69 @@
     - `width: auto`
     - `flex: 1 1 calc(50% - 6px)`
     - `min-height: 54px`
+
+# Ariya Deploy Push Error
+
+## Plan
+
+- [x] Inspect the Ariya deploy action implementation and the live git state on piko to find the exact cause of the non-fast-forward push failure.
+- [x] Fix the deploy path or repo state so Ariya can deploy cleanly without exposing raw git jargon in the UI.
+- [x] Verify the live Ariya deploy flow and document the outcome.
+
+## Review
+
+- Root cause:
+  - the live Ariya repo at `/home/dna/Code/Elfina-Coaching` was `ahead 1, behind 1`
+  - the portal tried to `git push` a local portal commit onto an older branch tip, which produced the raw `fetch first` rejection shown in the UI
+- Live repair on `dna@piko.local`:
+  - rebased `/home/dna/Code/Elfina-Coaching` onto `origin/main`
+  - pushed the rebased portal commit so Ariya is now back in sync with GitHub
+- Backend fix in [dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py):
+  - `deploy_portal_site()` now fetches `origin` after creating the portal commit
+  - if GitHub moved, it rebases the portal commit onto `origin/<branch>` before pushing
+  - if that rebase cannot be applied cleanly, the API now returns a plain-language message instead of raw git output:
+    - `GitHub has newer changes for this site and they could not be combined automatically. Please sync the workspace and try deploy again.`
+  - if GitHub changes again during the final push, the backend now automatically fetches, rebases, and retries the push once before surfacing an error
+  - only if that second combine step also fails does the user see a plain-language fallback:
+    - `GitHub changed while this deploy was being prepared and the updates could not be combined automatically. Please sync the workspace and try deploy again.`
+- Synced the patched backend to `/home/dna/Code/Cowork/dashboard_server.py` on piko and restarted `cowork-dashboard.service`.
+- Verification:
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py`
+  - `systemctl --user is-active cowork-dashboard.service` -> `active`
+  - live Ariya repo now reports `## main...origin/main`
+  - live workspace API for tenant `5337a2b3-3968-49e5-9fea-353ed3d9d50d` returns `200`
+- Remaining verification limit:
+  - I did not create a fresh dirty deploy in Ariya just to force another real portal deploy, because that would make a new production-facing commit solely for testing.
+
+# Remove Old Vercel Projects
+
+## Plan
+
+- [x] Inspect Vercel projects and domain assignments for `gray.dnalevity.com`, `soulfire-edit.dnalevity.com`, and `todo.dnalevity.com`.
+- [x] Delete the old Vercel projects and/or domain assignments for those legacy portals without touching the live shared app.
+- [x] Verify the old Vercel resources are gone and document the result.
+
+## Review
+
+- Verified the legacy mappings before deletion:
+  - `gray.dnalevity.com` -> project `gray-portal`
+  - `soulfire-edit.dnalevity.com` -> project `soulfire-edit-portal`
+  - `todo.dnalevity.com` -> project `dnalevity-todo`
+- Deleted the old Vercel projects:
+  - `gray-portal`
+  - `soulfire-edit-portal`
+  - `dnalevity-todo`
+- Verified cleanup:
+  - `vercel project ls` no longer shows those three projects
+  - `vercel alias ls` no longer shows aliases for `gray.dnalevity.com`, `soulfire-edit.dnalevity.com`, or `todo.dnalevity.com`
+- Important distinction:
+  - `vercel domains inspect <subdomain>` still resolves because `dnalevity.com` remains registered in the Vercel account as a domain object
+  - the old project bindings are gone; what remains is the parent domain registration, not the old apps
+
+# Shared Auth Session Persistence
+
+## Plan
+
+- [ ] Inspect the shared login flow, token storage, and backend auth session behavior to find why users are logged out after refresh.
+- [ ] Fix the persistence path so a successful login survives reloads.
+- [ ] Verify the live shared app keeps the session through a browser refresh and document the result.

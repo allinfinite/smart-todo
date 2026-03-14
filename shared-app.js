@@ -10,13 +10,37 @@
   const tenantKey = `${storageNamespace}:tenant-id`;
   const defaultTheme = config.theme || {};
 
+  function safeStorageGet(key) {
+    try {
+      return window.localStorage.getItem(key) || "";
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function safeStorageSet(key, value) {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch (_error) {
+      // Ignore storage failures and rely on cookie-backed auth.
+    }
+  }
+
+  function safeStorageRemove(key) {
+    try {
+      window.localStorage.removeItem(key);
+    } catch (_error) {
+      // Ignore storage failures and rely on cookie-backed auth.
+    }
+  }
+
   document.body.classList.add("shared-mode");
 
   const state = {
-    token: window.localStorage.getItem(tokenKey) || "",
+    token: safeStorageGet(tokenKey),
     user: null,
     tenants: [],
-    activeTenantId: window.localStorage.getItem(tenantKey) || "",
+    activeTenantId: safeStorageGet(tenantKey),
     loadRequestId: 0,
     requests: [],
     workspace: null,
@@ -53,18 +77,18 @@
   function setToken(token) {
     state.token = String(token || "");
     if (state.token) {
-      window.localStorage.setItem(tokenKey, state.token);
+      safeStorageSet(tokenKey, state.token);
     } else {
-      window.localStorage.removeItem(tokenKey);
+      safeStorageRemove(tokenKey);
     }
   }
 
   function setActiveTenantId(tenantId) {
     state.activeTenantId = String(tenantId || "");
     if (state.activeTenantId) {
-      window.localStorage.setItem(tenantKey, state.activeTenantId);
+      safeStorageSet(tenantKey, state.activeTenantId);
     } else {
-      window.localStorage.removeItem(tenantKey);
+      safeStorageRemove(tenantKey);
     }
   }
 
@@ -183,6 +207,7 @@
 
   async function apiFetch(path, options = {}) {
     const response = await fetch(`${apiBase}${path}`, {
+      credentials: "include",
       ...options,
       headers: {
         "Content-Type": "application/json",
