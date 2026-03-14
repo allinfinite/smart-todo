@@ -57,6 +57,19 @@
     return String(activeTenant()?.role || "").trim().toLowerCase();
   }
 
+  function applyAuthenticatedUser(user) {
+    state.user = user;
+    state.tenants = Array.isArray(user?.memberships)
+      ? user.memberships.map(membership => ({ ...membership.tenant, role: membership.role }))
+      : [];
+    if (!state.tenants.length) {
+      throw new Error("No tenant memberships found for this account");
+    }
+    if (!state.activeTenantId || !state.tenants.some(tenant => String(tenant.id) === String(state.activeTenantId))) {
+      setActiveTenantId(user.defaultTenantId || state.tenants[0].id);
+    }
+  }
+
   function userIsAdmin() {
     return ["owner", "internal_operator"].includes(activeRole());
   }
@@ -438,30 +451,32 @@
 
   async function bootstrapAuthenticatedState(currentUser = null) {
     const mePayload = currentUser ? { user: currentUser } : await apiFetch("/api/auth/me");
-    state.user = mePayload.user;
-    state.tenants = Array.isArray(mePayload.user?.memberships)
-      ? mePayload.user.memberships.map(membership => ({ ...membership.tenant, role: membership.role }))
-      : [];
-    if (!state.tenants.length) {
-      throw new Error("No tenant memberships found for this account");
-    }
-    if (!state.activeTenantId || !state.tenants.some(tenant => String(tenant.id) === String(state.activeTenantId))) {
-      setActiveTenantId(mePayload.user.defaultTenantId || state.tenants[0].id);
-    }
+    applyAuthenticatedUser(mePayload.user);
     state.creatingTenant = false;
     await loadTenantData();
   }
 
-  async function loadTenantData() {
+  async function loadTenantData(retryOnTenantNotFound = true) {
     const tenant = activeTenant();
     if (!tenant) {
       renderLogin("No tenant selected.");
       return;
     }
-    const [requestsPayload, workspacePayload] = await Promise.all([
-      apiFetch(`/api/app/tenants/${tenant.id}/requests`),
-      apiFetch(`/api/app/tenants/${tenant.id}/workspace`),
-    ]);
+    let requestsPayload;
+    let workspacePayload;
+    try {
+      [requestsPayload, workspacePayload] = await Promise.all([
+        apiFetch(`/api/app/tenants/${tenant.id}/requests`),
+        apiFetch(`/api/app/tenants/${tenant.id}/workspace`),
+      ]);
+    } catch (error) {
+      if (retryOnTenantNotFound && /tenant not found/i.test(String(error?.message || ""))) {
+        const mePayload = await apiFetch("/api/auth/me");
+        applyAuthenticatedUser(mePayload.user);
+        return loadTenantData(false);
+      }
+      throw error;
+    }
     state.requests = Array.isArray(requestsPayload.requests) ? requestsPayload.requests : [];
     state.workspace = workspacePayload.workspace || requestsPayload.workspace || null;
     if (userIsAdmin()) {
