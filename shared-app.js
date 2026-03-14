@@ -681,7 +681,11 @@
   async function runWorkspaceAction(action) {
     const tenant = activeTenant();
     if (!tenant) return;
-    const previewWindow = action === "preview" ? window.open("", "_blank", "noopener") : null;
+    const previewWindow = action === "preview" ? window.open("about:blank", "_blank") : null;
+    if (previewWindow && action === "preview") {
+      previewWindow.document.write("<title>Starting preview...</title><p style=\"font-family: sans-serif; padding: 24px;\">Starting preview...</p>");
+      previewWindow.document.close();
+    }
     state.activeAction = action;
     setWorkspaceStatus(`${action[0].toUpperCase()}${action.slice(1)} in progress...`);
     renderApp();
