@@ -22,3 +22,4 @@
 
 - When changing shared-app request or reply submission formats, patch the matching Cowork `/api/app/tenants/:tenantId/{requests,replies}` handlers in the same turn and verify they parse the same field names as the frontend before calling the feature done.
 - For shared request submit fixes, verify the full post-submit chain on the live tenant (`POST /requests`, then `GET /requests`, then `GET /workspace`) because a successful create can still leave the UI broken if the follow-up workspace refresh path is brittle.
+- In shared mode, do not gate initial app bootstrap on a `localStorage` token; always probe `/api/auth/me` so a valid API-domain session cookie can restore the user after refresh or storage failures.

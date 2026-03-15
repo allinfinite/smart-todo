@@ -1164,14 +1164,10 @@
     return;
   }
 
-  if (state.token) {
-    bootstrapAuthenticatedState().catch(error => {
-      if (error instanceof AuthExpiredError) {
-        return;
-      }
-      handleUnauthorized(error.message);
-    });
-  } else {
-    renderLogin();
-  }
+  bootstrapAuthenticatedState().catch(error => {
+    if (error instanceof AuthExpiredError) {
+      return;
+    }
+    handleUnauthorized(error.message);
+  });
 }());
