@@ -1305,8 +1305,9 @@ button:disabled {
 .shared-board-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 10px;
   align-items: center;
+  justify-content: flex-start;
 }
 
 .shared-board-status {
@@ -1345,32 +1346,32 @@ button:disabled {
 .board-action,
 .shared-utility-actions button.secondary,
 .summary-buttons .secondary {
-  min-height: 54px;
-  border-radius: 999px;
+  min-height: 38px;
+  border-radius: 24px;
   border: 0;
-  background: rgba(228, 222, 214, 0.76);
+  background: rgba(206, 201, 194, 0.92);
   color: var(--ink);
   box-shadow: none;
-  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .board-action {
   flex: 0 0 auto;
-  min-width: 164px;
-  padding: 0 24px;
+  min-width: 98px;
+  padding: 0 16px;
 }
 
 .shared-utility-actions button.secondary,
 .summary-buttons .secondary {
-  min-height: 56px;
-  padding-inline: 22px;
-  font-size: 0.95rem;
+  min-height: 38px;
+  padding-inline: 16px;
+  font-size: 0.9rem;
 }
 
 .summary-buttons .secondary {
-  min-width: 136px;
+  min-width: 110px;
   justify-content: center;
 }
 
@@ -1412,6 +1413,57 @@ button:disabled {
 
 .shared-inline-form {
   max-width: 860px;
+}
+
+.shared-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.shared-dropzone {
+  display: grid;
+  place-items: center;
+  min-height: 132px;
+  padding: 20px;
+  border: 2px dashed rgba(191, 211, 195, 0.95);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(248, 244, 239, 0.9));
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.shared-dropzone:hover,
+.shared-dropzone:focus-visible,
+.shared-dropzone.is-dragover {
+  border-color: rgba(216, 106, 56, 0.6);
+  background: linear-gradient(180deg, rgba(255, 249, 244, 0.95), rgba(248, 237, 228, 0.95));
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.shared-dropzone-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.shared-dropzone-copy strong {
+  font-size: 1rem;
+}
+
+.shared-dropzone-copy span,
+.shared-file-list {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 .shared-admin-head h2,
@@ -1557,6 +1609,11 @@ button:disabled {
   height: auto;
 }
 
+.shared-request-attachments {
+  display: grid;
+  gap: 10px;
+}
+
 .shared-replies {
   gap: 12px;
 }
@@ -1565,14 +1622,40 @@ button:disabled {
   border-radius: 18px;
 }
 
+.shared-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.shared-attachment {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(27, 23, 20, 0.06);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.84rem;
+}
+
+.shared-attachment:hover {
+  background: rgba(216, 106, 56, 0.16);
+}
+
+.shared-reply-attachments {
+  margin-top: 4px;
+}
+
 .shared-reply-form textarea {
   min-height: 110px;
 }
 
 @media (max-width: 900px) {
-  .shared-board-actions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.shared-board-actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 }
 
 @media (max-width: 720px) {

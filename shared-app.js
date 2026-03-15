@@ -56,6 +56,8 @@
     workspaceStatusLinkHref: "",
     workspaceStatusLinkLabel: "",
     activeAction: "",
+    composerFiles: [],
+    replyDrafts: {},
   };
 
   class AuthExpiredError extends Error {
@@ -131,8 +133,12 @@
     }
   }
 
-  function userIsAdmin() {
+  function userHasElevatedRole() {
     return ["owner", "internal_operator"].includes(activeRole());
+  }
+
+  function userCanViewAdminPanel() {
+    return activeRole() === "owner";
   }
 
   function setWorkspaceStatus(message, tone = "info", options = {}) {
@@ -206,11 +212,12 @@
   }
 
   async function apiFetch(path, options = {}) {
+    const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
     const response = await fetch(`${apiBase}${path}`, {
       credentials: "include",
       ...options,
       headers: {
-        "Content-Type": "application/json",
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
         ...authHeaders(),
         ...(options.headers || {}),
       },
@@ -270,6 +277,113 @@
       return raw;
     }
     return `${apiBase}${raw.startsWith("/") ? raw : `/${raw}`}`;
+  }
+
+  function normalizeFileArray(files) {
+    return Array.from(files || []).filter(Boolean);
+  }
+
+  function escapeAttribute(value) {
+    return escapeHtml(value).replaceAll("\n", " ");
+  }
+
+  function describeFiles(files) {
+    const normalizedFiles = normalizeFileArray(files);
+    if (!normalizedFiles.length) {
+      return "No files selected.";
+    }
+    return normalizedFiles.map(file => `${file.name} (${Math.max(1, Math.round(file.size / 1024))} KB)`).join(", ");
+  }
+
+  function syncInputFiles(input, files) {
+    if (!input) {
+      return;
+    }
+    if (!normalizeFileArray(files).length) {
+      input.value = "";
+      return;
+    }
+    if (typeof DataTransfer === "undefined") {
+      return;
+    }
+    const transfer = new DataTransfer();
+    normalizeFileArray(files).forEach(file => transfer.items.add(file));
+    input.files = transfer.files;
+  }
+
+  function ensureReplyDraft(requestId) {
+    const key = String(requestId || "");
+    if (!key) {
+      return { text: "", files: [] };
+    }
+    if (!state.replyDrafts[key]) {
+      state.replyDrafts[key] = { text: "", files: [] };
+    }
+    return state.replyDrafts[key];
+  }
+
+  function bindDropzone(dropzone, input, updateFiles) {
+    if (!dropzone || !input || typeof updateFiles !== "function") {
+      return;
+    }
+
+    const openPicker = event => {
+      if (event.target === input || event.target.closest("button, a, textarea, input, select")) {
+        return;
+      }
+      input.click();
+    };
+
+    ["dragenter", "dragover"].forEach(type => {
+      dropzone.addEventListener(type, event => {
+        event.preventDefault();
+        dropzone.classList.add("is-dragover");
+      });
+    });
+
+    ["dragleave", "dragend", "drop"].forEach(type => {
+      dropzone.addEventListener(type, event => {
+        event.preventDefault();
+        if (type !== "drop") {
+          dropzone.classList.remove("is-dragover");
+          return;
+        }
+        dropzone.classList.remove("is-dragover");
+        const files = normalizeFileArray(event.dataTransfer?.files);
+        if (files.length) {
+          updateFiles(files);
+        }
+      });
+    });
+
+    dropzone.addEventListener("click", openPicker);
+    dropzone.addEventListener("keydown", event => {
+      if (event.key !== "Enter" && event.key !== " ") {
+        return;
+      }
+      event.preventDefault();
+      input.click();
+    });
+
+    input.addEventListener("change", () => {
+      updateFiles(normalizeFileArray(input.files));
+    });
+  }
+
+  function renderAttachmentList(attachments, className = "shared-attachments") {
+    const items = Array.isArray(attachments) ? attachments.filter(Boolean) : [];
+    if (!items.length) {
+      return "";
+    }
+    return `
+      <div class="${escapeAttribute(className)}">
+        ${items.map(attachment => `
+          <a class="shared-attachment" href="${escapeAttribute(assetUrl(attachment.url || ""))}" target="_blank" rel="noreferrer">
+            ${escapeHtml(attachment.original_name || attachment.filename || "attachment")}
+          </a>
+        `).join("")}
+      </div>
+    `;
   }
 
   function firstReadableSentence(text) {
@@ -357,10 +471,12 @@
   function requestCard(request) {
     const requestId = String(request.request_id || request.id || "");
     const replies = Array.isArray(request.replies) ? request.replies : [];
+    const attachments = Array.isArray(request.attachments) ? request.attachments : [];
     const isExpanded = requestId && requestId === state.expandedRequestId;
     const status = requestState(request);
     const priority = requestPriority(request);
     const isCompleted = status === "completed";
+    const replyDraft = ensureReplyDraft(requestId);
     const latestMessage = request.latest_message
       ? `<p class="shared-request-note">${escapeHtml(request.latest_message)}</p>`
       : "";
@@ -428,14 +544,36 @@
                               <strong>${escapeHtml(reply.author || "user")}</strong>
                               <span>${escapeHtml(formatDate(reply.created_at || reply.createdAt))}</span>
                               <p>${escapeHtml(reply.text || "")}</p>
+                              ${renderAttachmentList(reply.attachments, "shared-attachments shared-reply-attachments")}
                             </div>
                           `
                         )
                         .join("")}</div>`
                     : ""
                 }
+                ${attachments.length ? `
+                  <div class="shared-request-attachments">
+                    <div class="shared-detail-label">Attachments</div>
+                    ${renderAttachmentList(attachments)}
+                  </div>
+                ` : ""}
                 <form class="shared-reply-form" data-request-id="${escapeHtml(requestId)}">
-                  <textarea name="reply" rows="3" placeholder="Add a reply or clarification"></textarea>
+                  <textarea name="reply" rows="3" placeholder="Add a reply or clarification">${escapeHtml(replyDraft.text || "")}</textarea>
+                  <input class="shared-file-input" id="sharedReplyFiles-${escapeAttribute(requestId)}" name="files" type="file" multiple />
+                  <div
+                    class="shared-dropzone"
+                    data-dropzone="reply"
+                    data-request-id="${escapeHtml(requestId)}"
+                    tabindex="0"
+                    role="button"
+                    aria-label="Attach files to reply"
+                  >
+                    <div class="shared-dropzone-copy">
+                      <strong>Drop files here</strong>
+                      <span>or click to upload multiple attachments</span>
+                    </div>
+                  </div>
+                  <p class="shared-file-list" data-file-list="reply" data-request-id="${escapeHtml(requestId)}">${escapeHtml(describeFiles(replyDraft.files))}</p>
                   <div class="form-actions">
                     <button type="submit">Send Reply</button>
                   </div>
@@ -532,7 +670,7 @@
               </label>
               <div class="shared-utility-actions">
                 <button class="secondary" id="toggleComposerButton" type="button">${state.composerOpen ? "Hide Request" : "New Request"}</button>
-                ${userIsAdmin() ? `<button class="secondary" id="toggleAdminButton" type="button">${state.adminOpen ? "Hide Admin" : "Admin"}</button>` : ""}
+                ${userCanViewAdminPanel() ? `<button class="secondary" id="toggleAdminButton" type="button">${state.adminOpen ? "Hide Admin" : "Admin"}</button>` : ""}
                 <button class="secondary" id="logoutButton" type="button">Logout</button>
               </div>
             </div>
@@ -561,6 +699,14 @@
                   <option value="low">Low</option>
                 </select>
               </label>
+              <input class="shared-file-input" id="sharedRequestFiles" name="files" type="file" multiple />
+              <div class="shared-dropzone" data-dropzone="request" tabindex="0" role="button" aria-label="Attach files to request">
+                <div class="shared-dropzone-copy">
+                  <strong>Drop files here</strong>
+                  <span>or click to upload multiple attachments</span>
+                </div>
+              </div>
+              <p class="shared-file-list" id="sharedRequestFilesStatus">${escapeHtml(describeFiles(state.composerFiles))}</p>
               <div class="form-actions">
                 <button type="submit">Queue Task</button>
                 <p class="form-status" id="sharedRequestStatus"></p>
@@ -569,7 +715,7 @@
           </section>
 
           ${
-            userIsAdmin()
+            userCanViewAdminPanel()
               ? `
                 <section class="shared-drawer shared-admin-panel ${state.adminOpen ? "" : "hidden"}" id="sharedAdminPanel">
                   <div class="shared-admin-head">
@@ -700,6 +846,20 @@
       });
     }
     document.querySelector("#sharedRequestForm").addEventListener("submit", submitRequest);
+    const requestForm = document.querySelector("#sharedRequestForm");
+    if (requestForm) {
+      const requestFilesInput = document.querySelector("#sharedRequestFiles");
+      const requestDropzone = document.querySelector('[data-dropzone="request"]');
+      const requestFilesStatus = document.querySelector("#sharedRequestFilesStatus");
+      syncInputFiles(requestFilesInput, state.composerFiles);
+      bindDropzone(requestDropzone, requestFilesInput, files => {
+        state.composerFiles = files;
+        if (requestFilesStatus) {
+          requestFilesStatus.textContent = describeFiles(files);
+        }
+        syncInputFiles(requestFilesInput, files);
+      });
+    }
     document.querySelectorAll(".card-toggle").forEach(button => {
       button.addEventListener("click", event => {
         const requestId = String(event.currentTarget.dataset.requestId || "");
@@ -712,6 +872,26 @@
     });
     document.querySelectorAll(".shared-reply-form").forEach(form => {
       form.addEventListener("submit", submitReply);
+      const requestId = String(form.dataset.requestId || "");
+      const draft = ensureReplyDraft(requestId);
+      const textarea = form.querySelector('textarea[name="reply"]');
+      const filesInput = form.querySelector('input[name="files"]');
+      const dropzone = form.querySelector('[data-dropzone="reply"]');
+      const filesStatus = form.querySelector('[data-file-list="reply"]');
+      if (textarea) {
+        textarea.value = draft.text || "";
+        textarea.addEventListener("input", event => {
+          ensureReplyDraft(requestId).text = event.currentTarget.value;
+        });
+      }
+      syncInputFiles(filesInput, draft.files);
+      bindDropzone(dropzone, filesInput, files => {
+        ensureReplyDraft(requestId).files = files;
+        if (filesStatus) {
+          filesStatus.textContent = describeFiles(files);
+        }
+        syncInputFiles(filesInput, files);
+      });
     });
     const tenantForm = document.querySelector("#tenantForm");
     if (tenantForm) {
@@ -767,7 +947,7 @@
     state.requests = Array.isArray(requestsPayload.requests) ? requestsPayload.requests : [];
     state.workspace = workspacePayload.workspace || requestsPayload.workspace || null;
     state.adminStatus = "";
-    if (userIsAdmin()) {
+    if (userCanViewAdminPanel()) {
       try {
         const [tenantsPayload, auditPayload] = await Promise.all([
           apiFetch("/api/app/admin/tenants"),
@@ -805,15 +985,19 @@
     if (!tenant) return;
     statusNode.textContent = "Saving...";
     try {
+      const payload = new FormData();
+      payload.set("title", String(formData.get("title") || "").trim());
+      payload.set("details", String(formData.get("details") || "").trim());
+      payload.set("priority", String(formData.get("priority") || "normal").trim());
+      state.composerFiles.forEach(file => {
+        payload.append("files", file);
+      });
       await apiFetch(`/api/app/tenants/${tenant.id}/requests`, {
         method: "POST",
-        body: JSON.stringify({
-          title: formData.get("title"),
-          details: formData.get("details"),
-          priority: formData.get("priority"),
-        }),
+        body: payload,
       });
       form.reset();
+      state.composerFiles = [];
       statusNode.textContent = "Request queued.";
       await reloadBoard();
     } catch (error) {
@@ -825,15 +1009,23 @@
     event.preventDefault();
     const tenant = activeTenant();
     const requestId = event.currentTarget.dataset.requestId;
+    const draft = ensureReplyDraft(requestId);
     const text = String(new FormData(event.currentTarget).get("reply") || "").trim();
-    if (!tenant || !requestId || !text) {
+    if (!tenant || !requestId || (!text && !draft.files.length)) {
       return;
     }
     try {
+      const payload = new FormData();
+      payload.set("requestId", requestId);
+      payload.set("text", text);
+      draft.files.forEach(file => {
+        payload.append("files", file);
+      });
       await apiFetch(`/api/app/tenants/${tenant.id}/replies`, {
         method: "POST",
-        body: JSON.stringify({ requestId, text }),
+        body: payload,
       });
+      state.replyDrafts[String(requestId)] = { text: "", files: [] };
       setWorkspaceStatus("Reply added.", "success");
       await reloadBoard();
     } catch (error) {

@@ -144,3 +144,12 @@ When `PORTAL_APP_MODE=shared`, the frontend uses authenticated tenant-aware endp
 - `POST /api/app/admin/tenants/:tenantId/users`
 - `PATCH /api/app/admin/users/:userId`
 - `GET /api/app/admin/audit-log`
+
+Shared-mode write endpoints should accept either JSON or multipart form uploads:
+
+- `POST /api/app/tenants/:tenantId/requests`
+  - text fields: `title`, `details`, `priority`
+  - file fields: repeated `files`
+- `POST /api/app/tenants/:tenantId/replies`
+  - text fields: `requestId`, `text`
+  - file fields: repeated `files`

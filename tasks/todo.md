@@ -1,5 +1,28 @@
 # Booch-Bar Smart Todo Setup
 
+## Multi-File Uploads
+
+### Plan
+
+- [x] Inspect the existing legacy upload flow and isolate the shared-app gaps for request and reply attachments.
+- [x] Update the shared composer and inline reply UI to support multiple file selection plus drag-and-drop affordances.
+- [x] Switch shared-app request and reply submission from JSON payloads to multipart `FormData`, preserving text-only compatibility.
+- [x] Verify syntax/build checks and document the result in the review section.
+
+### Review
+
+- Updated the shared request composer and inline reply forms in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) to support:
+  - multiple attachments on new requests
+  - multiple attachments on replies
+  - drag-and-drop or click-to-upload interactions
+  - attachment chips rendered back on shared request and reply detail views
+- Changed shared request and reply writes from JSON to multipart `FormData` while keeping the same text fields, and documented that backend expectation in [/Users/daniellevy/Code/smart-todo/README.md](/Users/daniellevy/Code/smart-todo/README.md).
+- Added shared upload/dropzone styling in [/Users/daniellevy/Code/smart-todo/styles.css](/Users/daniellevy/Code/smart-todo/styles.css).
+- Verification:
+  - `node --check ./shared-app.js`
+  - `node --check ./app.js`
+  - `npm run build`
+
 ## Plan
 
 - [x] Inspect the current `smart-todo` portal contract and confirm what must be configured for the `allinfinite/Booch-Bar` instance.
@@ -7,6 +30,13 @@
 - [x] Configure this repo so the generated portal is branded and wired for the Booch-Bar workspace, including preview and deploy actions.
 - [x] Add setup documentation/scripts for GitHub-backed Vercel auto-deploys and a piko.local preview/dev server.
 - [x] Verify the local build and any available deployment/auth wiring.
+
+## Multi-Tenant Repair
+
+- [ ] Audit backend/multi-tenant state (Cowork `dashboard_server.py`, `portal_multi_tenant.py`) so auth, tenant memberships, and legacy slug routes return consistent tenants and audit logs.
+- [ ] Harden API endpoints/CORS/session persistence so `X-Portal-Password` legacy routes, `/api/auth/*`, and `/api/app/*` all work with credentials and cookies, and admin queries no longer 403.
+- [ ] Update the shared frontend (`shared-app.js`, `styles.css`, `app.js`, `index.html`) to match the legacy visual layout and UX, including smaller action buttons, workspace cards with accomplishments/screenshots, preview link behavior, tenant scoping, and tenant-only admin gating.
+- [ ] Verify end-to-end flows (login, tenant switch, request board, legacy portal routes, preview links, workspace actions) via `npm run build`, backend lint/tests, and targeted browser checks.
 
 ## Review
 
