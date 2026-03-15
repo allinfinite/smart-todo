@@ -18,9 +18,25 @@
     }
   }
 
+  function safeSessionGet(key) {
+    try {
+      return window.sessionStorage.getItem(key) || "";
+    } catch (_error) {
+      return "";
+    }
+  }
+
   function safeStorageSet(key, value) {
     try {
       window.localStorage.setItem(key, value);
+    } catch (_error) {
+      // Ignore storage failures and rely on cookie-backed auth.
+    }
+  }
+
+  function safeSessionSet(key, value) {
+    try {
+      window.sessionStorage.setItem(key, value);
     } catch (_error) {
       // Ignore storage failures and rely on cookie-backed auth.
     }
@@ -34,10 +50,18 @@
     }
   }
 
+  function safeSessionRemove(key) {
+    try {
+      window.sessionStorage.removeItem(key);
+    } catch (_error) {
+      // Ignore storage failures and rely on cookie-backed auth.
+    }
+  }
+
   document.body.classList.add("shared-mode");
 
   const state = {
-    token: safeStorageGet(tokenKey),
+    token: safeStorageGet(tokenKey) || safeSessionGet(tokenKey),
     user: null,
     tenants: [],
     activeTenantId: safeStorageGet(tenantKey),
@@ -80,8 +104,10 @@
     state.token = String(token || "");
     if (state.token) {
       safeStorageSet(tokenKey, state.token);
+      safeSessionSet(tokenKey, state.token);
     } else {
       safeStorageRemove(tokenKey);
+      safeSessionRemove(tokenKey);
     }
   }
 
