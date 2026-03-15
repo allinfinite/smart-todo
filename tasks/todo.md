@@ -219,6 +219,39 @@
 
 # Multi-Tenant Smart Todo Migration
 
+## Screenshot Evidence Verification Gate
+
+### Plan
+
+- [x] Inspect the Cowork completion-screenshot flow and identify the last point before evidence is exposed to portal users.
+- [x] Add screenshot-analysis logic that confirms the captured image plausibly proves the task is complete before persisting it as `completion_screenshot`.
+- [x] Expose verification metadata for completed requests while withholding unverified screenshots from the portal payload.
+- [x] Run targeted verification for the parser/analysis path and document the result.
+
+### Review
+
+- Patched [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) so `maybe_capture_portal_completion_screenshot()` no longer publishes a captured screenshot immediately.
+- Added an OCR-based verification pass in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) that:
+  - runs `tesseract` against the captured image
+  - rejects screenshots that look like error pages or produce no readable text
+  - extracts expected evidence keywords from the declared evidence focus plus request context
+  - only marks the screenshot verified when enough expected markers are visible in the image
+- When verification fails, the backend now reopens the same request automatically instead of treating the run as done:
+  - the just-finished task is downgraded from `completed` to `failed`
+  - a new remediation task is queued against the same request with the verification failure reason, OCR excerpt, and the required evidence-route contract
+  - the request’s `agent_task_id` is moved to that retry task, so the portal stays in the in-progress flow until a later run produces verified proof
+- Only verified evidence is user-facing:
+  - `completion_screenshot` is removed from the record whenever verification fails, so the portal does not send the screenshot to the user
+  - `completion_screenshot_verification` is still persisted with status, summary, matched terms, missing terms, retry metadata, and an OCR excerpt for operator debugging
+- Added focused regression coverage in [/Users/daniellevy/Code/Cowork/tests/test_dashboard_evidence_verification.py](/Users/daniellevy/Code/Cowork/tests/test_dashboard_evidence_verification.py) for:
+  - a screenshot that clearly contains the expected completion evidence
+  - a screenshot that shows an error page instead of proof
+  - a failed verification that queues a retry task against the same request
+- Verification:
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py /Users/daniellevy/Code/Cowork/tests/test_dashboard_evidence_verification.py`
+  - `python3 -m unittest discover -s tests -p 'test_dashboard_evidence_verification.py'` in `/Users/daniellevy/Code/Cowork`
+  - `python3 tests/test_dashboard_evidence_verification.py` in `/Users/daniellevy/Code/Cowork`
+
 ## Plan
 
 - [x] Inspect the current `smart-todo` frontend contract and the Cowork portal backend to identify the minimum compatibility-preserving seams for multi-tenant auth and tenant-scoped APIs.
