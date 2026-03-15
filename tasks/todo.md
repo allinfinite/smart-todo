@@ -256,14 +256,34 @@
 
 ### Plan
 
-- [ ] Add backend request action handlers for both legacy and shared portal flows so requests can be canceled or archived safely.
-- [ ] Ensure canceling a request actually terminates any live Codex session and leaves the request in a stable canceled state.
-- [ ] Protect request creation against repeat posts so duplicate button presses or retries do not create twin todo cards.
-- [ ] Wire shared-app todo cards to show cancel/archive controls and verify the full flow.
+- [x] Add backend request action handlers for both legacy and shared portal flows so requests can be canceled or archived safely.
+- [x] Ensure canceling a request actually terminates any live Codex session and leaves the request in a stable canceled state.
+- [x] Protect request creation against repeat posts so duplicate button presses or retries do not create twin todo cards.
+- [x] Wire shared-app todo cards to show cancel/archive controls and verify the full flow.
 
 ### Review
 
-- In progress.
+- Added backend request-action support in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py):
+  - legacy route: `/api/portal/<site_slug>/requests/<request_id>/actions`
+  - shared route: `/api/app/tenants/<tenant_id>/requests/<request_id>/actions`
+- Cancel now actually tears down the running Codex session:
+  - the linked task is marked `canceled`
+  - `terminate_process(pid)` is called on the live agent PID
+  - `run_agent_task()` now preserves the canceled state instead of converting the terminated process into a generic `failed`
+- Archive now hides terminal requests from both legacy and shared request listings by persisting `archived_at` and filtering archived records out of GET responses.
+- Added duplicate-submit protection for request creation in both legacy and shared request POST handlers:
+  - recent matching unarchived requests within a short time window are treated as duplicates
+  - the existing request is returned with `duplicate: true` instead of creating a second todo card
+  - the shared composer also disables the submit button while the post is in flight
+- Wired shared request details in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) to render `Cancel` on queued/running cards and `Archive` on terminal cards, using the new shared action endpoint.
+- Added regression coverage in [/Users/daniellevy/Code/Cowork/tests/test_dashboard_evidence_verification.py](/Users/daniellevy/Code/Cowork/tests/test_dashboard_evidence_verification.py) for:
+  - recent duplicate request detection
+  - cancel-task session teardown behavior
+- Verification:
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py /Users/daniellevy/Code/Cowork/tests/test_dashboard_evidence_verification.py`
+  - `python3 -m unittest discover -s tests -p 'test_dashboard_evidence_verification.py'` in `/Users/daniellevy/Code/Cowork`
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - `node --check /Users/daniellevy/Code/smart-todo/app.js`
 
 ## Plan
 
