@@ -18,6 +18,7 @@
   - attachment chips rendered back on shared request and reply detail views
 - Changed shared request and reply writes from JSON to multipart `FormData` while keeping the same text fields, and documented that backend expectation in [/Users/daniellevy/Code/smart-todo/README.md](/Users/daniellevy/Code/smart-todo/README.md).
 - Added shared upload/dropzone styling in [/Users/daniellevy/Code/smart-todo/styles.css](/Users/daniellevy/Code/smart-todo/styles.css).
+- Patched the shared Cowork backend in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) so `/api/app/tenants/:tenantId/requests` and `/api/app/tenants/:tenantId/replies` now accept multipart form uploads with the same attachment persistence path as legacy portal routes.
 - Verification:
   - `node --check ./shared-app.js`
   - `node --check ./app.js`

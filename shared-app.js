@@ -386,6 +386,10 @@
     `;
   }
 
+  function passwordManagerIgnoreAttrs() {
+    return 'data-bwignore="true" data-1p-ignore="true" data-lpignore="true" autocomplete="off"';
+  }
+
   function firstReadableSentence(text) {
     const normalized = String(text || "")
       .replace(/\[[^\]]+\]\([^)]+\)/g, "$1")
@@ -557,9 +561,9 @@
                     ${renderAttachmentList(attachments)}
                   </div>
                 ` : ""}
-                <form class="shared-reply-form" data-request-id="${escapeHtml(requestId)}">
-                  <textarea name="reply" rows="3" placeholder="Add a reply or clarification">${escapeHtml(replyDraft.text || "")}</textarea>
-                  <input class="shared-file-input" id="sharedReplyFiles-${escapeAttribute(requestId)}" name="files" type="file" multiple />
+                <form class="shared-reply-form" data-request-id="${escapeHtml(requestId)}" ${passwordManagerIgnoreAttrs()}>
+                  <textarea name="reply" rows="3" placeholder="Add a reply or clarification" ${passwordManagerIgnoreAttrs()}>${escapeHtml(replyDraft.text || "")}</textarea>
+                  <input class="shared-file-input" id="sharedReplyFiles-${escapeAttribute(requestId)}" name="files" type="file" multiple data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
                   <div
                     class="shared-dropzone"
                     data-dropzone="reply"
@@ -681,25 +685,25 @@
           </header>
 
           <section class="shared-drawer ${state.composerOpen ? "" : "hidden"}" id="sharedComposerPanel">
-            <form id="sharedRequestForm" class="request-form shared-inline-form">
+            <form id="sharedRequestForm" class="request-form shared-inline-form" ${passwordManagerIgnoreAttrs()}>
               <label>
                 <span>Title</span>
-                <input name="title" maxlength="140" required />
+                <input name="title" maxlength="140" required ${passwordManagerIgnoreAttrs()} />
               </label>
               <label>
                 <span>Details</span>
-                <textarea name="details" rows="6"></textarea>
+                <textarea name="details" rows="6" ${passwordManagerIgnoreAttrs()}></textarea>
               </label>
               <label>
                 <span>Priority</span>
-                <select name="priority">
+                <select name="priority" ${passwordManagerIgnoreAttrs()}>
                   <option value="normal">Normal</option>
                   <option value="high">High</option>
                   <option value="urgent">Urgent</option>
                   <option value="low">Low</option>
                 </select>
               </label>
-              <input class="shared-file-input" id="sharedRequestFiles" name="files" type="file" multiple />
+              <input class="shared-file-input" id="sharedRequestFiles" name="files" type="file" multiple data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
               <div class="shared-dropzone" data-dropzone="request" tabindex="0" role="button" aria-label="Attach files to request">
                 <div class="shared-dropzone-copy">
                   <strong>Drop files here</strong>

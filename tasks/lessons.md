@@ -17,3 +17,7 @@
 - When matching the old portal look in shared mode, do not assume the workspace action buttons should fill a multi-column desktop grid; verify the visual density in a real browser and keep these controls compact unless the user explicitly wants oversized hero buttons.
 - After a desktop sizing fix, re-check the narrow breakpoint separately; mobile-only `width: 100%` overrides can silently keep shared workspace actions oversized on phones.
 - For shared auth on a separate API subdomain, do not rely on `localStorage` alone; send `credentials: "include"` and issue an API-domain session cookie so refreshes survive Safari/local-storage edge cases.
+
+## 2026-03-14
+
+- When changing shared-app request or reply submission formats, patch the matching Cowork `/api/app/tenants/:tenantId/{requests,replies}` handlers in the same turn and verify they parse the same field names as the frontend before calling the feature done.

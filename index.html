@@ -52,10 +52,10 @@
             <span class="mono" id="apiBaseLabel"></span>
           </div>
 
-          <form id="requestForm" class="request-form">
+          <form id="requestForm" class="request-form" data-bwignore="true" data-1p-ignore="true" data-lpignore="true" autocomplete="off">
             <label>
               <span id="titleLabel">Title</span>
-              <input id="titleInput" name="title" maxlength="140" placeholder="Describe the next update you want made" required />
+              <input id="titleInput" name="title" maxlength="140" placeholder="Describe the next update you want made" required data-bwignore="true" data-1p-ignore="true" data-lpignore="true" autocomplete="off" />
             </label>
 
             <label>
@@ -65,6 +65,10 @@
                 name="details"
                 rows="7"
                 placeholder="Explain the change, desired outcome, and anything that should stay the same."
+                data-bwignore="true"
+                data-1p-ignore="true"
+                data-lpignore="true"
+                autocomplete="off"
               ></textarea>
             </label>
 
@@ -76,7 +80,7 @@
 
               <label>
                 <span id="filesLabel">Files or references</span>
-                <input id="imagesInput" name="images" type="file" multiple />
+                <input id="imagesInput" name="images" type="file" multiple data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
               </label>
             </div>
 
@@ -117,7 +121,7 @@
           <div class="reply-dialog-title" id="replyDialogTitle"></div>
           <div class="reply-dialog-details" id="replyDialogDetails"></div>
         </div>
-        <form id="replyForm" class="reply-dialog-form">
+        <form id="replyForm" class="reply-dialog-form" data-bwignore="true" data-1p-ignore="true" data-lpignore="true" autocomplete="off">
           <input id="replyRequestInput" type="hidden" name="request_id" />
           <label>
             <span class="reply-input-label" id="replyInputLabel">Your Reply</span>
@@ -127,11 +131,15 @@
               rows="5"
               placeholder="Add your response, feedback, or clarification..."
               class="reply-textarea"
+              data-bwignore="true"
+              data-1p-ignore="true"
+              data-lpignore="true"
+              autocomplete="off"
             ></textarea>
           </label>
           <label class="reply-file-label">
             <span id="replyAttachLabel">Attach files (optional)</span>
-            <input id="replyFilesInput" name="files" type="file" multiple style="display: none;" />
+            <input id="replyFilesInput" name="files" type="file" multiple style="display: none;" data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
           </label>
           <div class="reply-selected-files" id="replySelectedFiles">No files selected.</div>
           <div class="reply-form-status" id="replyFormStatus"></div>
