@@ -23,6 +23,8 @@
   - `node --check ./shared-app.js`
   - `node --check ./app.js`
   - `npm run build`
+  - authenticated live multipart `POST https://cowork-api.dnalevity.com/api/app/tenants/e728c7c6-6167-417d-ab3a-d48930f8d374/requests` -> `201`
+  - in-process Flask test-client multipart `POST /api/app/tenants/e728c7c6-6167-417d-ab3a-d48930f8d374/requests` on `dna@piko.local` -> `201`
 
 ## Plan
 

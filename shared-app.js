@@ -931,12 +931,19 @@
     const loadRequestId = state.loadRequestId + 1;
     state.loadRequestId = loadRequestId;
     let requestsPayload;
-    let workspacePayload;
+    let workspacePayload = null;
     try {
-      [requestsPayload, workspacePayload] = await Promise.all([
-        apiFetch(`/api/app/tenants/${requestedTenantId}/requests`),
-        apiFetch(`/api/app/tenants/${requestedTenantId}/workspace`),
-      ]);
+      requestsPayload = await apiFetch(`/api/app/tenants/${requestedTenantId}/requests`);
+      try {
+        workspacePayload = await apiFetch(`/api/app/tenants/${requestedTenantId}/workspace`);
+      } catch (error) {
+        const message = String(error?.message || "").trim().toLowerCase();
+        if (!message.includes("tenant not found")) {
+          setWorkspaceStatus("Workspace details are temporarily unavailable. The request board is still current.", "warn");
+        } else {
+          throw error;
+        }
+      }
     } catch (error) {
       if (retryOnTenantNotFound && /tenant not found/i.test(String(error?.message || ""))) {
         const mePayload = await apiFetch("/api/auth/me");
@@ -949,7 +956,7 @@
       return;
     }
     state.requests = Array.isArray(requestsPayload.requests) ? requestsPayload.requests : [];
-    state.workspace = workspacePayload.workspace || requestsPayload.workspace || null;
+    state.workspace = workspacePayload?.workspace || requestsPayload.workspace || state.workspace || null;
     state.adminStatus = "";
     if (userCanViewAdminPanel()) {
       try {
@@ -996,12 +1003,15 @@
       state.composerFiles.forEach(file => {
         payload.append("files", file);
       });
-      await apiFetch(`/api/app/tenants/${tenant.id}/requests`, {
+      const responsePayload = await apiFetch(`/api/app/tenants/${tenant.id}/requests`, {
         method: "POST",
         body: payload,
       });
       form.reset();
       state.composerFiles = [];
+      if (responsePayload?.workspace) {
+        state.workspace = responsePayload.workspace;
+      }
       statusNode.textContent = "Request queued.";
       await reloadBoard();
     } catch (error) {

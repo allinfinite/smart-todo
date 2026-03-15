@@ -21,3 +21,4 @@
 ## 2026-03-14
 
 - When changing shared-app request or reply submission formats, patch the matching Cowork `/api/app/tenants/:tenantId/{requests,replies}` handlers in the same turn and verify they parse the same field names as the frontend before calling the feature done.
+- For shared request submit fixes, verify the full post-submit chain on the live tenant (`POST /requests`, then `GET /requests`, then `GET /workspace`) because a successful create can still leave the UI broken if the follow-up workspace refresh path is brittle.
