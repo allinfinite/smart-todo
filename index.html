@@ -16,6 +16,15 @@
         document.documentElement.classList.add("shared-bootstrap");
       }
     </script>
+    <style>
+      html.shared-bootstrap body {
+        visibility: hidden;
+      }
+
+      html.shared-bootstrap body.shared-ready {
+        visibility: visible;
+      }
+    </style>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
