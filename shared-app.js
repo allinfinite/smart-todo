@@ -50,6 +50,11 @@
     }
   }
 
+  function markSharedReady() {
+    document.body.classList.add("shared-ready");
+    document.documentElement.classList.remove("shared-bootstrap");
+  }
+
   function safeSessionRemove(key) {
     try {
       window.sessionStorage.removeItem(key);
@@ -59,6 +64,7 @@
   }
 
   document.body.classList.add("shared-mode");
+  markSharedReady();
 
   const state = {
     token: safeStorageGet(tokenKey) || safeSessionGet(tokenKey),
@@ -633,6 +639,7 @@
   }
 
   function renderLogin(message = "") {
+    markSharedReady();
     document.body.innerHTML = `
       <div class="page-shell shared-shell">
         <section class="auth-shell">
@@ -678,6 +685,7 @@
   }
 
   function renderApp() {
+    markSharedReady();
     const tenant = activeTenant();
     const tenantFormSource = state.creatingTenant
       ? { displayName: "", slug: "", status: "active", workspace: { enabledActions: ["preview", "sync", "deploy"] } }
