@@ -252,6 +252,19 @@
   - `python3 -m unittest discover -s tests -p 'test_dashboard_evidence_verification.py'` in `/Users/daniellevy/Code/Cowork`
   - `python3 tests/test_dashboard_evidence_verification.py` in `/Users/daniellevy/Code/Cowork`
 
+## Request Cancel And Archive Controls
+
+### Plan
+
+- [ ] Add backend request action handlers for both legacy and shared portal flows so requests can be canceled or archived safely.
+- [ ] Ensure canceling a request actually terminates any live Codex session and leaves the request in a stable canceled state.
+- [ ] Protect request creation against repeat posts so duplicate button presses or retries do not create twin todo cards.
+- [ ] Wire shared-app todo cards to show cancel/archive controls and verify the full flow.
+
+### Review
+
+- In progress.
+
 ## Plan
 
 - [x] Inspect the current `smart-todo` frontend contract and the Cowork portal backend to identify the minimum compatibility-preserving seams for multi-tenant auth and tenant-scoped APIs.

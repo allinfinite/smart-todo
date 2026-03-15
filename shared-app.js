@@ -86,9 +86,11 @@
     workspaceStatusLinkHref: "",
     workspaceStatusLinkLabel: "",
     activeAction: "",
+    requestSubmitInFlight: false,
     composerFiles: [],
     replyDrafts: {},
   };
+  const requestActionKeysInFlight = new Set();
 
   class AuthExpiredError extends Error {
     constructor(message = "Session expired. Sign in again.") {
@@ -496,6 +498,58 @@
     return "Queued";
   }
 
+  function requestAvailableActions(request) {
+    const provided = Array.isArray(request?.available_actions) ? request.available_actions : null;
+    if (provided) {
+      return provided.map(value => String(value || "").trim().toLowerCase()).filter(Boolean);
+    }
+    const status = requestState(request);
+    if (["completed", "failed", "blocked", "canceled"].includes(status)) {
+      return ["archive"];
+    }
+    if (["queued", "running"].includes(status)) {
+      return ["cancel"];
+    }
+    return [];
+  }
+
+  function requestActionKey(requestId, action) {
+    return `${String(requestId || "")}:${String(action || "").trim().toLowerCase()}`;
+  }
+
+  function requestActionEndpoint(tenantId, requestId) {
+    return `/api/app/tenants/${tenantId}/requests/${requestId}/actions`;
+  }
+
+  function requestActionButtons(request) {
+    const tenant = activeTenant();
+    const requestId = String(request.request_id || request.id || "");
+    const actions = requestAvailableActions(request);
+    if (!tenant || !requestId || !actions.length) {
+      return "";
+    }
+    return `
+      <div class="request-actions">
+        ${actions.map(action => {
+          const isArchive = action === "archive";
+          const key = requestActionKey(requestId, action);
+          const busy = requestActionKeysInFlight.has(key);
+          return `
+            <button
+              class="secondary request-action-btn ${isArchive ? "archive-btn" : "cancel-btn"}"
+              type="button"
+              data-request-id="${escapeHtml(requestId)}"
+              data-request-action="${escapeHtml(action)}"
+              ${busy ? "disabled" : ""}
+            >
+              ${escapeHtml(isArchive ? "Archive" : "Cancel")}
+            </button>
+          `;
+        }).join("")}
+      </div>
+    `;
+  }
+
   function requestPriorityLabel(request) {
     const priority = requestPriority(request);
     if (priority === "urgent") return "Urgent";
@@ -570,6 +624,7 @@
                     `
                     : latestMessage
                 }
+                ${requestActionButtons(request)}
                 ${
                   replies.length
                     ? `<div class="shared-replies">${replies
@@ -931,6 +986,9 @@
         syncInputFiles(filesInput, files);
       });
     });
+    document.querySelectorAll(".request-action-btn").forEach(button => {
+      button.addEventListener("click", handleRequestAction);
+    });
     const tenantForm = document.querySelector("#tenantForm");
     if (tenantForm) {
       tenantForm.addEventListener("submit", saveTenant);
@@ -1027,7 +1085,12 @@
     const form = event.currentTarget;
     const formData = new FormData(form);
     const statusNode = document.querySelector("#sharedRequestStatus");
-    if (!tenant) return;
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (!tenant || state.requestSubmitInFlight) return;
+    state.requestSubmitInFlight = true;
+    if (submitButton) {
+      submitButton.disabled = true;
+    }
     statusNode.textContent = "Saving...";
     try {
       const payload = new FormData();
@@ -1046,10 +1109,50 @@
       if (responsePayload?.workspace) {
         state.workspace = responsePayload.workspace;
       }
-      statusNode.textContent = "Request queued.";
+      statusNode.textContent = responsePayload?.duplicate ? "Request already queued." : "Request queued.";
       await reloadBoard();
     } catch (error) {
       statusNode.textContent = error.message;
+    } finally {
+      state.requestSubmitInFlight = false;
+      if (submitButton) {
+        submitButton.disabled = false;
+      }
+    }
+  }
+
+  async function handleRequestAction(event) {
+    const tenant = activeTenant();
+    const button = event.currentTarget;
+    const requestId = String(button.dataset.requestId || "");
+    const action = String(button.dataset.requestAction || "").trim().toLowerCase();
+    if (!tenant || !requestId || !["cancel", "archive"].includes(action)) {
+      return;
+    }
+    const key = requestActionKey(requestId, action);
+    if (requestActionKeysInFlight.has(key)) {
+      return;
+    }
+    requestActionKeysInFlight.add(key);
+    renderApp();
+    try {
+      const payload = await apiFetch(requestActionEndpoint(tenant.id, requestId), {
+        method: "POST",
+        body: JSON.stringify({ action }),
+      });
+      if (payload?.workspace) {
+        state.workspace = payload.workspace;
+      }
+      setWorkspaceStatus(action === "archive" ? "Request archived." : "Request canceled.", action === "archive" ? "info" : "warn");
+      await reloadBoard();
+    } catch (error) {
+      setWorkspaceStatus(error.message, "error");
+      renderApp();
+    } finally {
+      requestActionKeysInFlight.delete(key);
+      if (state.user) {
+        renderApp();
+      }
     }
   }
 
