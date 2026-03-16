@@ -1,3 +1,75 @@
+# Booch Bar Deploy Verification (2026-03-16)
+
+## Plan
+
+- [x] Verify where the Booch Bar portal deploy commit landed and whether it reached GitHub.
+- [x] Confirm whether Vercel production is serving a deployment created from that commit.
+- [x] Compare the deployed commit diff against the live site behavior to explain why the user did not see a visible change.
+
+## Review
+
+- Root cause:
+  - the Booch Bar portal deploy did succeed end to end; the server-side checkout on `dna@piko.local:/home/dna/Code/Booch-Bar` is at commit `e80640d` on `main`
+  - GitHub `origin/main` also points to `e80640d`
+  - Vercel production alias `https://booch-bar.vercel.app` is attached to deployment `dpl_BW6NTHRQEgFP2iWh2Sqf3oehDt1d`, created on `2026-03-16 13:14:50 HST`, which matches the portal deploy time
+  - the reason the site looks unchanged is that commit `e80640d` only updates featured-event image fallback logic in `/home/dna/Code/Booch-Bar/app/data.js`; it does not force a visible homepage change when the current upcoming calendar events already have attached images
+- Verification:
+  - `ssh dna@piko.local 'cd /home/dna/Code/Booch-Bar && git log --oneline --decorate -n 12'`
+  - `ssh dna@piko.local 'cd /home/dna/Code/Booch-Bar && git ls-remote origin refs/heads/main'`
+  - `vercel inspect https://booch-bar.vercel.app`
+  - `curl -s https://booch-bar.vercel.app`
+  - `ssh dna@piko.local 'cd /home/dna/Code/Booch-Bar && npm run build'`
+- Notes:
+  - the previous visual event/homepage work from `f78c757` is already live
+  - `e80640d` will matter when an upcoming featured event lacks an `ATTACH` image in the calendar feed, because the site will now fall back to `/images/rainbow-room.jpeg` instead of dropping that event image
+
+# Booch Bar Domain Mismatch Check (2026-03-16)
+
+## Plan
+
+- [x] Verify whether the production Booch Bar modal/clickable events feature exists on the Vercel deployment itself.
+- [x] Compare the deployed Vercel site against the public Booch Bar custom domain the user is likely viewing.
+- [x] Identify the exact hosting mismatch causing the user-visible discrepancy.
+
+## Review
+
+- Root cause:
+  - the portal deploy updated the Vercel-hosted Booch Bar app, and the clickable featured-event modal works there
+  - the public custom domain `https://www.theboochbarhilo.com/` is still served by Netlify, not Vercel
+  - that Netlify site does not include the new Booch Bar app at all: it has no `.eventCardButton` nodes and no `Featured Beats` section, so the landing-page event cards cannot be clickable there
+- Verification:
+  - `vercel inspect https://booch-bar.vercel.app`
+  - headless Playwright check against `https://booch-bar.vercel.app` confirmed clicking `.eventCardButton` opens `.eventModal`
+  - `curl -I https://www.theboochbarhilo.com` returned `server: Netlify`
+  - headless Playwright check against `https://www.theboochbarhilo.com` confirmed:
+    - `boochButtons: 0`
+    - `hasFeaturedBeats: 0`
+- Conclusion:
+  - the deploy itself is fine
+  - the custom domain still points at the old Netlify site, so users checking that domain will not see the new interactive landing-page events until DNS/domain hosting is moved or the Netlify site is updated separately
+
+# Booch Bar Blank Completion Screenshot Check (2026-03-16)
+
+## Plan
+
+- [x] Locate the affected Booch Bar request record and attached completion screenshot metadata.
+- [x] Verify whether the stored screenshot asset itself is blank or whether the portal UI is failing to render it.
+- [x] Record the evidence and likely failure point.
+
+## Review
+
+- Request checked:
+  - request `8b36713b-d1ad-4511-8988-1c9f52d788dc`
+  - title: `these links need to stand out as seperate links more`
+- Findings:
+  - the stored completion screenshot file exists at `/home/dna/Code/Cowork/.dashboard_state/booch_bar_portal_uploads/8b36713b-d1ad-4511-8988-1c9f52d788dc-completion-screenshot.png`
+  - the file is not blank: `file` reports `PNG image data, 1440 x 2200`
+  - the public asset URL returns `200 OK` with `Content-Type: image/png`
+  - opening the exact PNG shows the updated Booch Bar `Visit & Contact` page correctly
+  - OCR verification also extracted real page text from the image, confirming the capture content is valid
+- Conclusion:
+  - the blank box shown in the portal is a frontend rendering/display issue for the screenshot preview, not an empty capture and not a missing upload
+
 # Automatic Completion Screenshot Enforcement (2026-03-16)
 
 ## Plan
