@@ -30,3 +30,4 @@
 ## 2026-03-16
 
 - For Cowork-backed admin actions, do not stop after patching local backend files and frontend UI; verify the live `cowork-api.dnalevity.com` route advertises the new method and deploy/restart `cowork-dashboard.service` on `dna@piko.local` before calling the feature done.
+- For new browser-facing Cowork API methods, verify the live preflight response from `https://smart-todo.dnalevity.com` includes the method in `Access-Control-Allow-Methods`; adding the Flask route alone is not enough.

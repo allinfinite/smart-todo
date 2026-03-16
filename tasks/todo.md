@@ -55,6 +55,12 @@
     - created a temporary `client_user` in tenant `booch-bar`
     - `DELETE /api/app/admin/tenants/e728c7c6-6167-417d-ab3a-d48930f8d374/users/<tempUserId>` returned `{"removed":true}`
     - re-fetching `/api/app/admin/tenants` confirmed the temp user no longer appeared in the `booch-bar` members list
+- Follow-up fix after live browser report:
+  - updated the Cowork global CORS header in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) from `GET,POST,PATCH,OPTIONS` to `GET,POST,PATCH,DELETE,OPTIONS`
+  - redeployed the backend to `dna@piko.local` and restarted `cowork-dashboard.service`
+  - verified the exact browser preflight now returns:
+    - `Access-Control-Allow-Origin: https://smart-todo.dnalevity.com`
+    - `Access-Control-Allow-Methods: GET,POST,PATCH,DELETE,OPTIONS`
 
 # Auth Rebuild (2026-03-16)
 
