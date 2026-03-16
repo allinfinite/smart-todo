@@ -482,6 +482,7 @@
     if (stateValue === "completed") return "Done";
     if (stateValue === "failed") return "Failed";
     if (stateValue === "blocked") return "Blocked";
+    if (stateValue === "interrupted") return "Interrupted";
     if (stateValue === "running") return "In Progress";
     return "Queued";
   }
@@ -492,6 +493,9 @@
       return provided.map(value => String(value || "").trim().toLowerCase()).filter(Boolean);
     }
     const status = requestState(request);
+    if (status === "interrupted") {
+      return ["retry", "archive"];
+    }
     if (["completed", "failed", "blocked", "canceled"].includes(status)) {
       return ["archive"];
     }
@@ -524,17 +528,18 @@
       <div class="request-actions">
         ${actions.map(action => {
           const isArchive = action === "archive";
+          const isRetry = action === "retry";
           const key = requestActionKey(requestId, action);
           const busy = requestActionKeysInFlight.has(key);
           return `
             <button
-              class="secondary request-action-btn ${isArchive ? "archive-btn" : "cancel-btn"}"
+              class="secondary request-action-btn ${isArchive ? "archive-btn" : isRetry ? "retry-btn" : "cancel-btn"}"
               type="button"
               data-request-id="${escapeHtml(requestId)}"
               data-request-action="${escapeHtml(action)}"
               ${busy ? "disabled" : ""}
             >
-              ${escapeHtml(isArchive ? "Archive" : "Cancel")}
+              ${escapeHtml(isArchive ? "Archive" : isRetry ? "Retry" : "Cancel")}
             </button>
           `;
         }).join("")}
@@ -1209,7 +1214,7 @@
     const button = event.currentTarget;
     const requestId = String(button.dataset.requestId || "");
     const action = String(button.dataset.requestAction || "").trim().toLowerCase();
-    if (!tenant || !requestId || !["cancel", "archive"].includes(action)) {
+    if (!tenant || !requestId || !["cancel", "archive", "retry"].includes(action)) {
       return;
     }
     const key = requestActionKey(requestId, action);
@@ -1226,7 +1231,10 @@
       if (payload?.workspace) {
         state.workspace = payload.workspace;
       }
-      setWorkspaceStatus(action === "archive" ? "Request archived." : "Request canceled.", action === "archive" ? "info" : "warn");
+      setWorkspaceStatus(
+        action === "archive" ? "Request archived." : action === "retry" ? "Request restarted." : "Request canceled.",
+        action === "archive" ? "info" : action === "retry" ? "success" : "warn"
+      );
       await reloadBoard();
     } catch (error) {
       setWorkspaceStatus(error.message, "error");

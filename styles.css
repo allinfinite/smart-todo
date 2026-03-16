@@ -384,6 +384,10 @@ button:disabled {
   border-color: rgba(180, 76, 60, 0.24);
 }
 
+.request-card.state-interrupted {
+  border-color: rgba(110, 96, 79, 0.24);
+}
+
 .request-card.flash {
   animation: cardFlash 2.8s ease;
 }

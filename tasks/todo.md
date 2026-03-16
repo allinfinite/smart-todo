@@ -1,3 +1,71 @@
+# Automatic Completion Screenshot Enforcement (2026-03-16)
+
+## Plan
+
+- [x] Inspect the Cowork portal completion/evidence flow to find why completed requests can still end without a screenshot.
+- [x] Patch the backend so completed portal fixes retain captured screenshots and automatically retry when a task explicitly skips evidence without an attached image.
+- [x] Verify the backend syntax and live behavior assumptions, then document the enforcement change.
+
+## Review
+
+- Root cause:
+  - Cowork could silently leave a portal request in `completed` without a `completion_screenshot` when a retry task finished with `Evidence route: none`
+  - Cowork also dropped a freshly captured screenshot whenever OCR verification failed, which left done cards image-less even though a real screenshot file had been captured
+- Backend fix in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py):
+  - completion verification retries no longer clear an already captured `completion_screenshot`
+  - completed tasks that skip screenshot evidence now trigger an explicit retry/update path instead of silently returning
+  - when screenshot capture succeeds but verification is weak, Cowork now keeps the screenshot attached and preserves the verification metadata plus retry state
+- Verification:
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py`
+  - deployed updated [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) to `dna@piko.local:/home/dna/Code/Cowork/dashboard_server.py`
+  - restarted live user service `cowork-dashboard.service` with `systemctl --user restart cowork-dashboard.service`
+  - verified the live service is active and the deployed file contains the new screenshot-enforcement branches
+
+# Service Tab Evidence Repair (2026-03-16)
+
+## Plan
+
+- [x] Inspect the live Service Tab request metadata to confirm why the completed card had no completion screenshot.
+- [x] Attach a valid screenshot proving the repaired CTA section on the live Services page.
+- [x] Verify the screenshot asset is publicly reachable and clear the stale verification-retry state.
+
+## Review
+
+- Root cause:
+  - the Service Tab follow-up implementation completed, but Cowork's screenshot verification failed and left the request with `completion_screenshot: null`
+  - the retry task then finished by explicitly saying the preview had not refreshed yet, so the done card kept the completed status but still had no image
+- Repair:
+  - captured the live `/services` CTA section with Playwright after the preview refresh
+  - uploaded the screenshot to `/home/dna/Code/Cowork/.dashboard_state/savvy_portal_uploads/78501986-2046-42a9-94ca-08173af39a18-completion-screenshot.png`
+  - patched the Service Tab request record in `/home/dna/Code/Cowork/.dashboard_state/savvy_portal_requests.json` to attach the screenshot, mark verification as `verified`, and clear the stale `verification_retry_task_id`
+- Verification:
+  - the request record for `78501986-2046-42a9-94ca-08173af39a18` now has a populated `completion_screenshot`
+  - `https://cowork-api.dnalevity.com/portal-assets/savvy/78501986-2046-42a9-94ca-08173af39a18-completion-screenshot.png` returns `200`
+
+# Savvy Preview Recovery (2026-03-16)
+
+## Plan
+
+- [x] Inspect the live Savvy preview runtime and generated Next assets to confirm whether the breakage is build corruption, routing, or missing code.
+- [x] Apply the smallest recovery step that restores the preview without discarding completed Savvy feature work.
+- [x] Verify the live preview homepage and services route render correctly, then record the repair details.
+
+## Review
+
+- Root cause:
+  - the live Savvy preview process on `dna@piko.local` had a corrupted/stale `.next` dev build after an interrupted run
+  - the homepage HTML was rendering, but the browser bundle request for `/preview/savvyexcursions/_next/static/chunks/app/page.js` returned `404`, which made the preview look broken even though the underlying feature files were still present
+- Recovery:
+  - confirmed the in-progress Savvy files were still on disk in `/home/dna/Code/savvyexcursions`, including the new services route and header updates
+  - terminated the stale Savvy preview process through Cowork, cleared the preview build state with `reset_portal_preview_build_state("savvy")`, and restarted the preview with `ensure_portal_preview("savvy")`
+  - no Savvy feature work had to be reimplemented for this recovery
+- Verification:
+  - `https://piko.dnalevity.com/preview/savvyexcursions/_next/static/chunks/app/page.js` now returns `200`
+  - `https://piko.dnalevity.com/preview/savvyexcursions/services` now returns `200`
+  - browser validation via Playwright confirmed the homepage and services route both render with the expected navigation, hero content, reviews, and services page sections
+- Remaining gap:
+  - the Savvy repo still has unrelated work-in-progress changes and at least one separate production build issue in the blog pages (`siteAssetPath` undefined during `next build`), but that did not block restoring the live preview
+
 # Automated Tenant Initialization (2026-03-16)
 
 ## Plan
@@ -59,6 +127,89 @@
   - `https://piko.dnalevity.com/preview/savvyexcursions/_next/static/css/app/layout.css` returns `200`
   - `https://piko.dnalevity.com/images/logo-1.png` returns `200`
   - `https://piko.dnalevity.com/images/custom-vacations.jpg` returns `200`
+
+# Savvy Reviews Evidence Repair (2026-03-16)
+
+## Plan
+
+- [x] Inspect the live Reviews request evidence state and confirm why the done card had no screenshot.
+- [x] Repair the OCR/runtime dependency gap on piko and restore a screenshot attachment for the completed request.
+- [x] Verify the live Savvy tenant API now returns a `completion_screenshot` for the Reviews card.
+
+## Review
+
+- Root cause:
+  - the completed Savvy `Reviews` request had no screenshot because Cowork’s evidence verification depended on `tesseract`, and `tesseract-ocr` was not installed on `dna@piko.local`
+  - Cowork then removed the captured screenshot when verification failed, leaving the done card without any image
+- Live repair:
+  - installed `tesseract-ocr` and `tesseract-ocr-eng` on `dna@piko.local`
+  - confirmed the review changes were present in the live preview DOM at `https://piko.dnalevity.com/preview/savvyexcursions/#reviews`
+  - attached a repaired completion screenshot to the Savvy request record at `/home/dna/Code/Cowork/.dashboard_state/savvy_portal_uploads/c3ddde7b-f4c0-4d06-a034-9425926c5046-completion-screenshot.png`
+  - updated the request metadata so the screenshot is treated as verified evidence and is available to the done card
+- Verification:
+  - live `GET /api/app/tenants/48c6e06e-43d4-4a0b-82a0-e81e41b613db/requests` now returns a populated `completion_screenshot` object for request `c3ddde7b-f4c0-4d06-a034-9425926c5046`
+  - returned screenshot URL: `/portal-assets/savvy/c3ddde7b-f4c0-4d06-a034-9425926c5046-completion-screenshot.png`
+- Remaining gap:
+  - the fully automated visual capture path for Savvy is still brittle; I restored this screenshot by verifying the live preview DOM and patching the request evidence record directly.
+
+# Savvy Request Status Repair (2026-03-16)
+
+## Plan
+
+- [x] Inspect the live Savvy request/task state and determine whether the items were actually queued or just mislabeled.
+- [x] Add a retry path for interrupted requests and fix the shared UI state mapping for interrupted items.
+- [x] Deploy the backend fix, restart the affected Savvy requests, and verify they now report as running.
+
+## Review
+
+- Root cause:
+  - the live Savvy requests were not actually queued; Cowork was returning `status: interrupted`
+  - the shared frontend in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) treated unknown statuses as `Queued`
+  - Cowork had no retry action for interrupted portal requests, so they stayed stuck unless a new follow-up request was created
+- Backend fix in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py):
+  - added `retry` support to request actions for `interrupted`, `failed`, and `blocked` requests
+  - retry now creates a fresh task and updates the request’s `agent_task_id`
+  - interrupted requests now expose `available_actions: ["retry", "archive"]`
+- Frontend fix in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) and [/Users/daniellevy/Code/smart-todo/styles.css](/Users/daniellevy/Code/smart-todo/styles.css):
+  - `interrupted` now renders as `Interrupted` instead of falling through to `Queued`
+  - interrupted request cards now show a `Retry` action
+- Live verification:
+  - before the fix, Savvy `Reviews` and `Service Tab` returned `status: interrupted` with `progress: "Agent task stopped before completion."`
+  - deployed the Cowork backend update to `dna@piko.local` and restarted `cowork-dashboard.service`
+  - triggered live `retry` actions for:
+    - `Reviews` request `c3ddde7b-f4c0-4d06-a034-9425926c5046`
+    - `Service Tab` request `78501986-2046-42a9-94ca-08173af39a18`
+  - verified the live tenant API now returns both as:
+    - `status: running`
+    - `available_actions: ["cancel"]`
+- Remaining gap:
+  - the interrupted-label UI fix is local but not yet confirmed on the public `smart-todo.dnalevity.com` asset path; the Savvy items should still show correctly now because they are genuinely `running`.
+
+# Portal Evidence Status Fix (2026-03-16)
+
+## Plan
+
+- [x] Inspect the live portal request/task state to confirm whether the item failed due to implementation or only due to screenshot verification.
+- [x] Patch Cowork so evidence failures stay separate from user-facing implementation status.
+- [x] Deploy the backend change, repair already-misclassified tasks, and verify the affected request now shows the correct status.
+
+## Review
+
+- Root cause in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py):
+  - `maybe_capture_portal_completion_screenshot()` was overwriting a successful task from `completed` to `failed` whenever screenshot capture or OCR verification failed
+  - `maybe_queue_portal_verification_retry()` also repointed the request’s `agent_task_id` to the retry task, which let proof-collection problems leak into the main request state
+- Fix:
+  - screenshot/evidence failures now keep the implementation task in `completed`
+  - evidence retries are tracked separately with `verification_retry_task_id` instead of replacing the request’s main task link
+- Live verification on `dna@piko.local`:
+  - confirmed the Savvy `Menu Bar` request had `completion_screenshot_verification.summary = "Tesseract is unavailable, so the screenshot could not be analyzed."`
+  - deployed the patched Cowork backend and restarted `cowork-dashboard.service`
+  - ran a one-time repair over existing screenshot-only false failures in `/home/dna/Code/Cowork/.dashboard_state/agent_tasks.json`
+  - re-checked `GET /api/app/tenants/48c6e06e-43d4-4a0b-82a0-e81e41b613db/requests` and verified `Menu Bar` now returns:
+    - `status: completed`
+    - `public_status_text: "Menu Bar was completed and is ready to review."`
+- Remaining issue:
+  - screenshot verification itself is still failing on that backend because `Tesseract` is unavailable, so the proof metadata still shows a verification failure even though the item is now correctly labeled completed.
 
 # Persistent Shared Sessions (2026-03-16)
 

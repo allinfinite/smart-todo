@@ -36,5 +36,11 @@
 - For Cowork-backed admin actions, do not stop after patching local backend files and frontend UI; verify the live `cowork-api.dnalevity.com` route advertises the new method and deploy/restart `cowork-dashboard.service` on `dna@piko.local` before calling the feature done.
 - For new browser-facing Cowork API methods, verify the live preflight response from `https://smart-todo.dnalevity.com` includes the method in `Access-Control-Allow-Methods`; adding the Flask route alone is not enough.
 - For shared auth, audit both cookie persistence and server-side session invalidation rules; a “random logout” can come from session-cookie lifetime or from backend code that wipes prior sessions on each new login.
+- For portal completion proof, do not map screenshot-capture or OCR-verification failures directly onto the user-facing request status; evidence collection can fail even when the implementation itself is complete.
+- In the shared portal UI, do not collapse unknown backend task states into `Queued`; if Cowork emits statuses like `interrupted`, either surface them explicitly or provide a retry path so stale work does not look idle.
 - For shared-tenant initialization on the live Cowork backend, keep request-time work bounded and deterministic. Do not launch Codex runs, full Next builds, or other long-running repo normalization inside `sync` or `preview` web requests; move that work to an async job or an explicit operator action.
 - After any preview-path or middleware change for a tenant app, verify both classes of assets on the live preview URL: prefixed `_next` assets and any root-relative `/images/...` assets. A preview page can return `200` while still rendering unstyled or image-broken if those two routes are not checked separately.
+# Lessons Learned (2026-03-16)
+
+- After any portal request finishes or a verification retry completes, check that the request record actually has a populated `completion_screenshot`; a `done` status alone is not enough for a reviewable card.
+- In Cowork portal evidence handling, do not silently return on `Evidence route: none` when a completed request still lacks a `completion_screenshot`; queue another evidence repair path or keep the screenshot that was captured.
