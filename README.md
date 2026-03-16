@@ -146,6 +146,13 @@ When `PORTAL_APP_MODE=shared`, the frontend uses authenticated tenant-aware endp
 - `PATCH /api/app/admin/users/:userId`
 - `GET /api/app/admin/audit-log`
 
+Shared tenant workspace config may include:
+
+- `repoPath`: absolute server path for the checkout
+- `repoUrl`: remote Git URL used to bootstrap the first clone during `Sync`
+- `appPath`: runtime app directory when different from `repoPath`
+- `deployBranch`: required branch for `Sync` and `Deploy`
+
 Shared-mode write endpoints should accept either JSON or multipart form uploads:
 
 - `POST /api/app/tenants/:tenantId/requests`

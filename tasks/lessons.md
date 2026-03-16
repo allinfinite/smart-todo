@@ -26,3 +26,7 @@
 - For portal completion proof, do not surface a completion screenshot to the user until the backend analyzes the captured image itself and confirms it plausibly shows the finished work; fail closed and keep only internal verification metadata when the proof is weak.
 - If screenshot verification fails for a completed portal task, do not stop at hiding the screenshot; automatically reopen the same request with a remediation prompt so the system either fixes the work or chooses better proof before the user sees a “done” state.
 - For portal request controls, do not stop at adding cancel/archive buttons in the UI; wire server-side request actions too, terminate the live agent process on cancel, and dedupe repeated create-posts so fast double submits do not produce duplicate cards.
+
+## 2026-03-16
+
+- For Cowork-backed admin actions, do not stop after patching local backend files and frontend UI; verify the live `cowork-api.dnalevity.com` route advertises the new method and deploy/restart `cowork-dashboard.service` on `dna@piko.local` before calling the feature done.

@@ -1,3 +1,31 @@
+# Tenant Repo Bootstrap Fix (2026-03-16)
+
+## Plan
+
+- [x] Reproduce the tenant sync failure path and confirm why new tenants report `Sync requires branch main, found unknown.`
+- [x] Add shared-app tenant admin support for entering and saving a Git repo URL for first-time setup.
+- [x] Extend Cowork tenant/site persistence plus sync logic so first sync can bootstrap the repo path from the saved remote without manual server edits.
+- [x] Verify frontend/backend syntax checks and document the outcome.
+
+## Review
+
+- Root cause:
+  - new shared tenants only stored `repoPath`, so `Sync` assumed the server already had a git checkout at that path
+  - when the path was missing or not a repo, workspace branch detection returned empty and the action failed with `Sync requires branch main, found unknown.`
+- Updated the shared tenant admin UI in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) to add a `Repo URL` field and include it in the tenant save payload.
+- Extended Cowork tenant persistence in [/Users/daniellevy/Code/Cowork/portal_multi_tenant.py](/Users/daniellevy/Code/Cowork/portal_multi_tenant.py) and [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) so tenant workspace/site config now preserves `repoUrl` / `repo_url`.
+- Added first-sync bootstrap logic in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py):
+  - if `repoPath` is not yet a git checkout and a `Repo URL` is saved, `Sync` now clones the configured deploy branch into that path automatically
+  - if the path exists but is a non-empty non-git directory, `Sync` now fails with a direct bootstrap error instead of the misleading branch error
+- Updated sync success messaging in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so first-time setup reports `Repository connected and synced.`
+- Documented the new shared tenant workspace field in [/Users/daniellevy/Code/smart-todo/README.md](/Users/daniellevy/Code/smart-todo/README.md).
+- Verification:
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py /Users/daniellevy/Code/Cowork/portal_multi_tenant.py`
+  - `npm run build`
+- Remaining gap:
+  - I did not deploy the Cowork backend change to the live server or run a live browser sync against the new tenant in this turn.
+
 # Tenant User Removal (2026-03-16)
 
 ## Plan
@@ -19,8 +47,14 @@
   - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py /Users/daniellevy/Code/Cowork/portal_multi_tenant.py`
   - `node --check ./shared-app.js`
   - `npm run build`
-- Remaining gap:
-  - I did not exercise the delete flow against the live Cowork server in a browser session in this turn.
+- Live deploy/verification:
+  - synced [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) and [/Users/daniellevy/Code/Cowork/portal_multi_tenant.py](/Users/daniellevy/Code/Cowork/portal_multi_tenant.py) to `dna@piko.local:/home/dna/Code/Cowork/`
+  - restarted `cowork-dashboard.service` on `dna@piko.local`
+  - confirmed `OPTIONS https://cowork-api.dnalevity.com/api/app/admin/tenants/:tenantId/users/:userId` now returns `204`
+  - performed a live API round-trip on March 16, 2026:
+    - created a temporary `client_user` in tenant `booch-bar`
+    - `DELETE /api/app/admin/tenants/e728c7c6-6167-417d-ab3a-d48930f8d374/users/<tempUserId>` returned `{"removed":true}`
+    - re-fetching `/api/app/admin/tenants` confirmed the temp user no longer appeared in the `booch-bar` members list
 
 # Auth Rebuild (2026-03-16)
 

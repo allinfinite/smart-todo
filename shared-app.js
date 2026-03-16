@@ -193,6 +193,9 @@
       };
     }
     if (action === "sync") {
+      if (payload?.sync?.bootstrapped_repo) {
+        return { text: "Repository connected and synced." };
+      }
       return { text: String(payload?.sync?.summary || "").trim() || "Sync finished." };
     }
     if (action === "deploy") {
@@ -872,6 +875,7 @@
                       <label><span>Slug</span><input name="slug" value="${escapeHtml(tenantFormSource.slug || "")}" ${state.creatingTenant ? "" : "readonly"} required /></label>
                       <label><span>Public URL</span><input name="publicUrl" value="${escapeHtml(tenantFormSource.workspace?.publicUrl || "")}" /></label>
                       <label><span>Repo Path</span><input name="repoPath" value="${escapeHtml(tenantFormSource.workspace?.repoPath || "")}" /></label>
+                      <label><span>Repo URL</span><input name="repoUrl" value="${escapeHtml(tenantFormSource.workspace?.repoUrl || "")}" placeholder="https://github.com/org/repo.git" /></label>
                       <label><span>App Path</span><input name="appPath" value="${escapeHtml(tenantFormSource.workspace?.appPath || tenantFormSource.workspace?.repoPath || "")}" /></label>
                       <label><span>Preview Base Path</span><input name="previewBasePath" value="${escapeHtml(tenantFormSource.workspace?.previewBasePath || "")}" /></label>
                       <label><span>Preview Port</span><input name="previewPort" type="number" value="${escapeHtml(tenantFormSource.workspace?.previewPort || "")}" /></label>
@@ -1300,6 +1304,7 @@
         siteSlug: formData.get("slug"),
         publicUrl: formData.get("publicUrl"),
         repoPath: formData.get("repoPath"),
+        repoUrl: formData.get("repoUrl"),
         appPath: formData.get("appPath"),
         previewBasePath: formData.get("previewBasePath"),
         previewPort: Number(formData.get("previewPort") || 0),
