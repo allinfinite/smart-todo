@@ -69,6 +69,7 @@
     bearerToken: "",
   };
   const requestActionKeysInFlight = new Set();
+  const memberActionKeysInFlight = new Set();
 
   class AuthExpiredError extends Error {
     constructor(message = "Session expired. Sign in again.") {
@@ -505,6 +506,10 @@
     return `/api/app/tenants/${tenantId}/requests/${requestId}/actions`;
   }
 
+  function tenantMemberActionKey(tenantId, userId) {
+    return `${String(tenantId || "")}:${String(userId || "")}`;
+  }
+
   function requestActionButtons(request) {
     const tenant = activeTenant();
     const requestId = String(request.request_id || request.id || "");
@@ -663,6 +668,39 @@
 
   function tenantOption(tenant) {
     return `<option value="${escapeHtml(tenant.id)}">${escapeHtml(tenant.displayName || tenant.slug)} · ${escapeHtml(tenant.role || "client_user")}</option>`;
+  }
+
+  function tenantMembersMarkup() {
+    const activeAdminTenant = state.adminTenants.find(entry => String(entry.id) === String(state.activeTenantId)) || {};
+    const members = Array.isArray(activeAdminTenant.members) ? activeAdminTenant.members : [];
+    if (!members.length) {
+      return '<div class="empty-state">No members yet.</div>';
+    }
+    return members
+      .map(member => {
+        const userId = String(member.user?.id || member.userId || "");
+        const memberKey = tenantMemberActionKey(state.activeTenantId, userId);
+        const busy = memberActionKeysInFlight.has(memberKey);
+        return `
+          <div class="shared-member-row">
+            <div class="shared-member-copy">
+              <strong>${escapeHtml(member.user?.name || member.user?.email || member.userId)}</strong>
+              <span>${escapeHtml(member.user?.email || "")}</span>
+              <span>${escapeHtml(member.role || "")}</span>
+            </div>
+            <button
+              class="secondary shared-member-remove"
+              type="button"
+              data-member-user-id="${escapeHtml(userId)}"
+              data-member-name="${escapeAttribute(member.user?.name || member.user?.email || "this user")}"
+              ${busy || !userId ? "disabled" : ""}
+            >
+              ${busy ? "Removing..." : "Remove"}
+            </button>
+          </div>
+        `;
+      })
+      .join("");
   }
 
   function workspaceActionsMarkup() {
@@ -870,17 +908,7 @@
                   </div>
                   <div class="shared-members">
                     <h3>Members</h3>
-                    ${((state.adminTenants.find(entry => String(entry.id) === String(state.activeTenantId)) || {}).members || [])
-                      .map(
-                        member => `
-                          <div class="shared-member-row">
-                            <strong>${escapeHtml(member.user?.name || member.user?.email || member.userId)}</strong>
-                            <span>${escapeHtml(member.user?.email || "")}</span>
-                            <span>${escapeHtml(member.role || "")}</span>
-                          </div>
-                        `
-                      )
-                      .join("") || '<div class="empty-state">No members yet.</div>'}
+                    ${tenantMembersMarkup()}
                   </div>
                   <div class="shared-audit-log">
                     <h3>Audit Log</h3>
@@ -1012,6 +1040,9 @@
     if (userForm) {
       userForm.addEventListener("submit", saveUser);
     }
+    document.querySelectorAll("[data-member-user-id]").forEach(button => {
+      button.addEventListener("click", removeTenantUser);
+    });
   }
 
   async function bootstrapAuthenticatedState(currentUser = null) {
@@ -1323,6 +1354,40 @@
       await reloadBoard();
     } catch (error) {
       statusNode.textContent = error.message;
+    }
+  }
+
+  async function removeTenantUser(event) {
+    const tenantId = String(state.activeTenantId || "");
+    const userId = String(event.currentTarget.dataset.memberUserId || "");
+    const memberName = String(event.currentTarget.dataset.memberName || "this user");
+    if (!tenantId || !userId) {
+      return;
+    }
+    if (!window.confirm(`Remove ${memberName} from this tenant?`)) {
+      return;
+    }
+    const memberKey = tenantMemberActionKey(tenantId, userId);
+    if (memberActionKeysInFlight.has(memberKey)) {
+      return;
+    }
+    memberActionKeysInFlight.add(memberKey);
+    state.adminStatus = "";
+    renderApp();
+    try {
+      await apiFetch(`/api/app/admin/tenants/${tenantId}/users/${userId}`, {
+        method: "DELETE",
+      });
+      setWorkspaceStatus("User removed from tenant.", "success");
+      await reloadBoard();
+    } catch (error) {
+      state.adminStatus = error.message;
+      renderApp();
+    } finally {
+      memberActionKeysInFlight.delete(memberKey);
+      if (state.user) {
+        renderApp();
+      }
     }
   }
 

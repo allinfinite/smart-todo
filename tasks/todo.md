@@ -1,3 +1,27 @@
+# Tenant User Removal (2026-03-16)
+
+## Plan
+
+- [x] Add a backend membership-removal path for tenant admins in Cowork.
+- [x] Add a remove-user control in the shared tenant admin panel and refresh state after removal.
+- [x] Verify backend/frontend syntax checks and document the result.
+
+## Review
+
+- Added tenant membership deletion support to [/Users/daniellevy/Code/Cowork/portal_multi_tenant.py](/Users/daniellevy/Code/Cowork/portal_multi_tenant.py) and [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py).
+- New admin API route:
+  - `DELETE /api/app/admin/tenants/:tenantId/users/:userId`
+- Backend guardrail:
+  - refuses to remove the last `owner` membership from a tenant
+- Updated the shared tenant admin UI in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so each member row now has a `Remove` action with confirmation and in-flight state.
+- Added member-row layout styling in [/Users/daniellevy/Code/smart-todo/styles.css](/Users/daniellevy/Code/smart-todo/styles.css) and documented the new backend contract in [/Users/daniellevy/Code/smart-todo/README.md](/Users/daniellevy/Code/smart-todo/README.md).
+- Verification:
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py /Users/daniellevy/Code/Cowork/portal_multi_tenant.py`
+  - `node --check ./shared-app.js`
+  - `npm run build`
+- Remaining gap:
+  - I did not exercise the delete flow against the live Cowork server in a browser session in this turn.
+
 # Auth Rebuild (2026-03-16)
 
 ## Plan

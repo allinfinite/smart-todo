@@ -1497,6 +1497,24 @@ button:disabled {
   padding-block: 12px;
 }
 
+.shared-member-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.shared-member-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.shared-member-remove {
+  flex-shrink: 0;
+}
+
 .shared-workspace-meta {
   margin: -2px 0 4px;
   font-size: 0.88rem;
