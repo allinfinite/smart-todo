@@ -1204,6 +1204,13 @@ button:disabled {
   padding: 16px;
 }
 
+.shared-form-copy {
+  margin: -4px 0 2px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
 .shared-checkbox-row {
   display: flex;
   gap: 8px;

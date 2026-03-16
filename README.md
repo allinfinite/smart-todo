@@ -142,6 +142,8 @@ When `PORTAL_APP_MODE=shared`, the frontend uses authenticated tenant-aware endp
 - `GET|POST /api/app/admin/tenants`
 - `PATCH /api/app/admin/tenants/:tenantId`
 - `POST /api/app/admin/tenants/:tenantId/users`
+  - existing user path: `email` + `role`
+  - new user path: `email` + `name` + `password` + `role`
 - `DELETE /api/app/admin/tenants/:tenantId/users/:userId`
 - `PATCH /api/app/admin/users/:userId`
 - `GET /api/app/admin/audit-log`

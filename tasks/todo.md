@@ -1,3 +1,24 @@
+# Add Existing Tenant User (2026-03-16)
+
+## Plan
+
+- [x] Split tenant admin user management into an easy existing-user add flow and a separate new-user creation flow.
+- [x] Reuse the current membership-upsert API so existing users can be added by email and role only.
+- [x] Verify frontend syntax/build checks and document the result.
+
+## Review
+
+- Updated the shared tenant admin UI in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) to split user management into two forms:
+  - `Add Existing User` with only `email` and `role`
+  - `Create New User` with `email`, `name`, `password`, and `role`
+- Reused the existing `POST /api/app/admin/tenants/:tenantId/users` API so adding an existing user now sends only the fields required for membership upsert.
+- Added helper copy styling in [/Users/daniellevy/Code/smart-todo/styles.css](/Users/daniellevy/Code/smart-todo/styles.css) and documented the two payload shapes in [/Users/daniellevy/Code/smart-todo/README.md](/Users/daniellevy/Code/smart-todo/README.md).
+- Verification:
+  - `node --check ./shared-app.js`
+  - `npm run build`
+- Remaining gap:
+  - I did not deploy the frontend change to the live `smart-todo.dnalevity.com` site in this turn.
+
 # Tenant Repo Bootstrap Fix (2026-03-16)
 
 ## Plan

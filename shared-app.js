@@ -891,11 +891,10 @@
                       </div>
                     </form>
 
-                    <form id="userForm" class="shared-admin-form">
-                      <h3>Add or Update User</h3>
+                    <form id="existingUserForm" class="shared-admin-form" data-user-mode="existing">
+                      <h3>Add Existing User</h3>
+                      <p class="shared-form-copy">Attach an existing account to this tenant by email.</p>
                       <label><span>Email</span><input name="email" type="email" required /></label>
-                      <label><span>Name</span><input name="name" required /></label>
-                      <label><span>Password</span><input name="password" type="password" required /></label>
                       <label>
                         <span>Role</span>
                         <select name="role">
@@ -905,8 +904,28 @@
                         </select>
                       </label>
                       <div class="form-actions">
-                        <button type="submit">Save User</button>
-                        <p class="form-status" id="userFormStatus"></p>
+                        <button type="submit">Add to Tenant</button>
+                        <p class="form-status" id="existingUserFormStatus"></p>
+                      </div>
+                    </form>
+
+                    <form id="newUserForm" class="shared-admin-form" data-user-mode="new">
+                      <h3>Create New User</h3>
+                      <p class="shared-form-copy">Create a brand-new account and add it to this tenant in one step.</p>
+                      <label><span>Email</span><input name="email" type="email" required /></label>
+                      <label><span>Name</span><input name="name" required /></label>
+                      <label><span>Password</span><input name="password" type="password" required minlength="8" /></label>
+                      <label>
+                        <span>Role</span>
+                        <select name="role">
+                          <option value="client_user">client_user</option>
+                          <option value="internal_operator">internal_operator</option>
+                          <option value="owner">owner</option>
+                        </select>
+                      </label>
+                      <div class="form-actions">
+                        <button type="submit">Create and Add</button>
+                        <p class="form-status" id="newUserFormStatus"></p>
                       </div>
                     </form>
                   </div>
@@ -1040,10 +1059,9 @@
         renderApp();
       });
     }
-    const userForm = document.querySelector("#userForm");
-    if (userForm) {
-      userForm.addEventListener("submit", saveUser);
-    }
+    document.querySelectorAll("[data-user-mode]").forEach(form => {
+      form.addEventListener("submit", saveUser);
+    });
     document.querySelectorAll("[data-member-user-id]").forEach(button => {
       button.addEventListener("click", removeTenantUser);
     });
@@ -1340,22 +1358,26 @@
 
   async function saveUser(event) {
     event.preventDefault();
-    const statusNode = document.querySelector("#userFormStatus");
     const form = event.currentTarget;
+    const mode = String(form.dataset.userMode || "existing").trim().toLowerCase();
+    const statusNode = form.querySelector(".form-status");
     const formData = new FormData(form);
     statusNode.textContent = "Saving...";
     try {
+      const payload = {
+        email: String(formData.get("email") || "").trim(),
+        role: String(formData.get("role") || "client_user").trim(),
+      };
+      if (mode === "new") {
+        payload.name = String(formData.get("name") || "").trim();
+        payload.password = String(formData.get("password") || "");
+      }
       await apiFetch(`/api/app/admin/tenants/${state.activeTenantId}/users`, {
         method: "POST",
-        body: JSON.stringify({
-          email: formData.get("email"),
-          name: formData.get("name"),
-          password: formData.get("password"),
-          role: formData.get("role"),
-        }),
+        body: JSON.stringify(payload),
       });
       form.reset();
-      statusNode.textContent = "Saved.";
+      statusNode.textContent = mode === "new" ? "User created." : "User added to tenant.";
       await reloadBoard();
     } catch (error) {
       statusNode.textContent = error.message;
