@@ -1,3 +1,95 @@
+# Automated Tenant Initialization (2026-03-16)
+
+## Plan
+
+- [x] Audit the existing deterministic smart-todo provisioner and isolate the reusable app-initialization steps for preview-capable site setup.
+- [x] Integrate that initialization flow into shared-tenant first sync/preview so a new tenant repo is prepared automatically on first use.
+- [x] Add a guarded Codex fallback path only when deterministic initialization cannot normalize the repo for preview.
+- [x] Verify the initialization hooks and document the behavior change plus any remaining repo-class limitations.
+
+## Review
+
+- Added a new shared-tenant app initializer in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) that now runs as part of first sync and preview startup for tenant-backed sites.
+- Automated deterministic initialization now covers:
+  - patching Next config for `COWORK_PREVIEW_BASE_PATH`, `assetPrefix`, `NEXT_PUBLIC_SITE_BASE_PATH`, and `allowedDevOrigins`
+  - installing dependencies when `node_modules` is missing
+  - retrying `npm install` with `--legacy-peer-deps` on resolver conflicts
+  - caching per-site initialization state in Cowork runtime state so the work is skipped when the repo `HEAD` and preview base path have not changed
+- Wired the initializer into:
+  - `sync_portal_site()` so first bootstrap and later pulls can prepare the repo automatically
+  - `ensure_portal_preview()` so preview startup self-heals even if sync did not need to pull
+- Updated the standalone provisioner in [/Users/daniellevy/Code/smart-todo/scripts/provision_smarttodo.py](/Users/daniellevy/Code/smart-todo/scripts/provision_smarttodo.py) to match the same deterministic behavior for Next config patching and `--legacy-peer-deps` dependency fallback.
+- Regression found and fixed:
+  - the first attempt also ran preview builds and a guarded Codex fallback inside the live Cowork request path
+  - that caused long-running `codex exec` and `next build` processes to block the shared backend and left `smart-todo.dnalevity.com` stuck on `Checking your session...`
+  - the live hotfix removed build and Codex work from request-time initialization so the initializer is now bounded and deterministic only
+- Verification:
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py /Users/daniellevy/Code/Cowork/portal_multi_tenant.py /Users/daniellevy/Code/smart-todo/scripts/provision_smarttodo.py`
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - `npm run build`
+  - deployed updated [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) and [/Users/daniellevy/Code/smart-todo/scripts/provision_smarttodo.py](/Users/daniellevy/Code/smart-todo/scripts/provision_smarttodo.py) to `dna@piko.local`
+  - restarted live `cowork-dashboard.service` on `dna@piko.local`
+  - verified `https://smart-todo.dnalevity.com` returns `HTTP/2 200`
+  - verified `https://cowork-api.dnalevity.com/api/auth/me` returns a prompt `401 Unauthorized` instead of hanging
+  - verified live `cowork-dashboard.service` is active after the hotfix restart on March 16, 2026 at 19:22:47 GMT
+- Remaining gap:
+  - a Codex-assisted repo normalization path is still reasonable for hard repos, but it must move to an async job or an explicit operator action rather than running inline with live web requests
+
+# Savvy Preview Asset Regression (2026-03-16)
+
+## Plan
+
+- [x] Inspect the live Savvy preview HTML and asset responses to isolate whether the breakage was in the app, the preview proxy, or both.
+- [x] Patch the preview asset handling so stylesheet and image requests resolve again without reintroducing long-running request-time initialization.
+- [x] Restart the live Savvy preview cleanly and verify the public preview URL plus key asset URLs.
+
+## Review
+
+- Root cause:
+  - the Savvy preview app was serving a mix of preview-prefixed `_next` assets and root-relative `/images/...` markup
+  - the stylesheet route was failing because preview middleware was still matching prefixed asset requests
+  - the image bridge depended on an nginx proxy rule that became incorrect once the preview middleware behavior changed
+- Fixes applied:
+  - added preview middleware in [/Users/daniellevy/Code/savvyexcursions/middleware.ts](/Users/daniellevy/Code/savvyexcursions/middleware.ts) to bypass `/_next/`, `/images/`, `/api/`, and favicon requests and only rewrite true page routes into `/preview/savvyexcursions`
+  - deployed that middleware to `/home/dna/Code/savvyexcursions/middleware.ts` on `dna@piko.local`
+  - refreshed the live nginx snippet `/etc/nginx/snippets/piko-preview-routes/savvy.conf` so root `/images/` requests proxy back into the Savvy preview image path again
+  - restarted the Savvy preview cleanly after removing the stale `.next` cache
+- Verification:
+  - `https://piko.dnalevity.com/preview/savvyexcursions` returns `200`
+  - `https://piko.dnalevity.com/preview/savvyexcursions/_next/static/css/app/layout.css` returns `200`
+  - `https://piko.dnalevity.com/images/logo-1.png` returns `200`
+  - `https://piko.dnalevity.com/images/custom-vacations.jpg` returns `200`
+
+# Persistent Shared Sessions (2026-03-16)
+
+## Plan
+
+- [x] Audit the live shared-session lifecycle across frontend bootstrap, backend cookie issuance, and server-side session storage.
+- [x] Remove backend behavior that invalidates earlier sessions on each new login and issue persistent cookies that survive browser restarts.
+- [x] Harden frontend bootstrap so only real auth failures force logout, then verify the live API behavior and document any deployment gap.
+
+## Review
+
+- Root causes:
+  - Cowork login cookies were session cookies with no `Max-Age` or `Expires`, so browsers could drop them on restart or session cleanup.
+  - Cowork `create_session()` in [/Users/daniellevy/Code/Cowork/portal_multi_tenant.py](/Users/daniellevy/Code/Cowork/portal_multi_tenant.py) deleted all prior sessions for the same user on every new login, so logging in elsewhere invalidated the current session.
+  - the shared frontend in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) still treated any bootstrap error as a forced logout instead of limiting that to real `401` auth failures.
+- Backend fixes in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) and [/Users/daniellevy/Code/Cowork/portal_multi_tenant.py](/Users/daniellevy/Code/Cowork/portal_multi_tenant.py):
+  - `create_session()` now preserves existing sessions instead of deleting them
+  - shared auth cookies now ship with `Max-Age=31536000` and a matching `Expires` date
+  - `/api/auth/me` now re-sets the session cookie so the browser keeps the persisted auth token fresh on bootstrap
+- Frontend hardening in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js):
+  - non-auth bootstrap errors now render a retryable loading/error state instead of clearing the session and forcing a login
+- Live deploy/verification:
+  - synced the backend files to `dna@piko.local:/home/dna/Code/Cowork/`
+  - restarted `cowork-dashboard.service`
+  - verified live `POST https://cowork-api.dnalevity.com/api/auth/login` now returns `Set-Cookie: cowork_portal_session=...; Expires=Tue, 16 Mar 2027 ...; Max-Age=31536000; Secure; HttpOnly; Path=/; SameSite=None`
+  - verified two separate logins for `me@dnalevity.com` both remained valid:
+    - first cookie `GET /api/auth/me` -> `200`
+    - second cookie `GET /api/auth/me` -> `200`
+- Remaining gap:
+  - the public `https://smart-todo.dnalevity.com/shared-app.js` asset is still serving the older bootstrap-error handler, so the frontend hardening change is local/on piko but not yet confirmed on the public site asset path.
+
 # Add Existing Tenant User (2026-03-16)
 
 ## Plan

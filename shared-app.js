@@ -1427,6 +1427,6 @@
     if (error instanceof AuthExpiredError) {
       return;
     }
-    handleUnauthorized(error.message);
+    renderAuthLoading(String(error?.message || "Unable to verify your session right now. Refresh to retry."));
   });
 }());

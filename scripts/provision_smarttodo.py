@@ -386,6 +386,25 @@ class Provisioner:
         else:
             raise RuntimeError(f"Unsupported Next config shape for automatic patching: {candidate}")
 
+        if "NEXT_PUBLIC_SITE_BASE_PATH" not in updated:
+            insertion = (
+                "env: {\n"
+                "    NEXT_PUBLIC_SITE_BASE_PATH: normalizedBasePath,\n"
+                "  },\n"
+                "  allowedDevOrigins: [\"https://piko.dnalevity.com\"],\n"
+            )
+            if "images: {" in updated:
+                updated = updated.replace("images: {", insertion + "  images: {", 1)
+            else:
+                updated = updated.replace("const nextConfig = {\n", "const nextConfig = {\n  " + insertion, 1)
+                updated = updated.replace("module.exports = {\n", "module.exports = {\n  " + insertion, 1)
+        elif "allowedDevOrigins" not in updated:
+            updated = updated.replace(
+                "env: {\n    NEXT_PUBLIC_SITE_BASE_PATH: normalizedBasePath,\n  },\n",
+                "env: {\n    NEXT_PUBLIC_SITE_BASE_PATH: normalizedBasePath,\n  },\n  allowedDevOrigins: [\"https://piko.dnalevity.com\"],\n",
+                1,
+            )
+
         self.log(f"Patching Next config for preview base path: {candidate}")
         if not self.dry_run:
             candidate.write_text(updated)
@@ -408,6 +427,7 @@ class Provisioner:
             "  env: {\n"
             "    NEXT_PUBLIC_SITE_BASE_PATH: normalizedBasePath,\n"
             "  },\n"
+            "  allowedDevOrigins: [\"https://piko.dnalevity.com\"],\n"
             "};\n\n"
             "export default nextConfig;\n"
         )
@@ -418,7 +438,14 @@ class Provisioner:
             return
         if not (self.app_dir / "node_modules").exists():
             self.log(f"Installing app dependencies in {self.app_dir}")
-            run(["npm", "install"], cwd=self.app_dir, timeout=1800)
+            try:
+                run(["npm", "install"], cwd=self.app_dir, timeout=1800)
+            except RuntimeError as exc:
+                message = str(exc)
+                if "ERESOLVE" not in message and "could not resolve" not in message.lower():
+                    raise
+                self.log("Retrying dependency install with --legacy-peer-deps")
+                run(["npm", "install", "--legacy-peer-deps"], cwd=self.app_dir, timeout=1800)
 
     def verify_app_builds(self) -> None:
         assert self.app_dir is not None
