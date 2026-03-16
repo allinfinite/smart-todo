@@ -6,7 +6,6 @@
 
   const apiBase = String(config.apiBase || "").replace(/\/$/, "");
   const storageNamespace = String(config.storageNamespace || "smart-todo-shared-app");
-  const tokenKey = `${storageNamespace}:token`;
   const tenantKey = `${storageNamespace}:tenant-id`;
   const defaultTheme = config.theme || {};
 
@@ -18,25 +17,9 @@
     }
   }
 
-  function safeSessionGet(key) {
-    try {
-      return window.sessionStorage.getItem(key) || "";
-    } catch (_error) {
-      return "";
-    }
-  }
-
   function safeStorageSet(key, value) {
     try {
       window.localStorage.setItem(key, value);
-    } catch (_error) {
-      // Ignore storage failures and rely on cookie-backed auth.
-    }
-  }
-
-  function safeSessionSet(key, value) {
-    try {
-      window.sessionStorage.setItem(key, value);
     } catch (_error) {
       // Ignore storage failures and rely on cookie-backed auth.
     }
@@ -55,19 +38,10 @@
     document.documentElement.classList.remove("shared-bootstrap");
   }
 
-  function safeSessionRemove(key) {
-    try {
-      window.sessionStorage.removeItem(key);
-    } catch (_error) {
-      // Ignore storage failures and rely on cookie-backed auth.
-    }
-  }
-
   document.body.classList.add("shared-mode");
   markSharedReady();
 
   const state = {
-    token: safeStorageGet(tokenKey) || safeSessionGet(tokenKey),
     user: null,
     tenants: [],
     activeTenantId: safeStorageGet(tenantKey),
@@ -90,6 +64,10 @@
     composerFiles: [],
     replyDrafts: {},
   };
+  const session = {
+    status: "loading",
+    bearerToken: "",
+  };
   const requestActionKeysInFlight = new Set();
 
   class AuthExpiredError extends Error {
@@ -106,17 +84,6 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#39;");
-  }
-
-  function setToken(token) {
-    state.token = String(token || "");
-    if (state.token) {
-      safeStorageSet(tokenKey, state.token);
-      safeSessionSet(tokenKey, state.token);
-    } else {
-      safeStorageRemove(tokenKey);
-      safeSessionRemove(tokenKey);
-    }
   }
 
   function setActiveTenantId(tenantId) {
@@ -136,7 +103,7 @@
     return String(activeTenant()?.role || "").trim().toLowerCase();
   }
 
-  function handleUnauthorized(message = "Session expired. Sign in again.") {
+  function clearAppState() {
     state.user = null;
     state.tenants = [];
     state.requests = [];
@@ -148,8 +115,24 @@
     state.composerOpen = false;
     state.expandedRequestId = "";
     state.activeAction = "";
+    state.composerFiles = [];
+    state.replyDrafts = {};
     setWorkspaceStatus("");
-    setToken("");
+  }
+
+  function setSessionAnonymous() {
+    session.status = "anonymous";
+    session.bearerToken = "";
+  }
+
+  function setSessionAuthenticated(bearerToken = "") {
+    session.status = "authenticated";
+    session.bearerToken = String(bearerToken || "");
+  }
+
+  function handleUnauthorized(message = "Session expired. Sign in again.") {
+    clearAppState();
+    setSessionAnonymous();
     setActiveTenantId("");
     renderLogin(message);
   }
@@ -241,24 +224,25 @@
     }
   }
 
-  function authHeaders() {
-    return state.token ? { Authorization: `Bearer ${state.token}` } : {};
-  }
-
   async function apiFetch(path, options = {}) {
     const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
+    const shouldHandleUnauthorized = options.handleUnauthorized !== false;
+    const extraHeaders = options.headers || {};
+    const requestOptions = { ...options };
+    delete requestOptions.handleUnauthorized;
+    delete requestOptions.headers;
     const response = await fetch(`${apiBase}${path}`, {
       credentials: "include",
-      ...options,
+      ...requestOptions,
       headers: {
         ...(isFormData ? {} : { "Content-Type": "application/json" }),
-        ...authHeaders(),
-        ...(options.headers || {}),
+        ...(session.bearerToken ? { Authorization: `Bearer ${session.bearerToken}` } : {}),
+        ...extraHeaders,
       },
     });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
-      if (response.status === 401 && path !== "/api/auth/login") {
+      if (response.status === 401 && shouldHandleUnauthorized) {
         handleUnauthorized("Session expired. Sign in again.");
         throw new AuthExpiredError(payload.error || "Session expired. Sign in again.");
       }
@@ -693,6 +677,21 @@
     `;
   }
 
+  function renderAuthLoading(message = "Checking your session...") {
+    markSharedReady();
+    document.body.innerHTML = `
+      <div class="page-shell shared-shell">
+        <section class="auth-shell">
+          <div class="auth-card">
+            <p class="eyebrow">${escapeHtml(config.authEyebrow || "Smart Todo")}</p>
+            <h2>Loading</h2>
+            <p class="hero-copy">${escapeHtml(message)}</p>
+          </div>
+        </section>
+      </div>
+    `;
+  }
+
   function renderLogin(message = "") {
     markSharedReady();
     document.body.innerHTML = `
@@ -722,18 +721,30 @@
     `;
     document.querySelector("#sharedLoginForm").addEventListener("submit", async event => {
       event.preventDefault();
-      const formData = new FormData(event.currentTarget);
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const submitButton = form.querySelector('button[type="submit"]');
+      const statusNode = form.querySelector(".form-status");
+      if (submitButton) {
+        submitButton.disabled = true;
+      }
+      if (statusNode) {
+        statusNode.textContent = "Signing in...";
+      }
       try {
         const payload = await apiFetch("/api/auth/login", {
           method: "POST",
+          handleUnauthorized: false,
           body: JSON.stringify({
             email: formData.get("email"),
             password: formData.get("password"),
           }),
         });
-        setToken(payload.token);
+        setSessionAuthenticated(payload.token);
+        renderAuthLoading("Loading your workspace...");
         await bootstrapAuthenticatedState(payload.user);
       } catch (error) {
+        setSessionAnonymous();
         renderLogin(error instanceof AuthExpiredError ? "Session expired. Sign in again." : error.message);
       }
     });
@@ -909,16 +920,13 @@
     });
     document.querySelector("#logoutButton").addEventListener("click", async () => {
       try {
-        await apiFetch("/api/auth/logout", { method: "POST" });
+        await apiFetch("/api/auth/logout", { method: "POST", handleUnauthorized: false });
       } catch (_error) {
         // Ignore logout failures and clear local state.
       }
-      setToken("");
+      clearAppState();
+      setSessionAnonymous();
       setActiveTenantId("");
-      state.user = null;
-      state.tenants = [];
-      state.requests = [];
-      state.workspace = null;
       renderLogin();
     });
     document.querySelector("#refreshWorkspaceButton").addEventListener("click", () => reloadBoard());
@@ -1007,10 +1015,32 @@
   }
 
   async function bootstrapAuthenticatedState(currentUser = null) {
-    const mePayload = currentUser ? { user: currentUser } : await apiFetch("/api/auth/me");
+    const mePayload = currentUser ? { user: currentUser } : await apiFetch("/api/auth/me", { handleUnauthorized: false });
+    if (!mePayload?.user) {
+      handleUnauthorized("Session expired. Sign in again.");
+      throw new AuthExpiredError("Session expired. Sign in again.");
+    }
+    setSessionAuthenticated(session.bearerToken);
     applyAuthenticatedUser(mePayload.user);
     state.creatingTenant = false;
     await loadTenantData();
+  }
+
+  async function initializeSession() {
+    session.status = "loading";
+    renderAuthLoading();
+    try {
+      await bootstrapAuthenticatedState();
+    } catch (error) {
+      if (error instanceof AuthExpiredError) {
+        return;
+      }
+      if (/request failed \(401\)/i.test(String(error?.message || ""))) {
+        handleUnauthorized("Sign in to access your workspace.");
+        return;
+      }
+      throw error;
+    }
   }
 
   async function loadTenantData(retryOnTenantNotFound = true) {
@@ -1301,7 +1331,7 @@
     return;
   }
 
-  bootstrapAuthenticatedState().catch(error => {
+  initializeSession().catch(error => {
     if (error instanceof AuthExpiredError) {
       return;
     }

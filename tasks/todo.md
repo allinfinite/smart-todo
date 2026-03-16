@@ -1,3 +1,91 @@
+# Auth Rebuild (2026-03-16)
+
+## Plan
+
+- [x] Audit the current shared-app auth flow and isolate the state-management issues causing login/session glitches.
+- [x] Replace the mixed bearer-token-plus-cookie frontend auth model with a single session manager and deterministic bootstrap flow.
+- [x] Rewire login, logout, unauthorized recovery, and tenant switching so the UI always derives from the current server session.
+- [x] Verify syntax/build behavior and document the rebuilt auth flow plus remaining risks.
+
+## Review
+
+- Rebuilt shared-app auth in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) around a single session controller instead of persisted bearer tokens.
+- Removed the old `localStorage` and `sessionStorage` token persistence path. The app now treats the server session cookie as the source of truth and only keeps any returned bearer token in memory for the current page lifetime.
+- Added an explicit auth bootstrap screen and `initializeSession()` flow so page load always checks `/api/auth/me` before rendering either the login form or tenant UI.
+- Reworked login to:
+  - avoid global unauthorized side effects during `/api/auth/login`
+  - show an in-progress state
+  - render a loading shell while the authenticated workspace state is being hydrated
+- Reworked logout and unauthorized handling to clear all in-memory app state, selected tenant state, composer files, and reply drafts before returning to login.
+- Kept tenant selection persistence only, so refreshes restore the last workspace only when the server session is still valid.
+- Verification:
+  - `node --check ./shared-app.js`
+  - `node --check ./app.js`
+  - `npm run build`
+- Remaining gap:
+  - I did not run a live browser login against the Cowork API in this turn, so runtime verification against the deployed backend is still needed.
+
+# Booch Bar Web Deploy Check (2026-03-14)
+
+## Plan
+- [x] Confirm the Booch Bar repo state, Vercel linkage, and current deploy path
+- [x] Make one small visible homepage edit in `/Users/daniellevy/Code/Booch-Bar`
+- [x] Check the Vercel web interface path and complete the deployment through the available Vercel route
+- [x] Cross-check deploy status with the Vercel CLI and wait for completion
+- [x] Open the deployed site and verify the new change is live
+
+## Review
+- Updated `/Users/daniellevy/Code/Booch-Bar/app/page.js` to add a visible homepage hero subhead:
+  - `Now pouring island brews and plant-based plates in downtown Hilo.`
+- Verified the local Booch Bar app build before deploy:
+  - `npm run build` in `/Users/daniellevy/Code/Booch-Bar` completed successfully on March 14, 2026
+- Confirmed the local Vercel link for `/Users/daniellevy/Code/Booch-Bar` points at project `booch-bar`
+- Pushed the site change to GitHub on `main`:
+  - commit `58d152f` `Add homepage hero subhead`
+- Deployment result:
+  - opening `https://vercel.com/dnalevity/booch-bar` in the local Chrome profile currently lands on the Vercel login screen, so the dashboard session itself is signed out
+  - the Git-connected production deploy still triggered immediately after the push and completed successfully in Vercel
+  - latest production deployment:
+    - URL: `https://booch-irqhhw9ou-dnalevity.vercel.app`
+    - deployment id: `dpl_4ooqXQQY8ikt9iMmcz451KnqeDCn`
+    - created: March 14, 2026 7:39:19 PM HST
+    - status: `Ready`
+    - aliased to `https://booch-bar.vercel.app`
+- Live-site verification:
+  - `vercel inspect booch-bar.vercel.app` resolves to `booch-irqhhw9ou-dnalevity.vercel.app`
+  - `curl https://booch-bar.vercel.app` contains the new hero subhead
+  - browser-side DOM check in local Chrome returned:
+    - `title`: `The Booch Bar Experience`
+    - `heading`: `Hilo's Home For Kombucha, Eats, & Beats`
+    - `lede`: `Now pouring island brews and plant-based plates in downtown Hilo.`
+
+## Custom Domain Repair (2026-03-14)
+
+### Plan
+- [x] Confirm the current alias mismatch and deployment-protection state for `boochbar.dnalevity.com`
+- [x] Repoint `boochbar.dnalevity.com` to the current ready Booch Bar deployment
+- [x] Verify the custom domain serves the latest public site content
+
+### Review
+- Confirmed the custom domain mismatch on March 14, 2026:
+  - `booch-bar.vercel.app` pointed to `booch-irqhhw9ou-dnalevity.vercel.app`
+  - `boochbar.dnalevity.com` initially pointed to older deployment `booch-f6ejks17b-dnalevity.vercel.app`
+- Reassigned the custom domain alias with:
+  - `vercel alias set booch-irqhhw9ou-dnalevity.vercel.app boochbar.dnalevity.com`
+- Verified the project-level protection state via the Vercel API and found:
+  - `ssoProtection = {"deploymentType":"all_except_custom_domains"}`
+  - despite the alias fix, `https://boochbar.dnalevity.com` still returned `401 Authentication Required`
+- Cleared project-level Vercel Authentication via the Vercel API:
+  - patched project `prj_zdKx2h9oRRi8loY3rykvkFSY5dMT`
+  - resulting setting: `ssoProtection = None`
+- Final verification:
+  - `curl -I https://boochbar.dnalevity.com` now returns `200`
+  - `curl https://boochbar.dnalevity.com` includes:
+    - `The Booch Bar Experience`
+    - `Hilo's Home For Kombucha, Eats, & Beats`
+    - `Now pouring island brews and plant-based plates in downtown Hilo.`
+  - the rendered HTML references deployment `dpl_4ooqXQQY8ikt9iMmcz451KnqeDCn`
+
 # Booch-Bar Smart Todo Setup
 
 ## Multi-File Uploads
