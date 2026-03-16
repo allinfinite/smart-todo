@@ -17,6 +17,9 @@
 - Added first-sync bootstrap logic in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py):
   - if `repoPath` is not yet a git checkout and a `Repo URL` is saved, `Sync` now clones the configured deploy branch into that path automatically
   - if the path exists but is a non-empty non-git directory, `Sync` now fails with a direct bootstrap error instead of the misleading branch error
+- Follow-up auth hardening after live test feedback:
+  - Cowork git commands now run with `GIT_TERMINAL_PROMPT=0` so the web action never hangs or emits an interactive GitHub username prompt
+  - first-time clone now retries GitHub `https://github.com/...` repo URLs as `git@github.com:owner/repo.git` automatically, which covers private repos when the server already has SSH access configured
 - Updated sync success messaging in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js) so first-time setup reports `Repository connected and synced.`
 - Documented the new shared tenant workspace field in [/Users/daniellevy/Code/smart-todo/README.md](/Users/daniellevy/Code/smart-todo/README.md).
 - Verification:
