@@ -1646,6 +1646,51 @@ button:disabled {
   gap: 10px;
 }
 
+.shared-task-checklist,
+.shared-task-checklist-items {
+  display: grid;
+  gap: 10px;
+}
+
+.shared-task-checklist-item {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.shared-task-checklist-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(191, 211, 195, 0.95);
+  background: rgba(255, 255, 255, 0.92);
+  color: transparent;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.shared-task-checklist-text {
+  font-size: 0.96rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.shared-task-checklist-item.is-complete .shared-task-checklist-box {
+  border-color: rgba(44, 139, 87, 0.22);
+  background: rgba(44, 139, 87, 0.16);
+  color: #fff;
+}
+
+.shared-task-checklist-item.is-complete .shared-task-checklist-text {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
 .shared-completion-summary {
   margin: 0;
   font-size: 1rem;

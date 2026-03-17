@@ -11,6 +11,8 @@
 - Changes:
   - extracted the shared request-board rendering/event binding so the board can rerender independently of the rest of the shared workspace shell
   - added a 30-second poll against `/api/app/tenants/:tenantId/requests` that updates only `.shared-board-list` when request data changes
+  - sorted shared requests so cards with status `running` always render above non-running work while preserving backend order within each group
+  - exposed structured Cowork `todo_list` progress on shared requests and render it as a live checklist in expanded cards
   - gated polling to skip hidden tabs, active request-reply editing, and in-flight workspace/request actions
   - added a running-state glow animation on `.shared-request-card.state-running`
 - Verification:

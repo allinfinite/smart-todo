@@ -620,8 +620,20 @@
     return state.requests.some(request => ["queued", "running"].includes(requestState(request)));
   }
 
+  function requestSortRank(request) {
+    return requestState(request) === "running" ? 0 : 1;
+  }
+
   function updateRequestListState(requests) {
-    const nextRequests = Array.isArray(requests) ? requests : [];
+    const nextRequests = Array.isArray(requests)
+      ? requests
+          .map((request, index) => ({ request, index }))
+          .sort((left, right) => {
+            const rankDiff = requestSortRank(left.request) - requestSortRank(right.request);
+            return rankDiff || (left.index - right.index);
+          })
+          .map(entry => entry.request)
+      : [];
     const nextSignature = JSON.stringify(nextRequests);
     const changed = nextSignature !== state.requestListSignature;
     state.requests = nextRequests;
@@ -693,8 +705,24 @@
     const priority = requestPriority(request);
     const isCompleted = status === "completed";
     const replyDraft = ensureReplyDraft(requestId);
+    const taskChecklist = Array.isArray(request.task_checklist) ? request.task_checklist.filter(Boolean) : [];
     const latestMessage = request.latest_message
       ? `<p class="shared-request-note">${escapeHtml(request.latest_message)}</p>`
+      : "";
+    const checklistMarkup = taskChecklist.length
+      ? `
+        <div class="shared-task-checklist">
+          <div class="shared-detail-label">Task Queue</div>
+          <div class="shared-task-checklist-items">
+            ${taskChecklist.map(item => `
+              <div class="shared-task-checklist-item ${item.completed ? "is-complete" : ""}">
+                <span class="shared-task-checklist-box" aria-hidden="true">${item.completed ? "✓" : ""}</span>
+                <span class="shared-task-checklist-text">${escapeHtml(item.text || "")}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `
       : "";
     const completionScreenshot = request?.completion_screenshot?.url
       ? `
@@ -734,6 +762,7 @@
               <div class="shared-request-detail">
                 <p class="shared-request-meta">${escapeHtml(formatDate(request.created_at || request.createdAt))}</p>
                 ${request.details ? `<p class="shared-request-details">${escapeHtml(request.details)}</p>` : ""}
+                ${checklistMarkup}
                 ${
                   isCompleted
                     ? `
