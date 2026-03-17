@@ -6,6 +6,8 @@ import json
 import sys
 from pathlib import Path
 
+DEFAULT_CLIENT_MODEL = "gpt-5.4-mini"
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Create or update a multi-tenant Smart Todo tenant.")
@@ -48,6 +50,7 @@ def main() -> int:
                 "previewBasePath": args.preview_base_path or f"/preview/{args.slug}",
                 "previewPort": args.preview_port,
                 "deployBranch": args.deploy_branch,
+                "defaultModel": DEFAULT_CLIENT_MODEL,
                 "enabledActions": ["preview", "sync", "deploy"],
             },
         }
@@ -64,6 +67,7 @@ def main() -> int:
         "display_name": args.display_name,
         "app_dir": args.app_path or args.repo_path,
         "repo_dir": args.repo_path,
+        "default_model": DEFAULT_CLIENT_MODEL,
         "public_url": args.public_url,
         "preview": {
             "port": args.preview_port,

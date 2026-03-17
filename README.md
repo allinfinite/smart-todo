@@ -154,6 +154,7 @@ Shared tenant workspace config may include:
 - `repoUrl`: remote Git URL used to bootstrap the first clone during `Sync`
 - `appPath`: runtime app directory when different from `repoPath`
 - `deployBranch`: required branch for `Sync` and `Deploy`
+- `defaultModel`: default model for tenant work requests; smart-todo client provisioning defaults this to `gpt-5.4-mini`
 
 Shared-mode write endpoints should accept either JSON or multipart form uploads:
 

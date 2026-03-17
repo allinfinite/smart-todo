@@ -1,3 +1,26 @@
+# Shared Client Default Model (2026-03-17)
+
+## Plan
+
+- [x] Trace how smart-todo client defaults propagate into Cowork task execution and identify the smallest durable model hook.
+- [x] Set the smart-todo client default model to `gpt-5.4-mini` in provisioning/config sync paths for new and shared tenants.
+- [x] Pass the tenant/site default model into Cowork task execution so client requests, replies, and retries actually use `gpt-5.4-mini`.
+- [x] Verify the touched Python files compile and document the final behavior in this task card.
+
+## Review
+
+- Changes:
+  - updated smart-todo provisioning to stamp `gpt-5.4-mini` into client site definitions and shared-tenant workspace config as the default model
+  - documented the new shared tenant `defaultModel` workspace field in the smart-todo README
+  - updated Cowork multi-tenant sync/persistence so tenants keep a `workspace.defaultModel`, defaulting to `gpt-5.4-mini` when no explicit model is set
+  - updated Cowork portal task creation to attach the tenant/site default model on new requests, follow-up replies, and verification retries
+  - updated the Cowork task runner so stored task models are passed through to Codex with `--model <name>`
+- Verification:
+  - `python3 -m py_compile scripts/provision_smarttodo.py scripts/provision_shared_tenant.py /Users/daniellevy/Code/Cowork/portal_multi_tenant.py /Users/daniellevy/Code/Cowork/dashboard_server.py`
+- Notes:
+  - existing tenants that already have an explicit `workspace.defaultModel` keep it
+  - tenants without an explicit model now normalize to `gpt-5.4-mini`, so new client work and future synced tenant config use that default unless overridden later
+
 # Shared Task Card Polling And Glow (2026-03-16)
 
 ## Plan

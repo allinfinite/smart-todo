@@ -17,6 +17,7 @@ from urllib.request import Request, urlopen
 
 
 VERCEL_SCOPE = "dnalevity"
+DEFAULT_CLIENT_MODEL = "gpt-5.4-mini"
 BUILTIN_PREVIEW_PORTS = {
     "samanayo": 3101,
     "soulfire": 3102,
@@ -296,6 +297,7 @@ class Provisioner:
         return {
             "slug": self.slug,
             "display_name": self.display_name,
+            "default_model": DEFAULT_CLIENT_MODEL,
             "app_dir": str(self.app_dir),
             "repo_dir": str(self.app_dir),
             "portal_password_default": self.portal_password,
