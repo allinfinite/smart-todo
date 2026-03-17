@@ -1,3 +1,24 @@
+# Shared Task Card Polling And Glow (2026-03-16)
+
+## Plan
+
+- [x] Audit the shared-app request rendering path and isolate a request-list-only refresh flow that preserves composer, admin, and expanded-card state.
+- [x] Add a 30-second background poll for request/process status updates without triggering a full page reload.
+- [x] Add an in-progress glow animation to shared task cards and verify the shared frontend syntax after the change.
+
+## Review
+
+- Changes:
+  - extracted the shared request-board rendering/event binding so the board can rerender independently of the rest of the shared workspace shell
+  - added a 30-second poll against `/api/app/tenants/:tenantId/requests` that updates only `.shared-board-list` when request data changes
+  - gated polling to skip hidden tabs, active request-reply editing, and in-flight workspace/request actions
+  - added a running-state glow animation on `.shared-request-card.state-running`
+- Verification:
+  - `node --check shared-app.js`
+  - `npm run check`
+- Notes:
+  - the poll only runs while at least one shared request is still `queued` or `running`, which keeps background traffic bounded once the board is settled
+
 # Booch Bar Deploy Verification (2026-03-16)
 
 ## Plan
@@ -69,6 +90,28 @@
   - OCR verification also extracted real page text from the image, confirming the capture content is valid
 - Conclusion:
   - the blank box shown in the portal is a frontend rendering/display issue for the screenshot preview, not an empty capture and not a missing upload
+
+# Shared Login Screen Recovery (2026-03-16)
+
+## Plan
+
+- [x] Reproduce the unauthenticated shared-app bootstrap path and confirm why the login screen is not replacing the loading shell.
+- [x] Patch the shared frontend to treat the live Cowork unauthorized response as an auth failure during bootstrap.
+- [x] Verify the fix locally and on the live shared site, then document the outcome.
+
+## Review
+
+- Root cause:
+  - the shared bootstrap only treated the literal message `Request failed (401)` as unauthenticated
+  - the live Cowork API returns `401` with `{"error":"Unauthorized"}`, so bootstrap fell through to the outer catch and left the app on the loading screen instead of rendering the login form
+- Frontend fix in [/Users/daniellevy/Code/smart-todo/shared-app.js](/Users/daniellevy/Code/smart-todo/shared-app.js):
+  - added `isAuthFailure(error)` to normalize `AuthExpiredError`, `Request failed (401)`, `Unauthorized`, and `Session expired` into one auth-failure path
+  - updated both bootstrap and reload handling to use that normalized auth detection and render the login screen deterministically
+- Verification:
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - verified the live `https://cowork-api.dnalevity.com/api/auth/me` response is `401 Unauthorized`
+  - hotpatched the live Dokku container `smart-todo.web.1` so `https://smart-todo.dnalevity.com/shared-app.js` now serves the new `isAuthFailure()` logic
+  - browser validation with `npx playwright screenshot --wait-for-timeout 4000 https://smart-todo.dnalevity.com /tmp/smarttodo-login-check2.png` confirmed the loading shell transitions to the sign-in form on an unauthenticated visit
 
 # Automatic Completion Screenshot Enforcement (2026-03-16)
 

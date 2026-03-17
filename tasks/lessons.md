@@ -44,3 +44,4 @@
 
 - After any portal request finishes or a verification retry completes, check that the request record actually has a populated `completion_screenshot`; a `done` status alone is not enough for a reviewable card.
 - In Cowork portal evidence handling, do not silently return on `Evidence route: none` when a completed request still lacks a `completion_screenshot`; queue another evidence repair path or keep the screenshot that was captured.
+- In the shared auth bootstrap, do not key unauthenticated handling only on the literal string `Request failed (401)`; the live Cowork API can return `Unauthorized`, and the frontend must treat that as the same login-required state.

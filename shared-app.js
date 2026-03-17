@@ -63,6 +63,7 @@
     requestSubmitInFlight: false,
     composerFiles: [],
     replyDrafts: {},
+    requestListSignature: "",
   };
   const session = {
     status: "loading",
@@ -70,6 +71,9 @@
   };
   const requestActionKeysInFlight = new Set();
   const memberActionKeysInFlight = new Set();
+  let requestPollTimer = 0;
+  let requestPollInFlight = false;
+  const requestPollIntervalMs = 30000;
 
   class AuthExpiredError extends Error {
     constructor(message = "Session expired. Sign in again.") {
@@ -118,6 +122,7 @@
     state.activeAction = "";
     state.composerFiles = [];
     state.replyDrafts = {};
+    state.requestListSignature = "";
     setWorkspaceStatus("");
   }
 
@@ -129,6 +134,16 @@
   function setSessionAuthenticated(bearerToken = "") {
     session.status = "authenticated";
     session.bearerToken = String(bearerToken || "");
+  }
+
+  function isAuthFailure(error) {
+    const message = String(error?.message || "").trim();
+    return (
+      error instanceof AuthExpiredError
+      || /request failed \(401\)/i.test(message)
+      || /unauthorized/i.test(message)
+      || /session expired/i.test(message)
+    );
   }
 
   function handleUnauthorized(message = "Session expired. Sign in again.") {
@@ -219,7 +234,7 @@
       await loadTenantData();
     } catch (error) {
       const message = String(error?.message || "Unable to refresh workspace.");
-      if (error instanceof AuthExpiredError || /unauthorized/i.test(message)) {
+      if (isAuthFailure(error)) {
         handleUnauthorized("Session expired. Sign in again.");
         return;
       }
@@ -555,6 +570,120 @@
     return "Normal";
   }
 
+  function requestListMarkup() {
+    return state.requests.length
+      ? state.requests.map(requestCard).join("")
+      : '<div class="empty-state">No requests yet.</div>';
+  }
+
+  function syncReplyFormDrafts(scope = document) {
+    scope.querySelectorAll(".shared-reply-form").forEach(form => {
+      form.addEventListener("submit", submitReply);
+      const requestId = String(form.dataset.requestId || "");
+      const draft = ensureReplyDraft(requestId);
+      const textarea = form.querySelector('textarea[name="reply"]');
+      const filesInput = form.querySelector('input[name="files"]');
+      const dropzone = form.querySelector('[data-dropzone="reply"]');
+      const filesStatus = form.querySelector('[data-file-list="reply"]');
+      if (textarea) {
+        textarea.value = draft.text || "";
+        textarea.addEventListener("input", event => {
+          ensureReplyDraft(requestId).text = event.currentTarget.value;
+        });
+      }
+      syncInputFiles(filesInput, draft.files);
+      bindDropzone(dropzone, filesInput, files => {
+        ensureReplyDraft(requestId).files = files;
+        if (filesStatus) {
+          filesStatus.textContent = describeFiles(files);
+        }
+        syncInputFiles(filesInput, files);
+      });
+    });
+  }
+
+  function bindRequestBoardInteractions(scope = document) {
+    scope.querySelectorAll(".card-toggle").forEach(button => {
+      button.addEventListener("click", event => {
+        const requestId = String(event.currentTarget.dataset.requestId || "");
+        state.expandedRequestId = state.expandedRequestId === requestId ? "" : requestId;
+        renderRequestList(true);
+      });
+    });
+    syncReplyFormDrafts(scope);
+    scope.querySelectorAll(".request-action-btn").forEach(button => {
+      button.addEventListener("click", handleRequestAction);
+    });
+  }
+
+  function requestListHasActiveWork() {
+    return state.requests.some(request => ["queued", "running"].includes(requestState(request)));
+  }
+
+  function updateRequestListState(requests) {
+    const nextRequests = Array.isArray(requests) ? requests : [];
+    const nextSignature = JSON.stringify(nextRequests);
+    const changed = nextSignature !== state.requestListSignature;
+    state.requests = nextRequests;
+    state.requestListSignature = nextSignature;
+    return changed;
+  }
+
+  function renderRequestList(force = false) {
+    const board = document.querySelector(".shared-board-list");
+    if (!board) {
+      return;
+    }
+    if (!force && !state.requestListSignature) {
+      return;
+    }
+    board.innerHTML = requestListMarkup();
+    bindRequestBoardInteractions(board);
+  }
+
+  function stopRequestPolling() {
+    if (requestPollTimer) {
+      window.clearInterval(requestPollTimer);
+      requestPollTimer = 0;
+    }
+  }
+
+  function requestPollingBlocked() {
+    if (document.visibilityState === "hidden" || state.activeAction || state.requestSubmitInFlight) {
+      return true;
+    }
+    const activeElement = document.activeElement;
+    return Boolean(activeElement && activeElement.closest(".shared-reply-form"));
+  }
+
+  async function pollRequestList() {
+    const tenant = activeTenant();
+    if (!tenant || requestPollInFlight || !requestListHasActiveWork() || requestPollingBlocked()) {
+      return;
+    }
+    requestPollInFlight = true;
+    try {
+      const payload = await apiFetch(`/api/app/tenants/${tenant.id}/requests`);
+      const changed = updateRequestListState(payload?.requests);
+      if (changed) {
+        renderRequestList();
+      }
+    } catch (error) {
+      if (isAuthFailure(error)) {
+        handleUnauthorized("Session expired. Sign in again.");
+      }
+    } finally {
+      requestPollInFlight = false;
+    }
+  }
+
+  function ensureRequestPolling() {
+    stopRequestPolling();
+    requestPollTimer = window.setInterval(() => {
+      void pollRequestList();
+    }, requestPollIntervalMs);
+  }
+
   function requestCard(request) {
     const requestId = String(request.request_id || request.id || "");
     const replies = Array.isArray(request.replies) ? request.replies : [];
@@ -724,6 +853,7 @@
   }
 
   function renderAuthLoading(message = "Checking your session...") {
+    stopRequestPolling();
     markSharedReady();
     document.body.innerHTML = `
       <div class="page-shell shared-shell">
@@ -739,6 +869,7 @@
   }
 
   function renderLogin(message = "") {
+    stopRequestPolling();
     markSharedReady();
     document.body.innerHTML = `
       <div class="page-shell shared-shell">
@@ -964,7 +1095,7 @@
             <span>Branch: ${escapeHtml(state.workspace?.branch || "n/a")}</span>
             <span>Preview: ${state.workspace?.preview?.url ? `<a href="${escapeHtml(cacheSafePreviewUrl(state.workspace.preview.url))}" target="_blank" rel="noreferrer">${escapeHtml(state.workspace.preview.url)}</a>` : "n/a"}</span>
           </div>
-          <section class="queue-list shared-board-list">${state.requests.length ? state.requests.map(requestCard).join("") : '<div class="empty-state">No requests yet.</div>'}</section>
+          <section class="queue-list shared-board-list">${requestListMarkup()}</section>
         </main>
       </div>
     `;
@@ -1017,41 +1148,9 @@
         syncInputFiles(requestFilesInput, files);
       });
     }
-    document.querySelectorAll(".card-toggle").forEach(button => {
-      button.addEventListener("click", event => {
-        const requestId = String(event.currentTarget.dataset.requestId || "");
-        state.expandedRequestId = state.expandedRequestId === requestId ? "" : requestId;
-        renderApp();
-      });
-    });
+    bindRequestBoardInteractions();
     document.querySelectorAll("[data-workspace-action]").forEach(button => {
       button.addEventListener("click", event => runWorkspaceAction(event.currentTarget.dataset.workspaceAction));
-    });
-    document.querySelectorAll(".shared-reply-form").forEach(form => {
-      form.addEventListener("submit", submitReply);
-      const requestId = String(form.dataset.requestId || "");
-      const draft = ensureReplyDraft(requestId);
-      const textarea = form.querySelector('textarea[name="reply"]');
-      const filesInput = form.querySelector('input[name="files"]');
-      const dropzone = form.querySelector('[data-dropzone="reply"]');
-      const filesStatus = form.querySelector('[data-file-list="reply"]');
-      if (textarea) {
-        textarea.value = draft.text || "";
-        textarea.addEventListener("input", event => {
-          ensureReplyDraft(requestId).text = event.currentTarget.value;
-        });
-      }
-      syncInputFiles(filesInput, draft.files);
-      bindDropzone(dropzone, filesInput, files => {
-        ensureReplyDraft(requestId).files = files;
-        if (filesStatus) {
-          filesStatus.textContent = describeFiles(files);
-        }
-        syncInputFiles(filesInput, files);
-      });
-    });
-    document.querySelectorAll(".request-action-btn").forEach(button => {
-      button.addEventListener("click", handleRequestAction);
     });
     const tenantForm = document.querySelector("#tenantForm");
     if (tenantForm) {
@@ -1070,6 +1169,7 @@
     document.querySelectorAll("[data-member-user-id]").forEach(button => {
       button.addEventListener("click", removeTenantUser);
     });
+    ensureRequestPolling();
   }
 
   async function bootstrapAuthenticatedState(currentUser = null) {
@@ -1090,10 +1190,7 @@
     try {
       await bootstrapAuthenticatedState();
     } catch (error) {
-      if (error instanceof AuthExpiredError) {
-        return;
-      }
-      if (/request failed \(401\)/i.test(String(error?.message || ""))) {
+      if (isAuthFailure(error)) {
         handleUnauthorized("Sign in to access your workspace.");
         return;
       }
@@ -1135,7 +1232,7 @@
     if (loadRequestId !== state.loadRequestId || String(state.activeTenantId) !== requestedTenantId) {
       return;
     }
-    state.requests = Array.isArray(requestsPayload.requests) ? requestsPayload.requests : [];
+    updateRequestListState(requestsPayload.requests);
     state.workspace = workspacePayload?.workspace || requestsPayload.workspace || state.workspace || null;
     state.adminStatus = "";
     if (userCanViewAdminPanel()) {
