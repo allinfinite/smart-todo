@@ -46,6 +46,29 @@
   - the discard action is only advertised when the workspace is actually dirty
   - discarding local changes is destructive by design for the target repo checkout because it removes both tracked edits and untracked files in that workspace
 
+# Shared Discard Action Activation (2026-04-03)
+
+## Plan
+
+- [x] Reproduce why the live Soulfire shared workspace still renders `Discard Changes` as disabled after the feature shipped.
+- [x] Patch the backend tenant action normalization so existing tenants with older `enabledActions` arrays automatically expose `discard`.
+- [x] Deploy the backend fix to `dna@piko.local`, verify the live workspace payload includes `discard`, and document the regression.
+
+## Review
+
+- Root cause:
+  - the live Soulfire tenant record in `/home/dna/Code/Cowork/.dashboard_state/portal_tenants.json` still had the pre-feature action list `["sync","preview","deploy"]`
+  - the shared frontend correctly disabled the new button because it trusts `workspace.enabledActions`, and the backend was passing that stale list through unchanged for existing tenants
+- Changes:
+  - added shared `normalize_enabled_actions()` logic in [/Users/daniellevy/Code/Cowork/portal_multi_tenant.py](/Users/daniellevy/Code/Cowork/portal_multi_tenant.py)
+  - updated tenant sync/save paths to persist normalized action arrays that automatically include `discard` when a workspace already exposes `sync` or `deploy`
+  - updated [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) to use the same normalization when deriving workspace state and site definitions, so older tenants activate the button immediately without requiring a manual resave
+- Verification:
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py /Users/daniellevy/Code/Cowork/portal_multi_tenant.py`
+  - live Soulfire workspace API now includes `discard` in `enabledActions`
+- Notes:
+  - this was a backward-compatibility bug for tenants created before the new action existed, not a frontend enablement bug
+
 # Shared Task Card Polling And Glow (2026-03-16)
 
 ## Plan

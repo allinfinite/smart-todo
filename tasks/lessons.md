@@ -40,6 +40,10 @@
 - In the shared portal UI, do not collapse unknown backend task states into `Queued`; if Cowork emits statuses like `interrupted`, either surface them explicitly or provide a retry path so stale work does not look idle.
 - For shared-tenant initialization on the live Cowork backend, keep request-time work bounded and deterministic. Do not launch Codex runs, full Next builds, or other long-running repo normalization inside `sync` or `preview` web requests; move that work to an async job or an explicit operator action.
 - After any preview-path or middleware change for a tenant app, verify both classes of assets on the live preview URL: prefixed `_next` assets and any root-relative `/images/...` assets. A preview page can return `200` while still rendering unstyled or image-broken if those two routes are not checked separately.
+
+## 2026-04-03
+
+- When adding a new shared workspace action, do not only update the default action lists for new tenants. Normalize existing `workspace.enabledActions` records too, or the live UI will render the new control disabled for older tenants.
 # Lessons Learned (2026-03-16)
 
 - After any portal request finishes or a verification retry completes, check that the request record actually has a populated `completion_screenshot`; a `done` status alone is not enough for a reviewable card.
