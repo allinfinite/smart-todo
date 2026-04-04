@@ -46,6 +46,8 @@ const DEFAULT_PORTAL_CONFIG = {
     syncBusy: "Syncing...",
     preview: "Preview",
     previewBusy: "Starting preview...",
+    discard: "Discard Changes",
+    discardBusy: "Discarding...",
     deploy: "Deploy",
     deployBusy: "Deploying...",
     refresh: "Refresh",
@@ -84,6 +86,8 @@ const DEFAULT_PORTAL_CONFIG = {
     syncSuccessToast: "Preview server synced from GitHub.",
     previewError: "Unable to start preview.",
     previewReadyToast: "Preview is ready.",
+    discardError: "Unable to discard local changes.",
+    discardSuccessToast: "Local changes discarded.",
     deployError: "Unable to deploy.",
     deploySuccessToast: "Deploy pushed to GitHub.",
     followUpUnavailable: "That follow-up suggestion is no longer available.",
@@ -201,6 +205,7 @@ const submitButton = document.querySelector("#submitButton");
 const queueList = document.querySelector("#queueList");
 const syncButton = document.querySelector("#syncButton");
 const previewButton = document.querySelector("#previewButton");
+const discardButton = document.querySelector("#discardButton");
 const deployButton = document.querySelector("#deployButton");
 const refreshButton = document.querySelector("#refreshButton");
 const apiBaseLabel = document.querySelector("#apiBaseLabel");
@@ -320,6 +325,7 @@ function applyPortalConfig() {
   setText("#submitButton", PORTAL_CONFIG.buttons.submit);
   setText("#syncButton", PORTAL_CONFIG.buttons.sync);
   setText("#previewButton", PORTAL_CONFIG.buttons.preview);
+  setText("#discardButton", PORTAL_CONFIG.buttons.discard);
   setText("#deployButton", PORTAL_CONFIG.buttons.deploy);
   setText("#refreshButton", PORTAL_CONFIG.buttons.refresh);
   setText("#replyDialogHeading", PORTAL_CONFIG.buttons.replyDialogTitle);
@@ -559,10 +565,12 @@ function renderWorkspaceActions() {
   const supported = supportsWorkspaceActions();
   syncButton.classList.toggle("hidden", !supported);
   previewButton.classList.toggle("hidden", !supported);
+  discardButton.classList.toggle("hidden", !supported);
   deployButton.classList.toggle("hidden", !supported);
   if (!supported) {
     syncButton.disabled = true;
     previewButton.disabled = true;
+    discardButton.disabled = true;
     deployButton.disabled = true;
     return;
   }
@@ -570,6 +578,7 @@ function renderWorkspaceActions() {
   const actions = new Set(getWorkspaceAvailableActions());
   const syncBusy = workspaceActionsInFlight.has("sync");
   const previewBusy = workspaceActionsInFlight.has("preview");
+  const discardBusy = workspaceActionsInFlight.has("discard");
   const deployBusy = workspaceActionsInFlight.has("deploy");
 
   syncButton.disabled = syncBusy || !actions.has("sync");
@@ -580,6 +589,10 @@ function renderWorkspaceActions() {
   previewButton.textContent = previewBusy
     ? PORTAL_CONFIG.buttons.previewBusy
     : PORTAL_CONFIG.buttons.preview;
+  discardButton.disabled = discardBusy || !Boolean(cachedWorkspace?.dirty) || !actions.has("discard");
+  discardButton.textContent = discardBusy
+    ? PORTAL_CONFIG.buttons.discardBusy
+    : PORTAL_CONFIG.buttons.discard;
 
   deployButton.disabled = deployBusy || !Boolean(cachedWorkspace?.dirty) || !actions.has("deploy");
   deployButton.textContent = deployBusy
@@ -1330,7 +1343,7 @@ async function handleRequestAction(event) {
 
 async function handleWorkspaceAction(event) {
   const action = getWorkspaceActionKey(event.currentTarget?.dataset?.workspaceAction);
-  if (!supportsWorkspaceActions() || !["sync", "preview", "deploy"].includes(action)) {
+  if (!supportsWorkspaceActions() || !["sync", "preview", "discard", "deploy"].includes(action)) {
     return;
   }
   if (workspaceActionsInFlight.has(action)) {
@@ -1362,6 +1375,8 @@ async function handleWorkspaceAction(event) {
             ? PORTAL_CONFIG.messages.syncError
             : action === "preview"
               ? PORTAL_CONFIG.messages.previewError
+              : action === "discard"
+                ? PORTAL_CONFIG.messages.discardError
               : PORTAL_CONFIG.messages.deployError)
       );
     }
@@ -1376,6 +1391,8 @@ async function handleWorkspaceAction(event) {
         window.open(previewUrl, "_blank", "noopener,noreferrer");
       }
       showToast(PORTAL_CONFIG.messages.previewReadyToast, "success");
+    } else if (action === "discard") {
+      showToast(PORTAL_CONFIG.messages.discardSuccessToast, "success");
     } else {
       showToast(PORTAL_CONFIG.messages.deploySuccessToast, "success");
     }
@@ -1391,6 +1408,8 @@ async function handleWorkspaceAction(event) {
           ? PORTAL_CONFIG.messages.syncError
           : action === "preview"
             ? PORTAL_CONFIG.messages.previewError
+            : action === "discard"
+              ? PORTAL_CONFIG.messages.discardError
             : PORTAL_CONFIG.messages.deployError),
       "warn"
     );
@@ -1454,9 +1473,11 @@ requestForm.addEventListener("submit", submitRequest);
 replyForm.addEventListener("submit", submitReply);
 syncButton.dataset.workspaceAction = "sync";
 previewButton.dataset.workspaceAction = "preview";
+discardButton.dataset.workspaceAction = "discard";
 deployButton.dataset.workspaceAction = "deploy";
 syncButton.addEventListener("click", handleWorkspaceAction);
 previewButton.addEventListener("click", handleWorkspaceAction);
+discardButton.addEventListener("click", handleWorkspaceAction);
 deployButton.addEventListener("click", handleWorkspaceAction);
 refreshButton.addEventListener("click", () => {
   void fetchRequests();

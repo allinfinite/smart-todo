@@ -51,7 +51,7 @@ def main() -> int:
                 "previewPort": args.preview_port,
                 "deployBranch": args.deploy_branch,
                 "defaultModel": DEFAULT_CLIENT_MODEL,
-                "enabledActions": ["preview", "sync", "deploy"],
+                "enabledActions": ["preview", "sync", "discard", "deploy"],
             },
         }
     )

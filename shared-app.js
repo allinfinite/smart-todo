@@ -213,6 +213,9 @@
       }
       return { text: String(payload?.sync?.summary || "").trim() || "Sync finished." };
     }
+    if (action === "discard") {
+      return { text: String(payload?.discard?.summary || "").trim() || "Local changes discarded." };
+    }
     if (action === "deploy") {
       return { text: String(payload?.deploy?.summary || "").trim() || "Deploy finished." };
     }
@@ -871,11 +874,12 @@
 
   function workspaceActionsMarkup() {
     const workspace = state.workspace || {};
-    const enabledActions = Array.isArray(workspace.enabledActions) ? workspace.enabledActions : ["preview", "sync", "deploy"];
+    const enabledActions = Array.isArray(workspace.enabledActions) ? workspace.enabledActions : ["preview", "sync", "discard", "deploy"];
     const actionInFlight = String(state.activeAction || "");
     return `
       <button class="board-action" data-workspace-action="sync" ${(enabledActions.includes("sync") && !actionInFlight) ? "" : "disabled"}>${actionInFlight === "sync" ? "Syncing..." : "Sync"}</button>
       <button class="board-action" data-workspace-action="preview" ${(enabledActions.includes("preview") && !actionInFlight) ? "" : "disabled"}>${actionInFlight === "preview" ? "Starting..." : "Preview"}</button>
+      <button class="board-action" data-workspace-action="discard" ${(enabledActions.includes("discard") && !actionInFlight && workspace.dirty) ? "" : "disabled"}>${actionInFlight === "discard" ? "Discarding..." : "Discard Changes"}</button>
       <button class="board-action" data-workspace-action="deploy" ${(enabledActions.includes("deploy") && !actionInFlight) ? "" : "disabled"}>${actionInFlight === "deploy" ? "Deploying..." : "Deploy"}</button>
       <button class="board-action" id="refreshWorkspaceButton" type="button" ${actionInFlight ? "disabled" : ""}>Refresh</button>
     `;
@@ -960,7 +964,7 @@
     markSharedReady();
     const tenant = activeTenant();
     const tenantFormSource = state.creatingTenant
-      ? { displayName: "", slug: "", status: "active", workspace: { enabledActions: ["preview", "sync", "deploy"] } }
+      ? { displayName: "", slug: "", status: "active", workspace: { enabledActions: ["preview", "sync", "discard", "deploy"] } }
       : (tenant || { workspace: {} });
     applyTheme(tenant?.theme || {});
     document.title = tenant?.displayName ? `${tenant.displayName} · Smart Todo` : (config.portalTitle || "Smart Todo");
@@ -1048,6 +1052,7 @@
                       <label><span>Status</span><input name="status" value="${escapeHtml(tenantFormSource.status || "active")}" /></label>
                       <label class="shared-checkbox-row"><input type="checkbox" name="enablePreview" ${tenantFormSource.workspace?.enabledActions?.includes("preview") ? "checked" : ""} /> Preview</label>
                       <label class="shared-checkbox-row"><input type="checkbox" name="enableSync" ${tenantFormSource.workspace?.enabledActions?.includes("sync") ? "checked" : ""} /> Sync</label>
+                      <label class="shared-checkbox-row"><input type="checkbox" name="enableDiscard" ${tenantFormSource.workspace?.enabledActions?.includes("discard") ? "checked" : ""} /> Discard Changes</label>
                       <label class="shared-checkbox-row"><input type="checkbox" name="enableDeploy" ${tenantFormSource.workspace?.enabledActions?.includes("deploy") ? "checked" : ""} /> Deploy</label>
                       <div class="form-actions">
                         <button type="submit">${state.creatingTenant ? "Create Tenant" : "Save Tenant"}</button>
@@ -1464,6 +1469,7 @@
         enabledActions: [
           formData.get("enablePreview") ? "preview" : "",
           formData.get("enableSync") ? "sync" : "",
+          formData.get("enableDiscard") ? "discard" : "",
           formData.get("enableDeploy") ? "deploy" : "",
         ].filter(Boolean),
       },

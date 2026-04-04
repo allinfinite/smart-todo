@@ -21,6 +21,31 @@
   - existing tenants that already have an explicit `workspace.defaultModel` keep it
   - tenants without an explicit model now normalize to `gpt-5.4-mini`, so new client work and future synced tenant config use that default unless overridden later
 
+# Workspace Discard Action (2026-04-03)
+
+## Plan
+
+- [x] Inspect the existing smart-todo workspace action flow and confirm whether the backend already supports discarding local repo changes.
+- [x] Add a guarded backend `discard` workspace action that resets tracked changes, removes untracked files, and refreshes workspace state.
+- [x] Expose the discard action in the legacy and shared smart-todo UIs, including tenant config defaults and action copy.
+- [x] Verify the touched frontend and backend files parse cleanly and document the result.
+
+## Review
+
+- Changes:
+  - added `discard` to Cowork workspace action allowlists, workspace-state availability, and tenant defaults so dirty repos can surface a dedicated discard action
+  - added `discard_portal_site_changes()` in [/Users/daniellevy/Code/Cowork/dashboard_server.py](/Users/daniellevy/Code/Cowork/dashboard_server.py) to run `git reset --hard HEAD` plus `git clean -fd` only when the workspace is dirty and already a git checkout
+  - wired the new action through both legacy `/api/portal/<slug>/actions` and shared `/api/app/tenants/<tenantId>/actions` routes, including audit logging and `409` conflict responses
+  - added a `Discard Changes` button to the legacy smart-todo board and shared workspace header, plus matching labels, toasts, and tenant-admin enablement controls
+  - updated shared-tenant provisioning defaults and README backend-contract docs so new tenants expose the new action consistently
+- Verification:
+  - `node --check /Users/daniellevy/Code/smart-todo/app.js`
+  - `node --check /Users/daniellevy/Code/smart-todo/shared-app.js`
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py /Users/daniellevy/Code/Cowork/portal_multi_tenant.py /Users/daniellevy/Code/smart-todo/scripts/provision_shared_tenant.py`
+- Notes:
+  - the discard action is only advertised when the workspace is actually dirty
+  - discarding local changes is destructive by design for the target repo checkout because it removes both tracked edits and untracked files in that workspace
+
 # Shared Task Card Polling And Glow (2026-03-16)
 
 ## Plan

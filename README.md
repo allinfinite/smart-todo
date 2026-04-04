@@ -123,9 +123,9 @@ Optional workspace actions:
 
 - `GET <requestsPath>` may also return a `workspace` object
 - `GET <workspacePath>` may return `{ workspace }` when configured separately
-- `POST <siteActionsPath>` accepts `{ "action": "sync" }`, `{ "action": "preview" }`, or `{ "action": "deploy" }`
+- `POST <siteActionsPath>` accepts `{ "action": "sync" }`, `{ "action": "preview" }`, `{ "action": "discard" }`, or `{ "action": "deploy" }`
 
-When `siteActionsPath` is configured, the board header shows global `Sync`, `Preview`, and `Deploy` controls. Older backends remain compatible because the buttons stay hidden unless the action path is configured.
+When `siteActionsPath` is configured, the board header shows global `Sync`, `Preview`, `Discard Changes`, and `Deploy` controls. Older backends remain compatible because the buttons stay hidden unless the action path is configured.
 
 ## Shared App Backend Contract
 
@@ -154,6 +154,7 @@ Shared tenant workspace config may include:
 - `repoUrl`: remote Git URL used to bootstrap the first clone during `Sync`
 - `appPath`: runtime app directory when different from `repoPath`
 - `deployBranch`: required branch for `Sync` and `Deploy`
+- `enabledActions`: optional allowlist for workspace actions such as `preview`, `sync`, `discard`, and `deploy`
 - `defaultModel`: default model for tenant work requests; smart-todo client provisioning defaults this to `gpt-5.4-mini`
 
 Shared-mode write endpoints should accept either JSON or multipart form uploads:
