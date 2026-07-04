@@ -17,7 +17,7 @@ from urllib.request import Request, urlopen
 
 
 VERCEL_SCOPE = "dnalevity"
-DEFAULT_CLIENT_MODEL = "gpt-5.4-mini"
+DEFAULT_CLIENT_MODEL = "gpt-5.5"
 BUILTIN_PREVIEW_PORTS = {
     "samanayo": 3101,
     "soulfire": 3102,

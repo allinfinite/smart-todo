@@ -1,0 +1,9 @@
+[    1037ms] [VERBOSE] [DOM] Password forms should have (optionally hidden) username fields for accessibility: (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:4174/:0
+[   15967ms] [ERROR] Access to fetch at 'https://cowork-api.dnalevity.com/api/portal/soulfire/requests' from origin 'http://127.0.0.1:4174' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://127.0.0.1:4174/:0
+[   15968ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://cowork-api.dnalevity.com/api/portal/soulfire/requests:0
+[   25495ms] [ERROR] Access to fetch at 'https://cowork-api.dnalevity.com/api/portal/soulfire/requests' from origin 'http://127.0.0.1:4174' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://127.0.0.1:4174/:0
+[   25495ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://cowork-api.dnalevity.com/api/portal/soulfire/requests:0
+[   37480ms] [ERROR] Access to fetch at 'https://cowork-api.dnalevity.com/api/portal/soulfire/requests' from origin 'http://127.0.0.1:4174' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://127.0.0.1:4174/:0
+[   37480ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://cowork-api.dnalevity.com/api/portal/soulfire/requests:0
+[   49523ms] [ERROR] Access to fetch at 'https://cowork-api.dnalevity.com/api/portal/soulfire/requests' from origin 'http://127.0.0.1:4174' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://127.0.0.1:4174/:0
+[   49523ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://cowork-api.dnalevity.com/api/portal/soulfire/requests:0

@@ -6,7 +6,7 @@ import json
 import sys
 from pathlib import Path
 
-DEFAULT_CLIENT_MODEL = "gpt-5.4-mini"
+DEFAULT_CLIENT_MODEL = "gpt-5.5"
 
 
 def parse_args() -> argparse.Namespace:

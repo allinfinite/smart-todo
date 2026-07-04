@@ -1,0 +1,392 @@
+{
+  "count": 37,
+  "bad": [
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/icons/digestion.png",
+      "rc": 28,
+      "out": "000  3.005348",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3005 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/large-pregnant-goddess-candle-web.png",
+      "rc": 28,
+      "out": "000  3.005388",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3005 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/tapered-candles-web.png",
+      "rc": 28,
+      "out": "000  3.004961",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3004 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/tapered-flower-candle-web.png",
+      "rc": 28,
+      "out": "000  3.001853",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3001 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/day-of-the-dead-candles-web.png",
+      "rc": 28,
+      "out": "000  3.003456",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3003 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/hand-heart-candle-web.png",
+      "rc": 28,
+      "out": "000  3.006158",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3006 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/horse-candle-web.png",
+      "rc": 28,
+      "out": "000  3.006227",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3006 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/rose-candles-web.png",
+      "rc": 28,
+      "out": "000  3.003316",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3003 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/vulva-candle-clean-v2-web.png",
+      "rc": 28,
+      "out": "000  3.004904",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3004 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/colon-cleanse-label-package.png",
+      "rc": 28,
+      "out": "000  3.001992",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3001 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/kidney-cleanse-label-package.png",
+      "rc": 28,
+      "out": "000  3.005467",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3005 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/liver-support-label-package.png",
+      "rc": 28,
+      "out": "000  3.003108",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3003 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/mamaki-label-package.png",
+      "rc": 28,
+      "out": "000  3.006726",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3006 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/propolis-tincture.png",
+      "rc": 28,
+      "out": "000  3.006861",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3006 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/spilanthes-tincture.png",
+      "rc": 28,
+      "out": "000  3.002832",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3002 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/swedish-bitters.png",
+      "rc": 28,
+      "out": "000  3.002285",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3002 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/source/fast-like-a-girl-certified.png",
+      "rc": 28,
+      "out": "000  3.006736",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3006 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/source/silke-profile.png",
+      "rc": 28,
+      "out": "000  3.002370",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3002 ms: Timeout was reached",
+      "ok": false
+    }
+  ],
+  "results": [
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/apple-touch-icon.png",
+      "rc": 0,
+      "out": "200 image/png 1.318599",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/favicon-16.png",
+      "rc": 0,
+      "out": "200 image/png 1.366637",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/favicon-32.png",
+      "rc": 0,
+      "out": "200 image/png 1.366139",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/favicon.ico",
+      "rc": 0,
+      "out": "200 image/x-icon 1.359733",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/icon.svg",
+      "rc": 0,
+      "out": "200 image/svg+xml 1.366691",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/icons/detoxify.png",
+      "rc": 0,
+      "out": "200 image/png 1.368134",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/icons/digestion.png",
+      "rc": 28,
+      "out": "000  3.005348",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3005 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/icons/energy.png",
+      "rc": 0,
+      "out": "200 image/png 1.348197",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/icons/immunity.png",
+      "rc": 0,
+      "out": "200 image/png 1.364598",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/angel-candle-web.png",
+      "rc": 0,
+      "out": "200 image/png 1.344711",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/buddha-prayer-candles-web.png",
+      "rc": 0,
+      "out": "200 image/png 1.364511",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/large-pregnant-goddess-candle-web.png",
+      "rc": 28,
+      "out": "000  3.005388",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3005 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/maiden-mother-crown-goddess-candle-web.png",
+      "rc": 0,
+      "out": "200 image/png 1.308787",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/mini-flower-candle-web.png",
+      "rc": 0,
+      "out": "200 image/png 1.335097",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/mini-kitten-candle-web.png",
+      "rc": 0,
+      "out": "200 image/png 1.301048",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/mini-owl-candle-web.png",
+      "rc": 0,
+      "out": "200 image/png 1.320570",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/mini-turtle-candle-web.png",
+      "rc": 0,
+      "out": "200 image/png 1.327985",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/small-pregnant-goddess-candle-web.png",
+      "rc": 0,
+      "out": "200 image/png 1.324370",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/tapered-candles-web.png",
+      "rc": 28,
+      "out": "000  3.004961",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3004 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/batch-2/tapered-flower-candle-web.png",
+      "rc": 28,
+      "out": "000  3.001853",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3001 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/day-of-the-dead-candles-web.png",
+      "rc": 28,
+      "out": "000  3.003456",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3003 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/hand-heart-candle-web.png",
+      "rc": 28,
+      "out": "000  3.006158",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3006 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/horse-candle-web.png",
+      "rc": 28,
+      "out": "000  3.006227",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3006 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/rose-candles-web.png",
+      "rc": 28,
+      "out": "000  3.003316",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3003 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/candles/vulva-candle-clean-v2-web.png",
+      "rc": 28,
+      "out": "000  3.004904",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3004 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/colon-cleanse-label-package.png",
+      "rc": 28,
+      "out": "000  3.001992",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3001 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/kidney-cleanse-label-package.png",
+      "rc": 28,
+      "out": "000  3.005467",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3005 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/liver-support-label-package.png",
+      "rc": 28,
+      "out": "000  3.003108",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3003 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/mamaki-label-package.png",
+      "rc": 28,
+      "out": "000  3.006726",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3006 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/propolis-tincture.png",
+      "rc": 28,
+      "out": "000  3.006861",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3006 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/spilanthes-tincture.png",
+      "rc": 28,
+      "out": "000  3.002832",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3002 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/generated/products/swedish-bitters.png",
+      "rc": 28,
+      "out": "000  3.002285",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3002 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/source/fast-like-a-girl-certified.png",
+      "rc": 28,
+      "out": "000  3.006736",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3006 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/source/silke-profile.png",
+      "rc": 28,
+      "out": "000  3.002370",
+      "err": "curl: (28) Failed to connect to piko.dnalevity.com port 443 after 3002 ms: Timeout was reached",
+      "ok": false
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/source/silke-room-hero.png",
+      "rc": 0,
+      "out": "200 image/png 3.274977",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/images/source/wow-logo.png",
+      "rc": 0,
+      "out": "200 image/png 3.287567",
+      "err": "",
+      "ok": true
+    },
+    {
+      "url": "https://piko.dnalevity.com/preview/wellofwellness/site.webmanifest",
+      "rc": 0,
+      "out": "200 application/manifest+json 3.289645",
+      "err": "",
+      "ok": true
+    }
+  ]
+}

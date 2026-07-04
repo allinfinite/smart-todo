@@ -28,20 +28,23 @@ window.PORTAL_TEMPLATE_CONFIG = {
       "type": "catalog"
     }
   ],
-  "portalTitle": "Soulfire Edit Portal",
+  "portalTitle": "Smart Todo",
   "storageNamespace": "soulfire-edit-portal",
   "requestsPath": "/api/portal/soulfire/requests",
   "repliesPath": "/api/portal/soulfire/replies",
-  "authEyebrow": "Soulfire Workspace",
-  "authTitle": "Soulfire site updates",
-  "authCopy": "Enter the Soulfire portal password to view requests and queue the next change.",
-  "heroEyebrow": "Soulfire",
+  "authEyebrow": "Smart Todo Workspace",
+  "authTitle": "Open your task board",
+  "authCopy": "Sign in with your email and password to view requests and queue the next change.",
+  "heroEyebrow": "Smart Todo",
   "heroTitle": "Queue website updates without losing momentum.",
-  "heroCopy": "Send a change request, assign the right expert, and keep building the next round while work moves in the background.",
-  "composerTitle": "Send work to the Soulfire team",
-  "boardTitle": "Soulfire todo board",
+  "heroCopy": "Send a change request, attach the context, and keep building the next round while work moves in the background.",
+  "composerTitle": "Send work to Smart Todo",
+  "boardTitle": "Smart Todo board",
+  "buttons": {
+    "unlock": "Sign in"
+  },
   "waitingMessages": [
-    "It is in motion. You can add another Soulfire item while this moves.",
+    "It is in motion. You can add another item while this moves.",
     "This request has traction. If another page update is ready, add it now and keep the board warm.",
     "Good progress is happening in the background. Queue the next refinement whenever it is ready."
   ],

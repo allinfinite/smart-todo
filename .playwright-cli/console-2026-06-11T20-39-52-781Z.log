@@ -1,0 +1,2 @@
+[    6387ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:38559
+[    9715ms] [ERROR] WebSocket connection to 'wss://piko.dnalevity.com/preview/eufloria/_next/webpack-hmr' failed: Error during WebSocket handshake: Invalid status line @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/use-websocket.js:41

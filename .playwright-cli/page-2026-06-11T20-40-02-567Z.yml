@@ -1,0 +1,66 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e6]:
+      - img "Beautiful orchid flowers" [ref=e8]
+      - generic [ref=e13]:
+        - img "Heaven on Hawaii Farm Logo" [ref=e16]
+        - paragraph [ref=e18]: A 1/2 acre fruit forest on the jungly, volcanic east coast of Big Island, Hawaii.
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - generic [ref=e26] [cursor=pointer]:
+          - img "Fresh avocado fruit" [ref=e30]
+          - generic [ref=e34]:
+            - heading "avocado" [level=3] [ref=e35]
+            - paragraph [ref=e36]: Creamy and nutritious
+        - generic [ref=e38] [cursor=pointer]:
+          - img "Cacao pod on tree" [ref=e42]
+          - generic [ref=e46]:
+            - heading "cacao" [level=3] [ref=e47]
+            - paragraph [ref=e48]: Raw chocolate source
+        - generic [ref=e50] [cursor=pointer]:
+          - img "Ripe mango fruit" [ref=e54]
+          - generic [ref=e58]:
+            - heading "mango" [level=3] [ref=e59]
+            - paragraph [ref=e60]: Sweet tropical delight
+      - generic [ref=e64]:
+        - heading "Heaven on Hawaii Farm" [level=2] [ref=e65]
+        - paragraph [ref=e67]:
+          - text: Founded in
+          - generic [ref=e68]: "2015"
+        - paragraph [ref=e69]:
+          - text: Heaven on Hawai'i Farm is an off-grid permaculture experiment powered by sun and rain. The farm's main crop is
+          - generic [ref=e70]: avocado
+          - text: ", followed by lemon, soursop, breadfruit, mango, tangerine, cacao, longan, starfruit, lilikoi, black fig, mulberry, surinam cherry, and more."
+          - generic [ref=e71]:
+            - text: Permaculture design by
+            - link "eufloria" [ref=e72] [cursor=pointer]:
+              - /url: https://instagram.com/misseufloria
+            - text: .
+        - link "Follow me on Instagram" [ref=e74] [cursor=pointer]:
+          - /url: https://instagram.com/heavenOnHawaii
+          - img [ref=e76]
+          - generic [ref=e78]: Follow me on Instagram
+          - img [ref=e79]
+    - generic [ref=e82]:
+      - heading "Get in Touch" [level=2] [ref=e84]
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - textbox "Name" [ref=e90]
+          - textbox "Email" [ref=e92]
+        - textbox "Your message..." [ref=e94]
+        - generic:
+          - text: If you are human, leave this field blank
+          - textbox "If you are human, leave this field blank":
+            - /placeholder: Website
+        - button "Send" [ref=e95] [cursor=pointer]: Send
+    - generic [ref=e99]:
+      - paragraph [ref=e101]: © 2024 Heaven on Hawaii Farm. All rights reserved.
+      - link "@misseufloria" [ref=e103] [cursor=pointer]:
+        - /url: https://instagram.com/misseufloria
+        - img [ref=e104]
+        - generic [ref=e106]: "@misseufloria"
+      - paragraph [ref=e108]:
+        - text: Site made by
+        - link "dnalevity" [ref=e109] [cursor=pointer]:
+          - /url: https://dnalevity.com
+  - alert [ref=e110]

@@ -1,3 +1,809 @@
+# Smart Todo Redesign Mockups (2026-06-11)
+
+# Smart Todo Epic Landing Page (2026-07-03)
+
+## Plan
+
+- [x] Inspect the current static Smart Todo surface and preserve existing portal behavior.
+- [x] Generate or place an original landing-page visual asset after attempting the `generate-image` skill.
+- [x] Build a polished public-facing Smart Todo landing page around the existing task portal.
+- [x] Verify HTML/CSS/JS syntax and browser rendering at desktop and mobile sizes.
+- [x] Document final results and evidence here.
+
+## Review
+
+- Built a new Smart Todo landing page around the existing portal form and board instead of replacing the request workflow.
+- Added a generated hero/background image at `public/landing-assets/smart-todo-hero.png`; the requested Venice `generate-image` script was attempted first, but the API rejected the 1920px width and then returned `402 Payment Required` at the allowed size, so the final asset came from the available fallback image generator.
+- Updated visible page/portal copy in `portal.config.js` from stale Soulfire labels to Smart Todo labels while leaving API paths untouched.
+- Changed locked portal behavior so the landing page remains visible and the task board stays hidden until the portal is unlocked.
+- Fixed unauthenticated polling so a first-time visitor does not trigger background request API calls before entering a password.
+- Correction after visual review:
+  - changed the portal gate from password-only to email plus password.
+  - stores and sends the email as `X-Portal-Email` alongside the existing password header.
+  - updated the visible login copy and button to say sign in.
+  - kept the sign-in button full-width in the auth card after adding the second field.
+- Verification:
+  - `npm run check` passed.
+  - `node --check ./portal.config.js` passed.
+  - `tidy -qe index.html` passed.
+  - Playwright clean-profile desktop and mobile checks passed at `http://127.0.0.1:4174`.
+  - Desktop screenshot: `output/playwright/smart-todo-landing-desktop.png`.
+  - Mobile screenshot: `output/playwright/smart-todo-landing-mobile.png`.
+
+# Smart Todo All-User Access Audit (2026-06-30)
+
+## Plan
+
+- [x] Inventory all live Cowork users, tenants, and memberships on piko.
+- [x] Validate that every active non-internal user has at least one valid tenant membership.
+- [x] Verify live API session serialization for each active user via `/api/auth/me` and `/api/app/tenants`.
+- [x] Verify each user membership can load its tenant workspace endpoint.
+- [x] Repair any missing or invalid memberships found during the audit.
+- [x] Document final results and evidence here.
+
+## Review
+
+- Root cause scope: the same membership-loss issue affected multiple historical Smart Todo client accounts, not only Eufloria.
+- Took live backups before all-user repair:
+  - `/home/dna/Code/Cowork/.dashboard_state/backups/portal_memberships.pre-all-user-access-audit.20260630T232101Z.json`
+  - `/home/dna/Code/Cowork/.dashboard_state/backups/portal_users.pre-all-user-access-audit.20260630T232101Z.json`
+- Restored these client memberships from task/audit-log evidence:
+  - `annahuttner@yahoo.com` -> `savvy` as `client_user`
+  - `erinsarahsteph@gmail.com` -> `ariya` as `client_user`
+  - `info@samanayo.com` -> `samanayo` as `client_user`
+  - `info@theboochbarhilo.com` -> `booch-bar` as `client_user`
+  - `kaia@soulfireproductions.com` -> `soulfire` as `client_user`
+  - `maytoomuch@gmail.com` -> `42chakra` as `client_user`
+  - `misseufloria@gmail.com` -> `eufloria` as `client_user`
+  - `silkekorfmacher@gmail.com` -> `wellofwellness` as `client_user`
+- Marked inactive:
+  - `info@theboochbar.com`, because audit history shows that membership was explicitly removed before `info@theboochbarhilo.com` was added.
+  - `codex-remove-test-1773686120@example.com`, because it is a test account with no tenant history.
+- Verification:
+  - Final live state has 10 active users, 18 memberships, 0 active users without memberships, and 0 invalid membership references.
+  - Live `/api/auth/me`, `/api/app/tenants`, and each tenant workspace endpoint returned successfully for all active users and memberships.
+  - Workspace verification covered `savvy`, `samanayo`, `booch-bar`, `soulfire`, `42chakra`, `ariya`, `dnalevity`, `eufloria`, and `wellofwellness`.
+  - Erin's first Ariya workspace check timed out at 30 seconds, then immediately passed on retry with `/api/auth/me`, `/api/app/tenants`, and the Ariya workspace endpoint all returning `200`.
+
+# Eufloria Membership Login Repair (2026-06-30)
+
+## Plan
+
+- [x] Inspect live Cowork Eufloria tenant, user, and membership records on piko.
+- [x] Reproduce the `no tenant memberships found for this account` login path against the live API.
+- [x] Patch the smallest live-state or backend root cause so `misseufloria@gmail.com` resolves to the Eufloria tenant.
+- [x] Verify login, `/api/auth/me`, and Eufloria workspace access through the live API.
+- [x] Document the fix and verification evidence here.
+
+## Review
+
+- Root cause: the live Cowork user `misseufloria@gmail.com` and tenant `eufloria` both existed, but the client membership row was missing from `/home/dna/Code/Cowork/.dashboard_state/portal_memberships.json`.
+- The piko backend bootstrap code is no longer the destructive version that rewrites memberships to owner-only rows, so the restored row should persist across service restarts.
+- Took a live backup before editing: `/home/dna/Code/Cowork/.dashboard_state/backups/portal_memberships.pre-eufloria-client-restore.20260630T231714Z.json`.
+- Restored membership `e81dc1a6-f2f7-4daa-85a0-d400623623f2` for user `86ce99b8-b89f-4eb2-a107-0a619b8439d2` on tenant `bf8de553-a7fd-4b55-908b-59c3b2f5d08a` with role `client_user`.
+- Verification:
+  - Store-level `list_memberships_for_user` returns `eufloria` with role `client_user`.
+  - Live `GET https://cowork-api.dnalevity.com/api/auth/me` returns `misseufloria@gmail.com` with the Eufloria `client_user` membership.
+  - Live `GET https://cowork-api.dnalevity.com/api/app/tenants` returns Eufloria tenant `bf8de553-a7fd-4b55-908b-59c3b2f5d08a`.
+  - Live `GET https://cowork-api.dnalevity.com/api/app/tenants/bf8de553-a7fd-4b55-908b-59c3b2f5d08a/workspace` returns `200`, branch `main`, and preview `https://piko.dnalevity.com/preview/eufloria`.
+
+# Smart Todo Queued Reply Steering (2026-06-30)
+
+## Plan
+
+- [x] Inspect current queued-reply storage, promotion, and delete controls.
+- [x] Add a backend action that marks a queued reply as the steering message and moves it to the front of the queue.
+- [x] Add a visible queued-reply UI control for steering the conversation.
+- [x] Deploy the backend/frontend changes narrowly to piko.
+- [x] Verify with Silke's Well of Wellness session and the live API.
+
+## Review
+
+- Added a live Cowork endpoint: `POST /api/app/tenants/:tenantId/requests/:requestId/reply-queue/:replyId/steer`.
+- The endpoint marks the selected queued reply as `status: steering`, sets `steering: true`, moves it to the front of `reply_queue`, clears prior steering markers, and records `reply_queue_steered` in the audit log.
+- Updated live `shared-chat-app.js` so queued replies render a `Steer next` button. Once selected, the queued reply shows `Steering next` and the button is disabled.
+- Fixed a reload safety issue found during deployment: `bootstrap_multi_tenant_state()` no longer rewrites `portal_memberships.json` down to bootstrap-owner-only rows. After patching, a Gunicorn HUP preserved `me@dnalevity.com`, `owner@dnalevity.local`, and `silkekorfmacher@gmail.com` on the Well of Wellness tenant.
+- Verification:
+  - Local `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py` passed.
+  - Local `node --check shared-chat-app.js` passed.
+  - Piko `/home/dna/Code/Cowork/dashboard_server.py` passed `python3 -m py_compile`.
+  - Live API login as Silke succeeds and returns the Well of Wellness membership.
+  - Live API steering action returned `200` and changed the Big Cat queued reply `use gpt-image-2 instead of trying to edit` to `status: steering`, `steering: true`.
+  - Playwright clean-profile login as Silke shows that queued reply under Big Cat as `Steering next`, with the `Steer next` button disabled and `Delete` still available.
+
+# Smart Todo Full Chat History (2026-06-30)
+
+## Plan
+
+- [x] Confirm whether the six visible Well of Wellness request cards are a UI/API cap or the full request count.
+- [x] Inspect linked Cowork agent task logs for the missing per-thread Smart Todo message history.
+- [x] Expose saved agent messages in the tenant request API without leaking raw command output.
+- [x] Render all serialized Smart Todo messages in the selected chat thread.
+- [x] Deploy the backend/frontend fix narrowly and verify in Silke's live Well of Wellness session.
+
+## Review
+
+- The Well of Wellness request list currently has 6 request records; the sidebar was not capped by frontend pagination for that tenant.
+- The selected-thread transcript was incomplete because Cowork stored the full agent-side message history in `agent_tasks.json` logs, but the tenant request API only exposed `latest_message`.
+- Backend fix:
+  - Added `agent_messages` serialization from linked task logs, including tasks matched by `record.agent_task_id`, reply `agent_task_id`, and `source_item_id`.
+  - Exposes only `agent_message` text entries, not command output events.
+  - Verified the Big Cat request API now returns 18 `agent_messages`.
+- Frontend fix:
+  - Updated live `shared-chat-app.js` so selected threads render all `agent_messages` as Smart Todo bubbles, with checklist/actions on the latest bubble.
+  - Patched only the running Dokku container asset; the public asset now contains `agentMessages`, `smartTodoHistory`, and `currentSmartTodoMessage`.
+- Verification:
+  - Local `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py` passed.
+  - Local `node --check shared-chat-app.js` passed.
+  - Piko `/home/dna/Code/Cowork/dashboard_server.py` passed `python3 -m py_compile`.
+  - Live API login as Silke succeeds and returns the Well of Wellness membership.
+  - Playwright clean-profile login as Silke shows the Big Cat selected thread with the saved Smart Todo transcript rendered as many AI bubbles instead of a single latest message.
+- Note:
+  - Several active Well of Wellness worker processes were no longer alive after the backend reload and now show `Interrupted` with retry/archive controls. I left that state visible instead of masking it.
+
+# Well of Wellness Tenant Banner Issue (2026-06-30)
+
+## Plan
+
+- [x] Verify the current public TLS state for `smart-todo.dnalevity.com`.
+- [x] Reproduce Silke's Well of Wellness tenant/session API flow against the live Cowork API.
+- [x] Identify whether `Tenant not found` is a stale browser/UI status or a live backend authorization/store failure.
+- [x] Patch the smallest root-cause fix if the issue still reproduces.
+- [x] Verify the browser/app state after the fix and document the outcome.
+
+## Review
+
+- Public TLS for `https://smart-todo.dnalevity.com` verifies successfully over HTTP/2. The active certificate is issued by Let's Encrypt YE1 and expires `2026-09-28 18:39:13 UTC`.
+- Silke's live login succeeds, and the live Cowork API returns the Well of Wellness tenant, request list, and workspace for tenant `2c80d3b4-7eab-492c-9c9e-2aa7d78b90b7`.
+- Root cause: the chat frontend could retain a stale workspace error banner after a later successful tenant/workspace load. If a transient tenant lookup failed during the initial provisioning window, the page could keep showing `Tenant not found` even after the backend tenant was valid.
+- Fix:
+  - Updated `shared-chat-app.js` and `shared-app.js` to clear `workspaceStatus` when the workspace request succeeds.
+  - Hotpatched the running Dokku `smart-todo.web.1` container from the deployed image baseline, applying only the successful-workspace status-clear change to the two frontend assets.
+- Verification:
+  - `node --check shared-chat-app.js`
+  - `node --check shared-app.js`
+  - Live `https://smart-todo.dnalevity.com/shared-chat-app.js` contains the successful-workspace `setWorkspaceStatus("")` path.
+  - Playwright clean-profile login as Silke shows the Well of Wellness workspace, action buttons, repo metadata, preview link, and no `Tenant not found` banner.
+  - The exact Big Cat thread from the screenshot renders successfully with the uploaded image link and active reply composer.
+  - Big Cat uploaded image and completion screenshot return `200` with `image/jpeg` and `image/png` content types.
+  - Browser screenshot saved at `.playwright-cli/page-2026-06-30T20-58-48-573Z.png`.
+
+# Dokku Certificate Auto-Renewal Audit (2026-06-30)
+
+## Plan
+
+- [x] Audit all Dokku apps, domains, LetsEncrypt active state, expiry dates, and autorenew state.
+- [x] Confirm the Dokku LetsEncrypt cron job exists and runs globally.
+- [x] Renew any active Dokku LetsEncrypt certificates that are already expired or inside the renewal window.
+- [x] Verify public TLS for every renewed Dokku hostname.
+- [x] Document which apps are active/inactive and what remains outside Dokku scope.
+
+## Review
+
+- Dokku app audit:
+  - Active LetsEncrypt apps: `smart-todo`, `imaginemash`, `dna-levity-crm`.
+  - Inactive/not LetsEncrypt-managed apps at audit time: `bib-helper`, `coco-bot`, `commontrust-bot`, `credit-api`, `credit-bot`, `credit-pocketbase`, `hawaii-vibe-bot`.
+- Auto-renewal:
+  - Dokku user crontab contains `@daily /var/lib/dokku/plugins/available/letsencrypt/cron-job`.
+  - `dokku letsencrypt:report` shows `autorenew: true` for all active LetsEncrypt apps.
+  - Manual `dokku letsencrypt:auto-renew` completed successfully and reported all active apps outside the renewal window.
+- Renewed expired active certs:
+  - `imaginemash`: renewed with `dokku letsencrypt:enable imaginemash`.
+  - `dna-levity-crm`: renewed with `dokku letsencrypt:enable dna-levity-crm`.
+- Current active Dokku certificate expiries:
+  - `smart-todo.dnalevity.com`: valid through `2026-09-28 18:39:13 UTC`.
+  - `imaginemash.dnalevity.com`: valid through `2026-09-28 18:42:46 UTC`.
+  - `crm.dnalevity.com`: valid through `2026-09-28 18:42:49 UTC`.
+- Public TLS verification:
+  - `smart-todo.dnalevity.com` verifies and returns `HTTP/2 200`.
+  - `imaginemash.dnalevity.com` verifies and returns expected `HTTP/2 401` Basic Auth challenge.
+  - `crm.dnalevity.com` verifies and returns expected `HTTP/2 307` redirect to `/login`.
+- Outside Dokku scope: `cowork-api.dnalevity.com` and `piko.dnalevity.com` are certbot-managed nginx hosts, not Dokku app certs.
+
+# Smart Todo SSL Repair (2026-06-30)
+
+## Plan
+
+- [x] Confirm the failing hostname, certificate dates, and whether API/login backend hosts are also affected.
+- [x] Identify where `smart-todo.dnalevity.com` is served and which certificate manager owns it.
+- [x] Renew or replace the expired certificate for the user-facing Smart Todo hostname.
+- [x] Reload/restart only the required web service or proxy.
+- [x] Verify browser-grade TLS, HTTP status, and login page reachability after repair.
+- [x] Document the fix and verification evidence.
+
+## Review
+
+- Root cause: `smart-todo.dnalevity.com` was serving the Dokku app certificate at `/home/dokku/smart-todo/tls/server.crt`, which expired on `2026-06-11 23:24:50 UTC`.
+- Scope check: `cowork-api.dnalevity.com` had a valid certificate expiring `2026-08-10`, so the SSL warning was isolated to the Smart Todo frontend hostname.
+- Fix:
+  - Ran `dokku letsencrypt:enable smart-todo` on `dna@piko.local`.
+  - Dokku completed HTTP-01 validation, installed the new Let's Encrypt certificate, regenerated the app nginx config, and reloaded nginx.
+  - Added the Dokku letsencrypt cron job with `dokku letsencrypt:cron-job --add`; `letsencrypt:report smart-todo` now shows `autorenew: true`.
+- Verification:
+  - Public `curl -Iv https://smart-todo.dnalevity.com` verifies TLS successfully and returns `HTTP/2 200`.
+  - New public certificate is for `CN=smart-todo.dnalevity.com`, issuer `Let's Encrypt YE1`, valid from `2026-06-30 18:39:14 UTC` through `2026-09-28 18:39:13 UTC`.
+  - `dokku letsencrypt:list` shows `smart-todo` expiry `2026-09-28 19:39:13`.
+  - Dokku user crontab now contains `@daily /var/lib/dokku/plugins/available/letsencrypt/cron-job`.
+  - HTTPS page body loads the Smart Todo portal HTML, including the shared app bootstrap script.
+
+# Well of Wellness Smart Todo Access (2026-06-30)
+
+## Plan
+
+- [x] Inspect the live Cowork shared-tenant store for the Well of Wellness tenant, current users, memberships, and admin/operator account.
+- [x] Add or update `silkekorfmacher@gmail.com` with editor access for `wellofwellness.com` without disturbing existing users.
+- [x] Confirm the admin/operator account can also edit the Well of Wellness tenant.
+- [x] Verify login/session/workspace access for the new user and admin account through the live API.
+- [x] Verify the live preview route for `wellofwellness.com`, including rendered image requests, and fix preview asset issues if found.
+- [x] Document the results and proof in this file.
+
+## Review
+
+- Created live Cowork tenant `wellofwellness` (`2c80d3b4-7eab-492c-9c9e-2aa7d78b90b7`) for `https://wellofwellness.com`.
+- Added `silkekorfmacher@gmail.com` as `client_user` and generated a password. The password is not stored in this task log.
+- Added `me@dnalevity.com` and `owner@dnalevity.local` as `owner` memberships for the Well of Wellness tenant.
+- Cloned `git@github.com:allinfinite/wellofwellness.git` to `/home/dna/Code/wellofwellness` on piko and set the preview to `https://piko.dnalevity.com/preview/wellofwellness` on port `3108`.
+- Added and pushed Well of Wellness commit `d53a87c` so the Next app supports `/preview/wellofwellness` and prefixes local image/link assets correctly.
+- Verification:
+  - Local Well of Wellness `npm run lint` passed after the build output settled.
+  - Local preview-base-path `npm run build` passed.
+  - Piko preview-base-path `npm run build` passed.
+  - Silke login via `POST https://cowork-api.dnalevity.com/api/auth/login` succeeds, `/api/auth/me` returns the Well of Wellness membership, and the workspace endpoint returns branch `main`, `is_current=true`, `dirty=false`, and preview `ready=true`.
+  - Both admin sessions (`me@dnalevity.com` and `owner@dnalevity.local`) can load the Well of Wellness workspace as `owner`.
+  - `https://piko.dnalevity.com/preview/wellofwellness` and `/shop` return `200`.
+  - All 37 discovered preview asset URLs, including source photos, icons, product photos, OG image, favicon, and manifest, returned `200` after retrying connection-limited requests.
+  - Playwright snapshots for homepage and shop show rendered image nodes and preview-prefixed routes. Console errors were limited to dev-server HMR WebSocket handshakes behind nginx.
+- Delivery:
+  - Emailed Silke her Smart Todo login details at `silkekorfmacher@gmail.com` via the piko operator-mail SMTP path.
+
+## Plan
+
+- [x] Review the provided current-state screenshot and project lessons relevant to Smart Todo UI redesigns.
+- [x] Check the local image generator model list and note whether `gpt-image-2` is available.
+- [x] Generate several static redesign mockups using the closest available GPT image model and the screenshot as reference.
+- [x] Review generated files and document output paths.
+
+## Review
+
+- `gpt-image-2` is not exposed by the local generator. The available GPT image model is `gpt-image-1-5` / `gpt-image-1-5-edit`.
+- First edit attempt with `gpt-image-1-5-edit --aspect-ratio 16:9` failed because the model only supports `auto`, `1:1`, `3:2`, and `2:3`. Retrying with `auto`.
+- Generated four mockups:
+  - `/Users/daniellevy/.claude/scripts/generated_images/smart_todo_redesign_operator_console.png` (1536x1024)
+  - `/Users/daniellevy/.claude/scripts/generated_images/smart_todo_redesign_client_workspace.png` (1536x1024)
+  - `/Users/daniellevy/.claude/scripts/generated_images/smart_todo_redesign_split_board.png` (1536x1024)
+  - `/Users/daniellevy/.claude/scripts/generated_images/smart_todo_redesign_inbox_console.webp` (generator returned 1024x1024 despite the requested 1280x853)
+
+# Eufloria Smart Todo Access (2026-06-11)
+
+## Plan
+
+- [x] Confirm the live shared-app tenant/user storage and existing Eufloria records.
+- [x] Create or update the Eufloria tenant for `https://www.eufloria.com/`.
+- [x] Add `misseufloria@gmail.com` with client access and a new login password.
+- [x] Find a real textable phone number before sending credentials.
+- [x] Verify the user can log in and see the Eufloria workspace.
+- [x] Document the result and any blocker.
+
+## Review
+
+- Created production Cowork tenant `eufloria` (`bf8de553-a7fd-4b55-908b-59c3b2f5d08a`) with:
+  - public URL `https://www.eufloria.com/`
+  - repo/app path `/home/dna/Code/eufloria.com`
+  - preview URL `https://piko.dnalevity.com/preview/eufloria`
+  - default model `gpt-5.5`
+- Added `misseufloria@gmail.com` as `client_user` and generated a new password. The password was not written to CRM or task notes.
+- Cloned `git@github.com:allinfinite/eufloria.com.git` to piko, installed dependencies, and added/pushed Eufloria repo commits so Smart Todo preview works under `/preview/eufloria`.
+- Verification:
+  - `POST https://cowork-api.dnalevity.com/api/auth/login` succeeds for `misseufloria@gmail.com`.
+  - `/api/auth/me` returns the same user from the session cookie.
+  - `/api/app/tenants/bf8de553-a7fd-4b55-908b-59c3b2f5d08a/workspace` returns branch `main`, `is_current=true`, and preview ready.
+  - `https://piko.dnalevity.com/preview/eufloria` returns `200` and includes Eufloria content plus `/preview/eufloria/_next/` asset paths.
+- SMS delivery blocker:
+  - No verified phone number was found in live CRM, Cowork lead notes, the Eufloria site/source, or public search results.
+  - Did not text the email/iMessage handle because project lessons say not to treat an email-address iMessage handle as a requested text channel unless explicitly instructed.
+- SMS delivery follow-up:
+  - User supplied verified phone `(808) 298-6346`.
+  - Updated live CRM phone and preferred contact method to `sms`.
+  - Texted the Smart Todo login link and credentials via Apple Messages automation; `osascript` returned exit code `0`.
+  - CRM activity `85747de6-6089-422b-9b21-9590c4d637e2` records the phone correction.
+  - CRM activity `fa024579-534d-41fd-bee0-fec7ecca6d36` records the sent SMS without storing the password in the body.
+- CRM:
+  - Added live CRM relationship/project/activity for Eufloria.
+  - Activity `d8095ace-a0f0-4ad5-92b9-434870064715` records that access was provisioned and SMS delivery is pending a verified phone number.
+
+# Smart Todo Text Reply 400 Fix (2026-05-17)
+
+## Plan
+
+- [x] Reproduce/identify why text-only replies now hit Cowork with `400 BAD REQUEST`.
+- [x] Patch the optimistic-send payload so empty native file inputs are not submitted as uploads.
+- [x] Verify text-only replies and attachment replies with delayed API mocks.
+- [x] Deploy and update CRM.
+
+## Review
+
+- Root cause:
+  - The optimistic-send patch rebuilt the reply upload payload from `new FormData(form).getAll("files")`.
+  - For text-only replies, browsers can include the empty native file input as a file part with `filename=""`, which Cowork rejects as an unsupported upload and returns `400`.
+- Fix:
+  - Changed `shared-chat-app.js` to build reply/request uploads from the app-tracked `submittedFiles` array instead of the raw form file input.
+  - On failure, the composer restores the same tracked `submittedFiles`.
+- Verification:
+  - `node --check shared-chat-app.js`
+  - `node --check shared-app.js`
+  - `node --check app.js`
+  - `npm run check --if-present`
+  - Playwright mock verified text-only replies do not send a `filename=""` multipart part.
+  - Playwright mock verified replies with an actual selected attachment still send that file.
+- live `shared-chat-app.js` contains `submittedFiles.forEach` and no `formData.getAll("files")` match.
+- Deployed Smart Todo Dokku revision `087cd2c0419f5e739dd5a5e34ddcaee9d92599be`.
+- CRM activity recorded as `2d77fe39-d9e7-46b0-9677-70ed64a11bc9` on project `Smart Todo Git Freshness Gate` under `DNA Levity Apps`.
+
+# Smart Todo Reply Queue While Working (2026-05-17)
+
+## Plan
+
+- [x] Inspect how active request replies are stored and rendered.
+- [x] Add a queued-reply representation for replies submitted while the request task is running or queued.
+- [x] Add a delete action for queued replies in Cowork and the chat UI.
+- [x] Make queued replies become normal work once the current bot task is no longer active.
+- [x] Verify backend/frontend behavior with syntax checks and delayed browser/API mocks.
+- [x] Deploy and update CRM.
+
+## Review
+
+- Backend:
+  - Cowork now stores replies submitted while a request task is `queued` or `running` in `reply_queue` instead of starting another task immediately.
+  - Queued replies are serialized to the shared app as `reply_queue`.
+  - Added `DELETE /api/app/tenants/:tenantId/requests/:requestId/reply-queue/:replyId` for deleting queued replies.
+  - When the active task finishes, Cowork promotes the next queued reply into the normal `replies` thread and starts a follow-up task.
+- Frontend:
+  - The chat feed shows a `Queued Replies` block with each queued reply and a `Delete` button.
+  - After sending during active work, the submit status says `Reply queued.`
+- Verification:
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py`
+  - `node --check shared-chat-app.js`
+  - `node --check shared-app.js`
+  - `node --check app.js`
+  - `npm run check --if-present`
+  - Python in-memory backend mock verified `start_next_queued_portal_reply()` creates a follow-up task, removes the queued item, and appends it to `replies`.
+  - Playwright mock verified a running request shows `Queued Replies`, then calls the DELETE endpoint and removes the item from the feed.
+  - Live Smart Todo asset contains `Queued Replies`, `reply-queue`, and `deleteQueuedReply`.
+- Live Cowork route preflight for queued-reply DELETE returns `204`, and `cowork-dashboard.service` is active.
+- Deployed Smart Todo Dokku revision `4fb0ebc24adcc5a25fab9342a4111db4adf3b7ed`.
+- CRM activity recorded as `0a3c3ea1-b9b3-4cc3-8540-35c0226046c4` on project `Smart Todo Git Freshness Gate` under `DNA Levity Apps`.
+
+# Smart Todo Optimistic Chat Send (2026-05-17)
+
+## Plan
+
+- [x] Inspect the chat feed and submit path to find where the send waits on Cowork.
+- [x] Add an optimistic local message so new requests and replies render immediately after Send.
+- [x] Reconcile optimistic messages with the real API response and remove them on failure.
+- [x] Verify with a delayed API browser mock and syntax checks.
+- [x] Deploy and update CRM.
+
+## Review
+
+- Changed `shared-chat-app.js` to keep `optimisticMessages` in local state.
+- On Send, the composer now clears immediately and renders the user's message in the selected chat feed with a `Sending...` marker while Cowork processes the request.
+- For a brand-new request, the empty feed changes into a temporary `Sending request...` thread until Cowork returns the real request id.
+- On success, the optimistic message remains visible until the board reloads with the real request/reply; on failure, it is removed and the original composer text/files are restored.
+- Verification:
+  - `node --check shared-chat-app.js`
+  - `node --check shared-app.js`
+  - `node --check app.js`
+  - `npm run check --if-present`
+  - Playwright delayed-API mock verified existing-thread replies appear before `/replies` resolves.
+  - Playwright delayed-API mock verified new requests appear in a temporary thread before `/requests` resolves.
+- live `shared-chat-app.js` contains `optimisticMessages` and `Sending request...`.
+- Deployed Smart Todo Dokku revision `325c40a96c6d1ced0b939d6675d2c86ae18fd73c`.
+- CRM activity recorded as `ed12e540-655e-47ab-a835-108a16024a64` on project `Smart Todo Git Freshness Gate` under `DNA Levity Apps`.
+
+# Smart Todo Whisper Empty Transcript Fix (2026-05-16)
+
+## Plan
+
+- [x] Identify why recorded audio can reach Cowork but still return `422 No speech was transcribed`.
+- [x] Make browser recording flush audio chunks reliably before transcription.
+- [x] Improve Cowork's local Whisper path so normal speech recordings are less likely to produce empty output.
+- [x] Verify the frontend recorder and backend transcription path.
+- [x] Deploy, update lessons, and record the correction in CRM.
+
+## Review
+
+- Root cause:
+  - Cowork's `whisper.cpp` command used `-np`, but the installed `whisper.cpp` v1.5.4 CLI does not support that flag.
+  - The CLI printed help output without creating a transcript file, which made the endpoint return `422 No speech was transcribed`.
+- Fix:
+  - Replaced `-np` with supported `-nt` in `/Users/daniellevy/Code/Cowork/dashboard_server.py` and on piko.
+  - Updated `shared-chat-app.js` so `MediaRecorder` starts with a 1-second timeslice and calls `requestData()` before `stop()` when available.
+- Verification:
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py`
+  - `node --check shared-chat-app.js`
+  - `node --check shared-app.js`
+  - `node --check app.js`
+  - `npm run check --if-present`
+  - Generated WebM audio with `espeak-ng` + `ffmpeg` on piko and verified `whisper-cli ... -nt` produced transcript text.
+  - Playwright mock verified the browser uses `start(1000)`, calls `requestData()`, posts to `/api/app/transcriptions`, and inserts returned text.
+  - Live `shared-chat-app.js` contains `audioRecorder.start(1000)` and `audioRecorder.requestData()`.
+  - Live Cowork transcription route preflight returns `204`, Cowork service is active, and piko backend contains `"-nt"`.
+- Deployed Smart Todo Dokku revision `d13406f223d069b457836bcdbc594401f69e7992`.
+- CRM activity recorded as `04538792-906e-4bbc-9524-7084392ecb8a` on project `Smart Todo Git Freshness Gate` under `DNA Levity Apps`.
+
+# Smart Todo Local Whisper Voice Recording (2026-05-16)
+
+## Plan
+
+- [x] Replace browser `SpeechRecognition` with explicit `MediaRecorder` capture that only stops when the user presses `Stop Recording`.
+- [x] Add an authenticated Cowork transcription endpoint that stores audio only in a temp file, runs local Whisper, returns text, and deletes temp artifacts.
+- [x] Insert returned transcript into the composer without attaching or saving the audio to the Smart Todo request.
+- [x] Verify frontend behavior, backend syntax, live service health, and live deployment.
+- [x] Update lessons and CRM with the correction.
+
+## Review
+
+- Changed `shared-chat-app.js` so the voice button records a browser audio blob through `MediaRecorder`, switches to `Stop Recording`, and only stops when pressed.
+- Removed browser `SpeechRecognition` from the live voice path.
+- Added `/api/app/transcriptions` to Cowork. It requires the existing shared-app auth session, accepts a multipart audio `file`, converts it to a temporary WAV, runs local Whisper, returns `{ text }`, and deletes the temp directory automatically.
+- Installed local `whisper.cpp` on `dna@piko.local` with `ggml-tiny.en.bin` at `/home/dna/.local/share/whisper.cpp/ggml-tiny.en.bin`.
+- Verification:
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py`
+  - `node --check shared-chat-app.js`
+  - `node --check shared-app.js`
+  - `node --check app.js`
+  - `npm run check --if-present`
+  - Playwright mock verified `Record Audio` -> `Stop Recording`, `/api/app/transcriptions` multipart upload, transcript insertion into the textarea, and zero attachment chips.
+  - piko `whisper.cpp` transcribed the bundled JFK sample correctly.
+  - live Cowork preflight for `/api/app/transcriptions` returns `204` with Smart Todo CORS headers, and unauthenticated POST returns `401`.
+  - live `shared-chat-app.js` contains `MediaRecorder` and `/api/app/transcriptions` and no `SpeechRecognition` match.
+- Deployed Smart Todo Dokku revision `5576aee8d5c7cc172ddc9692b8ea79a7fb59051c`.
+- CRM activity recorded as `24cfbcc2-a407-473a-a8b2-99aa1bd25473` on project `Smart Todo Git Freshness Gate` under `DNA Levity Apps`.
+
+# Auto Sync Dirty Workspace Recovery (2026-05-16)
+
+## Plan
+
+- [x] Unblock the live DNA Levity workspace by preserving dirty local changes and fast-forwarding to GitHub.
+- [x] Patch Cowork sync so dirty-but-behind workspaces auto-preserve local edits instead of freezing end users.
+- [x] Patch the frontend gate so a blocked state does not disable every possible recovery path.
+- [x] Capture the correction in lessons.
+- [x] Verify backend/frontend syntax plus live DNA Levity workspace recovery.
+- [x] Update CRM activity and document the result here.
+
+## Review
+
+- Immediate live recovery:
+  - DNA Levity workspace at `/home/dna/Code/dnalevity.com/dnalevity-next` was `main...origin/main [behind 5]` with local dirty edits.
+  - Preserved those edits with `git stash push --include-untracked -m "Smart Todo auto-preserve before sync 20260517T021703Z"`.
+  - Pulled `origin/main` with `--ff-only`; the checkout is now clean and `HEAD == origin/main` at `00bd5a33e6ed7e88acc2c18358bd30492fa29a4b`.
+- Backend fix:
+  - Updated `/Users/daniellevy/Code/Cowork/dashboard_server.py` so `sync_portal_site()` no longer freezes end users when a workspace is both dirty and behind.
+  - If dirty + behind, Cowork now automatically stashes tracked/untracked local changes with a timestamped `Smart Todo auto-preserve before sync ...` message, pulls the latest GitHub commits, and returns `preserved_local_changes` metadata.
+  - If dirty but already current, sync returns success without forcing an end-user decision.
+- Frontend fix:
+  - Updated `shared-chat-app.js` so `Sync` and `Refresh` remain available from a blocked state.
+  - Updated legacy `app.js` so blocked state still allows retrying `Sync`.
+- Verification:
+  - `node --check app.js && node --check shared-chat-app.js && node --check shared-app.js && npm run check --if-present`
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py /Users/daniellevy/Code/Cowork/portal_multi_tenant.py`
+  - Local Git fixture verified dirty-behind sync now preserves dirty work in `stash@{0}`, pulls one remote commit, and leaves the checkout clean/current.
+  - Deployed files to `dna@piko.local`, hotpatched running Dokku container `smart-todo.web.1`, restarted `cowork-dashboard.service`, and verified it is active.
+  - Live assets now contain the recovery UI patch (`recoveryLocked`, `action !== "sync"`), and piko Cowork contains `preserved_local_changes`.
+- Lessons:
+  - Added a rule that freshness gates must have automatic dirty-workspace recovery and must not fail closed with every recovery action disabled.
+- CRM:
+  - Recorded CRM activity `5ee418e9-c99d-444f-81fb-4dd2c0678197` on project `Smart Todo Git Freshness Gate`.
+
+# Smart Todo Voice Transcription Duration Fix (2026-05-16)
+
+## Plan
+
+- [x] Stop treating browser speech-recognition auto-end as a finished recording.
+- [x] Keep recognition alive until the user presses `Stop Recording`.
+- [x] Verify auto-end restarts recognition and still creates no audio attachment.
+- [x] Deploy to the live Smart Todo app.
+- [x] Update CRM activity and document the result.
+
+## Review
+
+- Changed `shared-chat-app.js` so recording state follows user intent (`speechRecognitionWanted`) instead of a single recognition instance.
+- Browser `onend` and recoverable `no-speech`/`network` errors now restart recognition after 250ms while the user is still recording.
+- Pressing `Stop Recording` finalizes the session and appends the accumulated transcript into the composer.
+- Verification:
+  - `node --check shared-chat-app.js`
+  - `node --check shared-app.js`
+  - `node --check app.js`
+  - `npm run check --if-present`
+  - Playwright mock forced an immediate first `onend`, verified recognition restarted, captured `keep listening longer`, appended it to the textarea, and created zero attachments.
+  - live `shared-chat-app.js` contains `speechRecognitionWanted`, `scheduleSpeechRecognitionRestart`, and `Still listening`.
+- Deployed Dokku revision `faa1af827b34ce8e7af9d927a86c7922663026b4`.
+- CRM activity recorded as `fc2c70a7-84f9-42a0-a71c-fd46d5c4a623` on project `Smart Todo Git Freshness Gate` under `DNA Levity Apps`.
+
+# Smart Todo Voice Transcription Composer (2026-05-16)
+
+## Plan
+
+- [x] Replace recorded-audio attachment behavior with transcript-only voice input.
+- [x] Append the transcript into the composer text after recording stops.
+- [x] Verify no audio file is created or attached.
+- [x] Deploy to the live Smart Todo app.
+- [x] Update CRM activity and document the result.
+
+## Review
+
+- Changed `shared-chat-app.js` so `Record Audio` uses browser `SpeechRecognition` / `webkitSpeechRecognition`.
+- Stopping recording now appends recognized speech to the message textarea and shows `Transcript added to message.`
+- Removed the MediaRecorder/audio-blob path from the live chat script, so voice input no longer saves or uploads an audio file.
+- Verification:
+  - `node --check shared-chat-app.js`
+  - `node --check shared-app.js`
+  - `node --check app.js`
+  - `npm run check --if-present`
+  - Playwright mock with stubbed SpeechRecognition confirmed `Please make the headline warmer` was inserted into the textarea and zero attachment chips were created.
+  - live `shared-chat-app.js` contains `SpeechRecognition`, `appendTranscriptToComposer`, and no `MediaRecorder`, `new File`, or `smart-todo-voice` audio attachment path.
+- Deployed Dokku revision `7e4877d626ea5ca1de52312f40f694d0bdb694d4`.
+- CRM activity recorded as `e718fbe4-ba06-442a-9aea-1d55dcad25a7` on project `Smart Todo Git Freshness Gate` under `DNA Levity Apps`.
+
+# Tenant Switch Responsiveness (2026-05-16)
+
+## Plan
+
+- [x] Inspect the shared tenant-switch flow and identify which work blocks visible tenant changes.
+- [x] Add an immediate tenant-loading state so switching tenants gives feedback instead of leaving stale UI on screen.
+- [x] Reduce avoidable latency by parallelizing independent tenant data requests and deferring owner admin/audit loading until after the main board renders.
+- [x] Apply the fix to both the public shared board and the secret chat view.
+- [x] Verify JavaScript syntax and run a browser-level mock that proves the selected tenant changes immediately while slow requests are still pending.
+- [x] Document the result here.
+
+## Review
+
+- Root cause:
+  - tenant switching changed `activeTenantId` and then awaited the full `loadTenantData()` path before rendering, so users kept seeing the old tenant while requests/workspace/admin/audit calls ran.
+  - request and workspace fetches were serial even though they are independent.
+  - owner-only admin/audit calls blocked the main board render after the tenant payload loaded.
+- Fix:
+  - added tenant-scoped loading state in `shared-app.js` and `shared-chat-app.js` so the selected tenant name, loading message, and disabled tenant-scoped controls render immediately.
+  - changed the public shared board to fetch requests and workspace in parallel, render the main board as soon as they return, then refresh owner admin/audit data afterward.
+  - applied the same immediate loading behavior to the chat view; its GitHub freshness/sync gate now renders progress before a slow auto-sync.
+- Verification:
+  - `node --check shared-app.js && node --check shared-chat-app.js && npm run check --if-present`
+  - Playwright mock for public `shared-app.js` with slow tenant requests/workspace/admin APIs: immediately after selecting tenant `Beta`, the page showed `Beta todo board`, `Switching workspace...`, `Loading this workspace...`, and disabled workspace actions; after the delayed API returned, it showed `tenant-b request` and `/repo/tenant-b`.
+  - Playwright mock for `shared-chat-app.js` with the same slow APIs: immediately after selecting tenant `Beta`, the sidebar showed `Beta`, `Switching workspace...`, `Loading this workspace...`, and disabled workspace actions; after load, it showed `tenant-b request` and `/repo/tenant-b`.
+- Deployment:
+  - created an isolated deploy clone from the current Dokku app repo so unrelated dirty local files were not included.
+  - committed only `shared-app.js` and `shared-chat-app.js` as Dokku deploy commit `73aa45b Improve tenant switch responsiveness`.
+  - pushed the commit to `dokku@piko.dnalevity.com:smart-todo`; Dokku built and promoted container `smart-todo.web.1` with CID `9e76b87b198`.
+  - verified live `https://smart-todo.dnalevity.com/` still loads `chat-v2.css` and `shared-chat-app.js`.
+  - verified live `shared-chat-app.js` and `shared-app.js` both contain `tenantLoading`, `Switching workspace`, `Loading this workspace`, and the parallel `Promise.allSettled` tenant fetch path.
+
+# Smart Todo Chat Interface V2 (2026-05-16)
+
+## Plan
+
+- [x] Record the implementation plan before changing code.
+- [x] Replace the shared board shell with a ChatGPT-style sidebar, feed, and composer.
+- [x] Add recorded audio upload support in the shared composer and Cowork upload allowlist.
+- [x] Preserve workspace actions, request actions, admin access, polling, and auth behavior.
+- [x] Verify JavaScript/Python syntax plus local shared UI behavior.
+- [x] Update CRM activity and document the result here.
+
+## Review
+
+- Replaced the shared-mode board surface in `shared-app.js` with a ChatGPT-style app shell: request history sidebar, selected request feed, unified bottom composer, owner admin drawer, and mobile history drawer.
+- Added browser audio recording support to the shared composer; recordings are attached as `.webm` files through the existing multipart `files` upload path.
+- Added audio extensions to Cowork's portal upload allowlist in `/Users/daniellevy/Code/Cowork/dashboard_server.py`: `.webm`, `.m4a`, `.mp3`, and `.wav`.
+- Preserved existing shared endpoints for new requests, replies, workspace actions, request actions, tenant switching, polling, auth, and owner admin flows.
+- Verification passed:
+  - `node --check shared-app.js`
+  - `node --check app.js`
+  - `npm run check --if-present`
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py`
+  - local Playwright mock shared-mode check for desktop shell, request history, preview/deploy action buttons, new chat submission, audio record control presence, and mobile history drawer
+- CRM:
+  - inserted live CRM activity `15a26261-2bc8-4b7e-9456-70ddac2e6cc3` on project `Smart Todo Git Freshness Gate` under `DNA Levity Apps`
+- Live deploy:
+  - not performed in this pass because the smart-todo worktree already contained unrelated dirty changes before this implementation; deploying from this checkout would risk shipping unrelated work.
+
+# Smart Todo Public UI Revert And Secret Chat Link (2026-05-16)
+
+## Plan
+
+- [x] Confirm the live public site was serving the chat interface.
+- [x] Restore the public shared app to the previous board UI.
+- [x] Move the chat interface behind a secret entrypoint.
+- [x] Verify the public route loads the old board script and the secret route loads the chat script/CSS.
+- [x] Capture the correction in lessons and CRM.
+
+## Review
+
+- Deployed Dokku commit `a0808cad40c0581ed0ef02565839fe6db8691ce5`.
+- Public `https://smart-todo.dnalevity.com/` now dynamically loads `shared-app.js`, whose live content contains the old `.shared-board` renderer and no chat renderer.
+- Secret chat link is `https://smart-todo.dnalevity.com/?v2=7f3a9c`; that query-gated loader pulls `chat-v2.css` and `shared-chat-app.js`.
+- Deployed the Cowork audio upload allowlist patch on `dna@piko.local`, verified Python compilation, and restarted `cowork-dashboard.service` successfully.
+- Verified live assets by HTTP:
+  - root HTML contains the query gate
+  - public `shared-app.js` contains the old board renderer
+  - `shared-chat-app.js` contains the chat renderer
+- Added lessons to prevent public-first UI replacements and to account for `serve -s` SPA route rewriting.
+- CRM activity recorded as `8c22a070-abb1-4ec3-8771-bad6a32c72b9` on project `Smart Todo Git Freshness Gate` under `DNA Levity Apps`.
+
+# Smart Todo Chat V2 Public Promotion (2026-05-16)
+
+## Plan
+
+- [x] Promote the verified chat interface to the public Smart Todo route.
+- [x] Keep the old board script available as a rollback asset.
+- [x] Verify live root loads the chat CSS and chat shared app script.
+- [x] Update CRM activity and document the result.
+
+## Review
+
+- Deployed Dokku revision `004f5ba0d6e3199c937df87d5b7f5eff81426e3e`.
+- Public `https://smart-todo.dnalevity.com/` now loads `chat-v2.css` and `shared-chat-app.js` directly.
+- Verified live assets by HTTP:
+  - root HTML references `./chat-v2.css` and `./shared-chat-app.js`
+  - `shared-chat-app.js` contains the chat renderer
+  - `chat-v2.css` contains the chat layout styles
+- Local syntax checks passed after aligning `index.html` with the promoted public loader:
+  - `node --check shared-app.js`
+  - `node --check shared-chat-app.js`
+  - `node --check app.js`
+  - `npm run check --if-present`
+- CRM activity recorded as `71dcf13c-1c77-45b9-9c62-ebc632003734` on project `Smart Todo Git Freshness Gate` under `DNA Levity Apps`.
+
+# Auto Sync Before Workspace Use (2026-05-16)
+
+## Plan
+
+- [x] Inspect the shared and legacy smart-todo page-load flows plus Cowork workspace state/action endpoints.
+- [x] Add backend remote freshness fields so workspace state reflects fetched GitHub refs, not stale local refs.
+- [x] Add a frontend freshness gate that runs on page load, automatically syncs when behind, and blocks user actions while checking or syncing.
+- [x] Verify JavaScript/Python syntax and exercise the backend freshness/sync path.
+- [x] Update CRM activity and document the result here.
+
+## Review
+
+- Added Cowork workspace freshness reporting in `/Users/daniellevy/Code/Cowork/dashboard_server.py`:
+  - `collect_workspace_state(..., check_remote=True)` fetches `origin`, compares `HEAD...origin/<deployBranch>`, and returns `ahead`, `behind`, `remote_ref`, `remote_checked_at`, `remote_error`, and `is_current`.
+  - legacy `/api/portal/<site_slug>/workspace` and shared `/api/app/tenants/<tenant_id>/workspace` now use the remote-checking path.
+- Added smart-todo frontend gates:
+  - `shared-app.js` checks workspace freshness during authenticated page load, auto-runs the existing `sync` action when `behind > 0`, and blocks chat/request/reply/workspace actions while checking, syncing, or blocked.
+  - `app.js` applies the same page-load auto-sync and action blocking for legacy portal pages.
+- Updated `README.md` with the workspace freshness response fields and page-load behavior.
+- Verification:
+  - `node --check app.js && node --check shared-app.js && npm run check --if-present`
+  - `python3 -m py_compile /Users/daniellevy/Code/Cowork/dashboard_server.py /Users/daniellevy/Code/Cowork/portal_multi_tenant.py`
+  - a local bare-remote/clone fixture proved `collect_workspace_state("test-site", check_remote=True)` reports `behind: 1`, `ahead: 0`, `is_current: false`, and no `remote_error` after the remote receives a new commit.
+- Live rollout:
+  - copied `app.js`, `shared-app.js`, and `README.md` to `dna@piko.local:/home/dna/Code/smart-todo/`
+  - hotpatched the running Dokku `smart-todo.web.1` container with the updated `app.js` and `shared-app.js`
+  - copied `dashboard_server.py` to `dna@piko.local:/home/dna/Code/Cowork/dashboard_server.py`
+  - restarted `cowork-dashboard.service`; it reported `active`
+  - verified live `https://smart-todo.dnalevity.com/app.js` and `shared-app.js` contain the new workspace freshness gate, and piko files contain `check_remote=True` workspace endpoints.
+- CRM:
+  - created/updated project `Smart Todo Git Freshness Gate` under `DNA Levity Apps`.
+  - recorded CRM activity `40df6d31-5748-4c90-9a56-b55e5783fe1b` with the implementation and verification summary.
+
+# Smart Todo Featured On Piko DNA Levity Site (2026-05-16)
+
+## Plan
+
+- [x] Add Smart Todo to the DNA Levity featured projects carousel with an appropriate live link and visual.
+- [x] Verify the Next app still builds with the featured item included.
+- [x] Sync/verify the piko-served DNA Levity site path for the updated featured item.
+- [x] Update CRM project activity and document the result here.
+
+## Review
+
+- Added Smart Todo as the first featured project in `/Users/daniellevy/Code/DNAlevity.com/dnalevity-next/app/page.tsx`, linking to `https://smart-todo.dnalevity.com`.
+- Verified the local DNA Levity Next app with `npm run build` and Browser inspection of the featured carousel.
+- Updated the live piko root homepage at `/var/www/html/index.html` with a Smart Todo featured web app card and verified `https://piko.dnalevity.com` by HTTP and Browser.
+- Mirrored the featured-project entry into `/home/dna/Code/dnalevity.com/dnalevity-next/app/page.tsx` on piko and verified the remote Next source with `npm run build`.
+- Note: `https://piko.dnalevity.com/preview/dnalevity` still returns `502` because no DNA Levity preview process is currently serving that route; the root piko website is updated.
+- CRM activity recorded as `4fbda88e-6c4c-4537-bc0b-b970145974ed` on project `Piko Website Smart Todo Feature` under `DNA Levity Apps`.
+
+# 42 Chakra Preview SSL Protocol Error (2026-05-14)
+
+## Plan
+
+- [x] Reproduce/confirm the broken preview URL path for the 42chakra shared tenant.
+- [x] Trace how smart-todo chooses the preview iframe URL after a preview action.
+- [x] Patch the smallest durable fix so 42chakra preview embeds the public piko preview URL instead of an invalid secure localhost URL.
+- [x] Verify frontend syntax plus live preview/API behavior for the 42chakra tenant.
+- [x] Update CRM activity and document the result here.
+
+## Review
+
+- Root cause:
+  - 42chakra middleware redirected unauthenticated protected preview routes with `new URL("/", request.url)`.
+  - Behind the piko preview proxy, Next saw the internal request origin as `https://localhost:3106`, so `/preview/42chakra/scan` returned `307 Location: https://localhost:3106/`, which produced the visible `ERR_SSL_PROTOCOL_ERROR` screenshot.
+- Changes:
+  - patched `/Users/daniellevy/Code/42chakra/src/middleware.ts` and deployed it to `dna@piko.local:/home/dna/Code/42chakra/src/middleware.ts`
+  - preview-mode unauthenticated redirects now use `https://piko.dnalevity.com/preview/42chakra/` instead of the internal localhost origin
+  - patched `/Users/daniellevy/Code/smart-todo/app.js` and `/Users/daniellevy/Code/smart-todo/shared-app.js` so completion screenshots with `verification.status: "failed"` or `completion_screenshot_verification.status: "failed"` are hidden from review cards
+  - hotpatched the running Dokku `smart-todo.web.1` container and piko working tree copies of `app.js` and `shared-app.js`
+- Verification:
+  - `npx tsc --noEmit` passed locally and on piko for `/Users/daniellevy/Code/42chakra`
+  - `node --check app.js && node --check shared-app.js && npm run check --if-present` passed locally for smart-todo
+  - live container checks passed: `node --check /app/app.js && node --check /app/shared-app.js`
+  - `https://piko.dnalevity.com/preview/42chakra` returns `200`
+  - `https://piko.dnalevity.com/preview/42chakra/scan` now redirects to `https://piko.dnalevity.com/preview/42chakra/`, then resolves to a `200` preview page with no `localhost` or `ERR_SSL`
+  - live `https://smart-todo.dnalevity.com/app.js` and `shared-app.js` now contain `hasReviewableCompletionScreenshot`
+- CRM:
+  - inserted live CRM activity `6b332390-1d86-450c-9952-fe5beda497e7` on `Morayana Levy / 42 Chakra Point` and project `42 Chakra Point Smart Todo Access`
+
+# Smart Todo Default Model GPT-5.5 (2026-05-14)
+
+## Plan
+
+- [x] Locate every smart-todo/Cowork default model fallback and provisioning path.
+- [x] Change new tenant provisioning and backend fallback defaults from `gpt-5.4-mini` to `gpt-5.5`.
+- [x] Migrate live piko tenant/config records so existing users default to `gpt-5.5`.
+- [x] Verify Python files compile and live workspace payloads report the new default.
+- [x] Record the rollout result here and update CRM activity.
+
+## Review
+
+- Changes:
+  - updated smart-todo provisioning defaults in `scripts/provision_smarttodo.py` and `scripts/provision_shared_tenant.py` to `gpt-5.5`
+  - updated Cowork shared-tenant normalization/fallbacks in `portal_multi_tenant.py` and `dashboard_server.py` to `gpt-5.5`
+  - updated the smart-todo README shared workspace contract to document `gpt-5.5`
+  - deployed the changed smart-todo scripts and Cowork backend files to `dna@piko.local`
+  - migrated live piko tenant records and `config/portal-sites.json` entries for all 7 smart-todo tenants to `gpt-5.5`
+- Verification:
+  - `python3 -m py_compile /Users/daniellevy/Code/smart-todo/scripts/provision_smarttodo.py /Users/daniellevy/Code/smart-todo/scripts/provision_shared_tenant.py /Users/daniellevy/Code/Cowork/portal_multi_tenant.py /Users/daniellevy/Code/Cowork/dashboard_server.py`
+  - same `py_compile` check passed on piko after deployment
+  - `cowork-dashboard.service` restarted and reported `active`
+  - live piko tenant state now reports `gpt-5.5` for `42chakra`, `ariya`, `booch-bar`, `dnalevity`, `samanayo`, `savvy`, and `soulfire`
+  - authenticated 42chakra workspace API returns `workspace.default_model: "gpt-5.5"` and tenant `workspace.defaultModel: "gpt-5.5"`
+- CRM:
+  - inserted CRM activity entries for portal-backed projects noting the default model rollout to `gpt-5.5`
+
+# Morayana Smart Todo Access (2026-05-14)
+
+## Plan
+
+- [x] Review current smart-todo/Cowork instructions, lessons, and provisioning paths.
+- [x] Identify the source repo/project and live tenant setup for `https://www.42chakrapoint.com/`.
+- [x] Create or update the shared smart-todo tenant for 42 Chakra Point with preview actions that make image changes visible.
+- [x] Create Morayana's `maytoomuch@gmail.com` client account and verify login access to `https://smart-todo.dnalevity.com/`.
+- [x] Verify workspace preview/image-change visibility through the live Cowork/smart-todo API.
+- [x] Update the CRM with the client/project/account setup state.
+- [x] Send Morayana the login details by email and text, then document the result here.
+
+## Review
+
+- Source/project:
+  - Vercel project `42chakra` serves `https://www.42chakrapoint.com/`.
+  - App repo is `git@github.com:allinfinite/42chakra.git`, cloned on piko at `/home/dna/Code/42chakra`.
+- Setup:
+  - created shared smart-todo tenant `42chakra` with tenant id `b261623a-ce12-4060-8bcf-3aff81902e05`
+  - created/updated client user `maytoomuch@gmail.com` named `Morayana` with `client_user` access
+  - wired workspace actions for `preview`, `sync`, `discard`, and `deploy`
+  - installed nginx route `/etc/nginx/snippets/piko-preview-routes/42chakra.conf`
+  - restarted `cowork-dashboard.service`
+- Preview image fix:
+  - updated 42chakra preview config so preview builds use `/preview/42chakra`
+  - changed public image references on the landing page so `bkg-new.png`, `marayana-logo-new.png`, `marayana-new.jpeg`, and `chakracanvas-new.png` load from the preview path
+  - patched Cowork's Next preview initializer to recognize `next.config.ts` so it does not create a shadow `next.config.mjs`
+- Verification:
+  - `npm run build` passed locally in `/Users/daniellevy/Code/42chakra`
+  - piko preview build passed with `COWORK_PREVIEW_BASE_PATH=/preview/42chakra`
+  - login to `https://cowork-api.dnalevity.com/api/auth/login` succeeded for `maytoomuch@gmail.com`
+  - workspace API returned tenant `42chakra`, repo `/home/dna/Code/42chakra`, and preview URL `https://piko.dnalevity.com/preview/42chakra`
+  - preview action returned ready on port `3106`
+  - Playwright verified preview page text rendered and all key image assets returned `200`: `bkg-new.png`, `marayana-logo-new.png`, `marayana-new.jpeg`, and `chakracanvas-new.png`
+- Notifications:
+  - sent email to `maytoomuch@gmail.com` with smart-todo login information
+  - sent Apple Messages/iMessage notification to `maytoomuch@gmail.com`; no phone number was present in CRM or local notes
+  - correction: user provided Meirav's phone number `(228) 243-3333`; credentials were then texted to `+12282433333` with a note that Daniel already submitted her edit requests
+- CRM:
+  - created active-client CRM relationship `Morayana Levy / 42 Chakra Point`
+  - created active project `42 Chakra Point Smart Todo Access`
+  - recorded tenant slug `42chakra`, public URL, preview URL, and notification status in the CRM activity timeline
+  - updated the CRM person record with `(228) 243-3333`, preferred contact method `text`, and a new activity for the credential text
+
 # Shared Client Default Model (2026-03-17)
 
 ## Plan
@@ -1590,3 +2396,100 @@
     - confirmed `localStorage` held `smart-todo-shared:token`
     - confirmed the browser cookie jar held an HttpOnly `cowork_portal_session` cookie for `cowork-api.dnalevity.com`
     - refreshed the page and remained logged into the Ariya board
+
+# 42 Chakra Failed Request Investigation (2026-05-16)
+
+## Plan
+
+- [x] Identify the failed 42chakra request records shown in the shared smart-todo UI.
+- [x] Inspect live Cowork/smart-todo logs and request metadata to find the concrete failure causes.
+- [x] Fix the root cause if it is in our managed code/config and keep the change scoped.
+- [x] Verify the failing request path after the fix, including live preview behavior where relevant.
+- [x] Update CRM activity and document the result here.
+
+## Review
+
+- Root cause:
+  - both failed requests (`f35611c6-3205-4b4b-9cbb-6dd732c8f8ca` and `83b36d68-3717-40f6-89ea-1752a6c18509`) failed before implementation because the live Cowork runner launched `/usr/local/bin/codex`, which was `codex-cli 0.106.0`
+  - the tenant default had been migrated to `gpt-5.5`, and that older CLI returned: `The 'gpt-5.5' model requires a newer version of Codex`
+- Fix:
+  - patched `/Users/daniellevy/Code/Cowork/dashboard_server.py` and deployed it to piko so Cowork prefers `COWORK_CODEX_BIN`, then `/home/dna/.local/bin/codex`, before falling back to the global `codex`
+  - piko now imports `/home/dna/.local/bin/codex`, which reports `codex-cli 0.130.0`
+  - exposed `retry` for failed/blocked shared request cards so model-start failures are recoverable from the UI/API
+- Retry outcome:
+  - retried the urgent 42chakra request through the live shared API; new agent task `2b998a8a-2fc7-4cca-ad39-ab4862d2291b` completed successfully
+  - archived duplicate lower-priority request `83b36d68-3717-40f6-89ea-1752a6c18509` after cleanup so the board keeps the urgent completed run as the canonical result
+  - the completed urgent run patched `/home/dna/Code/42chakra` scan/invoice behavior: current recipient state, reset clearing, point order rendering, chakra visual normalization, invoice update persistence, and email image point mapping
+- Verification:
+  - `/home/dna/Code/Cowork/dashboard_server.py` passed `python -m py_compile` locally and on piko
+  - `cowork-dashboard.service` restarted and reported `active`
+  - `/home/dna/.local/bin/codex --version` reports `codex-cli 0.130.0`
+  - retried 42chakra request no longer failed at model startup
+  - 42chakra `npm run build` passed after cleanup
+  - authenticated HTTP smoke passed for `http://127.0.0.1:3106/preview/42chakra/scan`
+  - live 42chakra shared request list now shows the urgent scan-system request completed and the duplicate failed card no longer visible
+  - Playwright browser smoke on piko remained blocked because Chrome is unavailable on that Linux Arm64 environment
+- CRM:
+  - recorded the failed-request root cause, Cowork runner repair, and completed 42chakra scan-system retry in CRM activity `83f7bb3c-4982-408f-bd11-38908ea49603`
+  - appended the same status to project `42 Chakra Point Smart Todo Access`
+
+# Eufloria Smart Todo Preview Images (2026-06-11)
+
+## Plan
+
+- [x] Inspect the live Smart Todo preview for Eufloria image requests under `/preview/eufloria`.
+- [x] Identify any broken image URL patterns in the Eufloria app.
+- [x] Patch the smallest necessary image path/base-path handling.
+- [x] Deploy/push the fix and sync the piko checkout.
+- [x] Verify preview images load with browser and HTTP checks.
+
+## Review
+
+- Root cause:
+  - Eufloria preview used `next/image` optimized URLs under `/preview/eufloria/_next/image`, but those requests returned `400` (`The requested resource isn't a valid image`) behind the Smart Todo preview path.
+  - After disabling image optimization for preview mode, public image `src` values needed explicit `NEXT_PUBLIC_SITE_BASE_PATH` prefixing or they pointed at `https://piko.dnalevity.com/...` root assets.
+  - Metadata icon/manifest URLs were also root-relative and missed `/preview/eufloria`.
+  - The cacao card briefly used lowercase `cacao.jpg`, but the tracked production asset is `public/cacao.JPG`.
+- Fixes pushed to `allinfinite/eufloria.com` through commit `76f2800`:
+  - `next.config.js`: sets `images.unoptimized` when `COWORK_PREVIEW_BASE_PATH` is active.
+  - `app/components/Hero.tsx` and `app/components/Fruits.tsx`: prefix displayed public image paths with `NEXT_PUBLIC_SITE_BASE_PATH`.
+  - `app/components/Hero.tsx`: changed logo rendering to a stable aspect-ratio `fill` image so Next no longer warns about distorted dimensions.
+  - `app/layout.tsx`: prefixes favicon, apple-touch icon, manifest, Open Graph image, and Twitter image paths in preview mode.
+  - `app/components/InstagramFeed.tsx`: fetches the Instagram API under the preview base path.
+  - `app/api/instagram/route.ts`: marks the route `force-dynamic`.
+- Verification:
+  - `COWORK_PREVIEW_BASE_PATH=/preview/eufloria npm run build` passes.
+  - Piko checkout is clean at `76f2800`.
+  - Refreshed Smart Todo preview reports ready, clean workspace, and no changed files.
+  - HTTP sweep of rendered image/icon/manifest URLs shows no `/_next/image` optimizer URLs and zero failures:
+    - `/preview/eufloria/flow-bio.jpeg` -> `200 image/jpeg`
+    - `/preview/eufloria/logo.png` -> `200 image/png`
+    - `/preview/eufloria/avacado.jpg` -> `200 image/jpeg`
+    - `/preview/eufloria/cacao.JPG` -> `200 image/jpeg`
+    - `/preview/eufloria/mango.jpg` -> `200 image/jpeg`
+    - `/preview/eufloria/favicon.png` -> `200 image/png`
+    - `/preview/eufloria/apple-touch-icon.png` -> `200 image/png`
+    - `/preview/eufloria/site.webmanifest` -> `200 application/manifest+json`
+  - Playwright browser snapshot shows hero image, logo, avocado, cacao, and mango image nodes rendered.
+  - Final screenshot saved at `output/playwright/eufloria-preview-images-clean-2026-06-11.png`.
+  - Browser console has no image warnings; the remaining console error is the known Next dev HMR websocket through the preview proxy, not an image request failure.
+
+# Eufloria Admin Membership (2026-06-11)
+
+## Plan
+
+- [x] Inspect live Cowork users and the Eufloria tenant membership list.
+- [x] Resolve which existing account corresponds to `admin`.
+- [x] Add that account as an admin/owner on the Eufloria tenant.
+- [x] Verify the user has admin access to the Eufloria tenant.
+
+## Review
+
+- Resolved `admin` to the existing live Cowork admin/operator account `me@dnalevity.com` because there is no literal `admin@...` user in `portal_users.json`.
+- Added `me@dnalevity.com` to tenant `eufloria` as role `owner`.
+- Membership id: `4dae4e0a-e401-4186-941c-eb9d811d95d1`.
+- Audit id: `18f987c7-2281-4f83-82ea-680e6ff6f8da`.
+- Verified final Eufloria memberships:
+  - `owner@dnalevity.local` -> `owner`
+  - `me@dnalevity.com` -> `owner`
+  - `misseufloria@gmail.com` -> `client_user`

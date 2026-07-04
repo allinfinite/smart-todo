@@ -3,12 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Todo</title>
-    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="32" fill="%23123128"/><path d="M19 33.5 28 42l18-21" fill="none" stroke="%23c7f2d5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <title>Client Work Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <script src="./portal.config.js"></script>
@@ -27,114 +26,11 @@
       }
     </style>
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./chat-v2.css" />
   </head>
   <body>
     <div class="page-shell">
-      <nav class="landing-nav" aria-label="Primary">
-        <a class="brand-mark" href="#top" aria-label="Smart Todo home">
-          <span class="brand-icon">✓</span>
-          <span>Smart Todo</span>
-        </a>
-        <div class="nav-links">
-          <a href="#outcomes">Outcomes</a>
-          <a href="#flow">Flow</a>
-          <a href="#portal">Portal</a>
-        </div>
-        <a class="nav-cta" href="#portal">Open portal</a>
-      </nav>
-
-      <header class="landing-hero" id="top">
-        <div class="hero-media" aria-hidden="true">
-          <img src="./public/landing-assets/smart-todo-hero.png" alt="" />
-        </div>
-        <div class="hero-content">
-          <p class="eyebrow">Smart Todo</p>
-          <h1>Turn every website task into visible momentum.</h1>
-          <p class="hero-lede">
-            Queue requests, attach references, review finished work, and keep the next improvement moving from one focused client portal.
-          </p>
-          <div class="hero-actions">
-            <a class="primary-link" href="#portal">Start a task</a>
-            <a class="secondary-link" href="#flow">See the flow</a>
-          </div>
-          <div class="hero-stats" aria-label="Smart Todo highlights">
-            <div>
-              <strong>Live</strong>
-              <span>task board</span>
-            </div>
-            <div>
-              <strong>Clear</strong>
-              <span>reply threads</span>
-            </div>
-            <div>
-              <strong>Fast</strong>
-              <span>follow-ups</span>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main class="landing-main">
-        <section class="outcome-band" id="outcomes" aria-labelledby="outcomesTitle">
-          <div>
-            <p class="eyebrow">Built For Client Work</p>
-            <h2 id="outcomesTitle">A todo list that shows what is moving, what is done, and what needs your call.</h2>
-          </div>
-          <div class="outcome-grid">
-            <article>
-              <span class="feature-kicker">01</span>
-              <h3>Submit once</h3>
-              <p>Add a request with the screenshots, files, links, and context needed to move it forward.</p>
-            </article>
-            <article>
-              <span class="feature-kicker">02</span>
-              <h3>Track progress</h3>
-              <p>See queued, active, blocked, and completed work without digging through scattered messages.</p>
-            </article>
-            <article>
-              <span class="feature-kicker">03</span>
-              <h3>Keep stacking</h3>
-              <p>Turn suggested follow-ups into new todo items while completed work stays easy to review.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="flow-section" id="flow" aria-labelledby="flowTitle">
-          <div class="flow-copy">
-            <p class="eyebrow">How It Works</p>
-            <h2 id="flowTitle">From rough idea to reviewed update in one clean path.</h2>
-            <p>
-              Smart Todo keeps the request, discussion, attached references, and final screenshot connected, so every next step has the context it needs.
-            </p>
-          </div>
-          <div class="flow-rail" aria-label="Smart Todo workflow">
-            <div>
-              <span>Capture</span>
-              <strong>Describe the change</strong>
-            </div>
-            <div>
-              <span>Move</span>
-              <strong>Watch status update</strong>
-            </div>
-            <div>
-              <span>Review</span>
-              <strong>Check the finished work</strong>
-            </div>
-            <div>
-              <span>Continue</span>
-              <strong>Add the next priority</strong>
-            </div>
-          </div>
-        </section>
-
-        <section class="portal-section" id="portal" aria-labelledby="portalTitle">
-          <div class="portal-intro">
-            <p class="eyebrow">Client Portal</p>
-            <h2 id="portalTitle">Open the board and keep the work moving.</h2>
-            <p>Use the same focused flow for new requests, replies, references, previews, and completed updates.</p>
-          </div>
-
-          <section class="auth-shell" id="authShell">
+      <section class="auth-shell" id="authShell">
         <div class="auth-card">
           <p class="eyebrow" id="authEyebrow">Protected Portal</p>
           <h2 id="authTitle">Project updates</h2>
@@ -142,10 +38,6 @@
             Enter the portal password to view and submit work requests.
           </p>
           <form id="authForm" class="auth-form">
-            <label>
-              <span id="emailLabel">Email</span>
-              <input id="emailInput" type="email" autocomplete="username" required />
-            </label>
             <label>
               <span id="passwordLabel">Password</span>
               <input id="passwordInput" type="password" autocomplete="current-password" required />
@@ -156,19 +48,18 @@
             </div>
           </form>
         </div>
-          </section>
+      </section>
 
-          <div class="portal-workspace">
-            <header class="hero">
-              <p class="eyebrow" id="heroEyebrow">Client Delivery Portal</p>
-              <h1 id="heroTitle">Send work, watch it move, and keep the list growing.</h1>
-              <p class="hero-copy" id="heroCopy">
-                Add a task and keep building your list while work moves in the background.
-              </p>
-            </header>
+      <header class="hero">
+        <p class="eyebrow" id="heroEyebrow">Client Delivery Portal</p>
+        <h1 id="heroTitle">Send work, watch it move, and keep the list growing.</h1>
+        <p class="hero-copy" id="heroCopy">
+          Add a task and keep building your list while work moves in the background.
+        </p>
+      </header>
 
-            <div class="layout">
-              <section class="panel composer-panel">
+      <main class="layout">
+        <section class="panel composer-panel">
           <div class="panel-head">
             <div>
               <p class="eyebrow" id="composerEyebrow">New Request</p>
@@ -193,6 +84,7 @@
                 data-bwignore="true"
                 data-1p-ignore="true"
                 data-lpignore="true"
+                autocomplete="off"
               ></textarea>
             </label>
 
@@ -215,9 +107,9 @@
               <p class="form-status" id="formStatus"></p>
             </div>
           </form>
-              </section>
+        </section>
 
-              <section class="panel queue-panel">
+        <section class="panel queue-panel">
           <div class="panel-head">
             <div>
               <p class="eyebrow" id="boardEyebrow">Todo List</p>
@@ -232,9 +124,6 @@
             </div>
           </div>
           <div class="queue-list" id="queueList"></div>
-              </section>
-            </div>
-          </div>
         </section>
       </main>
     </div>
@@ -262,6 +151,7 @@
               data-bwignore="true"
               data-1p-ignore="true"
               data-lpignore="true"
+              autocomplete="off"
             ></textarea>
           </label>
           <label class="reply-file-label">
@@ -294,18 +184,7 @@
 
     <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
 
-    <script>
-      (function () {
-        var style = document.createElement("link");
-        style.rel = "stylesheet";
-        style.href = "./chat-v2.css";
-        document.head.appendChild(style);
-        var script = document.createElement("script");
-        script.src = "./shared-chat-app.js";
-        script.defer = true;
-        document.body.appendChild(script);
-      }());
-    </script>
+    <script src="./shared-chat-app.js" defer></script>
     <script src="./app.js" defer></script>
   </body>
 </html>

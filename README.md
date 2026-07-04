@@ -127,6 +127,8 @@ Optional workspace actions:
 
 When `siteActionsPath` is configured, the board header shows global `Sync`, `Preview`, `Discard Changes`, and `Deploy` controls. Older backends remain compatible because the buttons stay hidden unless the action path is configured.
 
+On page load, workspace-capable portals call the workspace endpoint to check remote Git freshness. If the checkout is behind its configured deploy branch, the frontend automatically runs `Sync` and blocks request/reply/workspace actions until the checkout is current. The workspace response may include `ahead`, `behind`, `remote_ref`, `remote_checked_at`, `remote_error`, and `is_current` fields.
+
 ## Shared App Backend Contract
 
 When `PORTAL_APP_MODE=shared`, the frontend uses authenticated tenant-aware endpoints instead:
@@ -155,7 +157,7 @@ Shared tenant workspace config may include:
 - `appPath`: runtime app directory when different from `repoPath`
 - `deployBranch`: required branch for `Sync` and `Deploy`
 - `enabledActions`: optional allowlist for workspace actions such as `preview`, `sync`, `discard`, and `deploy`
-- `defaultModel`: default model for tenant work requests; smart-todo client provisioning defaults this to `gpt-5.4-mini`
+- `defaultModel`: default model for tenant work requests; smart-todo client provisioning defaults this to `gpt-5.5`
 
 Shared-mode write endpoints should accept either JSON or multipart form uploads:
 

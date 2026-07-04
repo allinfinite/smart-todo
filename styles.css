@@ -52,6 +52,10 @@ body {
     linear-gradient(180deg, var(--bg-start), var(--bg-mid) 45%, var(--bg-end));
 }
 
+body.portal-locked .portal-workspace {
+  display: none;
+}
+
 button,
 input,
 textarea,
@@ -73,9 +77,351 @@ a {
 
 .page-shell {
   min-height: 100vh;
-  max-width: 1260px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 18px 20px 28px;
+  padding: 18px 22px 36px;
+}
+
+.landing-nav {
+  position: sticky;
+  top: 14px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: min(100%, 1180px);
+  margin: 0 auto 18px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  border-radius: 999px;
+  background: rgba(255, 252, 246, 0.72);
+  box-shadow: 0 18px 46px rgba(31, 24, 17, 0.1);
+  backdrop-filter: blur(18px);
+}
+
+.brand-mark,
+.nav-links,
+.hero-actions,
+.hero-stats,
+.flow-rail,
+.primary-link,
+.secondary-link,
+.nav-cta {
+  display: flex;
+  align-items: center;
+}
+
+.brand-mark,
+.nav-links a,
+.nav-cta,
+.primary-link,
+.secondary-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand-mark {
+  gap: 10px;
+  font-weight: 900;
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #123128;
+  color: #c7f2d5;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.nav-links {
+  gap: 22px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+}
+
+.nav-cta,
+.primary-link,
+.secondary-link {
+  justify-content: center;
+  border-radius: 999px;
+  font-weight: 900;
+}
+
+.nav-cta {
+  padding: 10px 16px;
+  background: #1b1714;
+  color: #fffaf2;
+}
+
+.landing-hero {
+  position: relative;
+  min-height: min(760px, calc(100vh - 92px));
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  border-radius: 28px;
+  background: #0b1113;
+  box-shadow: 0 30px 80px rgba(11, 17, 19, 0.28);
+  isolation: isolate;
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.hero-media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 58% center;
+  filter: saturate(0.98) contrast(1.05);
+}
+
+.landing-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(7, 11, 12, 0.9) 0%, rgba(7, 11, 12, 0.68) 36%, rgba(7, 11, 12, 0.14) 72%),
+    linear-gradient(0deg, rgba(7, 11, 12, 0.74) 0%, rgba(7, 11, 12, 0.08) 48%);
+}
+
+.hero-content {
+  width: min(680px, 100%);
+  padding: clamp(28px, 6vw, 78px);
+  color: #fffaf2;
+}
+
+.hero-content .eyebrow {
+  color: #8ff0b2;
+}
+
+.hero-content h1 {
+  max-width: 11ch;
+  margin: 0;
+  font-size: clamp(3.2rem, 8vw, 7.6rem);
+  line-height: 0.91;
+  letter-spacing: 0;
+}
+
+.hero-lede {
+  max-width: 37rem;
+  margin: 22px 0 0;
+  color: rgba(255, 250, 242, 0.78);
+  font-size: clamp(1rem, 1.8vw, 1.22rem);
+  line-height: 1.55;
+}
+
+.hero-actions {
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.primary-link,
+.secondary-link {
+  min-height: 48px;
+  padding: 13px 20px;
+}
+
+.primary-link {
+  background: #ff765f;
+  color: #130f0d;
+}
+
+.secondary-link {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fffaf2;
+}
+
+.hero-stats {
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 34px;
+}
+
+.hero-stats div {
+  min-width: 128px;
+  padding: 13px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.hero-stats strong,
+.hero-stats span {
+  display: block;
+}
+
+.hero-stats strong {
+  font-size: 1.12rem;
+}
+
+.hero-stats span {
+  margin-top: 2px;
+  color: rgba(255, 250, 242, 0.66);
+  font-size: 0.82rem;
+}
+
+.landing-main {
+  display: grid;
+  gap: 24px;
+  padding-top: 24px;
+}
+
+.outcome-band,
+.flow-section,
+.portal-section {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+}
+
+.outcome-band {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  padding: clamp(28px, 5vw, 58px) 0;
+}
+
+.outcome-band h2,
+.flow-copy h2,
+.portal-intro h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.outcome-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.outcome-grid article {
+  min-height: 230px;
+  display: grid;
+  align-content: space-between;
+  gap: 22px;
+  padding: 22px;
+  border: 1px solid rgba(52, 41, 28, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 252, 246, 0.82);
+  box-shadow: 0 16px 38px rgba(31, 24, 17, 0.08);
+}
+
+.feature-kicker {
+  font-family: "IBM Plex Mono", monospace;
+  color: #2c8b57;
+  font-weight: 800;
+}
+
+.outcome-grid h3 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.outcome-grid p,
+.flow-copy p,
+.portal-intro p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.flow-section {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1fr);
+  gap: 30px;
+  align-items: center;
+  padding: clamp(28px, 5vw, 58px);
+  border-radius: 28px;
+  background: #12201d;
+  color: #fffaf2;
+  box-shadow: 0 24px 70px rgba(18, 32, 29, 0.18);
+}
+
+.flow-copy .eyebrow {
+  color: #8ff0b2;
+}
+
+.flow-copy p {
+  max-width: 34rem;
+  margin-top: 16px;
+  color: rgba(255, 250, 242, 0.7);
+}
+
+.flow-rail {
+  gap: 10px;
+  align-items: stretch;
+}
+
+.flow-rail div {
+  flex: 1 1 0;
+  min-height: 170px;
+  display: grid;
+  align-content: space-between;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.flow-rail span {
+  font-family: "IBM Plex Mono", monospace;
+  color: #ff967f;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.flow-rail strong {
+  font-size: 1.12rem;
+  line-height: 1.2;
+}
+
+.portal-section {
+  display: grid;
+  gap: 18px;
+  padding: clamp(26px, 5vw, 56px) 0 0;
+}
+
+.portal-workspace {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(52, 41, 28, 0.12);
+  border-radius: 28px;
+  background: rgba(255, 252, 246, 0.54);
+  box-shadow: 0 20px 54px rgba(31, 24, 17, 0.08);
+}
+
+.portal-intro {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 0.7fr);
+  gap: 24px;
+  align-items: end;
+}
+
+.portal-intro p:last-child {
+  max-width: 35rem;
 }
 
 .hero {
@@ -111,14 +457,17 @@ a {
 }
 
 .auth-shell {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
+  position: relative;
+  z-index: 1;
   display: grid;
   place-items: center;
-  padding: 20px;
-  background: rgba(20, 15, 11, 0.72);
-  backdrop-filter: blur(12px);
+  padding: 28px;
+  border: 1px solid rgba(52, 41, 28, 0.12);
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, rgba(18, 32, 29, 0.92), rgba(27, 23, 20, 0.9)),
+    url("./public/landing-assets/smart-todo-hero.png") center/cover;
+  box-shadow: 0 24px 70px rgba(31, 24, 17, 0.16);
 }
 
 .auth-card {
@@ -139,6 +488,15 @@ a {
   display: grid;
   gap: 14px;
   margin-top: 18px;
+}
+
+.auth-card .form-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.auth-card .form-actions button {
+  width: 100%;
 }
 
 .layout {
@@ -308,33 +666,30 @@ button:disabled {
 
 @media (min-width: 1021px) {
   body {
-    overflow: hidden;
+    overflow-y: auto;
   }
 
   .page-shell {
-    height: 100vh;
-    padding: 12px 20px 20px;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 8px;
+    height: auto;
   }
 
   .hero {
-    padding: 4px 8px 0;
+    padding: 8px 8px 4px;
   }
 
   .hero-copy {
-    display: none;
+    display: block;
   }
 
   .layout {
-    height: 100%;
+    height: auto;
     min-height: 0;
   }
 
   .composer-panel,
   .queue-panel {
-    height: 100%;
+    height: auto;
+    max-height: 720px;
     overflow: hidden;
   }
 
@@ -926,6 +1281,29 @@ button:disabled {
 }
 
 @media (max-width: 1020px) {
+  .landing-hero {
+    min-height: 720px;
+  }
+
+  .outcome-band,
+  .flow-section,
+  .portal-intro {
+    grid-template-columns: 1fr;
+  }
+
+  .outcome-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .outcome-grid article {
+    min-height: 180px;
+  }
+
+  .flow-rail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .layout {
     grid-template-columns: 1fr;
     gap: 14px;
@@ -937,6 +1315,10 @@ button:disabled {
 }
 
 @media (max-width: 920px) {
+  .nav-links {
+    display: none;
+  }
+
   .panel-head {
     flex-direction: column;
     align-items: stretch;
@@ -996,6 +1378,98 @@ button:disabled {
     padding-inline: 14px;
     padding-top: 14px;
     padding-bottom: 24px;
+  }
+
+  .landing-nav {
+    top: 10px;
+    margin-bottom: 12px;
+    padding: 8px;
+  }
+
+  .brand-mark {
+    font-size: 0.94rem;
+  }
+
+  .brand-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .nav-cta {
+    padding: 9px 12px;
+    font-size: 0.84rem;
+  }
+
+  .landing-hero {
+    min-height: 690px;
+    border-radius: 22px;
+  }
+
+  .hero-media img {
+    object-position: 64% center;
+  }
+
+  .landing-hero::after {
+    background:
+      linear-gradient(0deg, rgba(7, 11, 12, 0.9) 0%, rgba(7, 11, 12, 0.48) 58%, rgba(7, 11, 12, 0.22) 100%);
+  }
+
+  .hero-content {
+    padding: 28px;
+  }
+
+  .hero-content h1 {
+    max-width: 10ch;
+    font-size: clamp(3rem, 16vw, 4.6rem);
+  }
+
+  .hero-actions {
+    align-items: stretch;
+  }
+
+  .primary-link,
+  .secondary-link {
+    width: 100%;
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .hero-stats div {
+    min-width: 0;
+  }
+
+  .outcome-band,
+  .flow-section,
+  .portal-section {
+    width: 100%;
+  }
+
+  .outcome-band h2,
+  .flow-copy h2,
+  .portal-intro h2 {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+  .flow-section {
+    padding: 26px;
+    border-radius: 22px;
+  }
+
+  .flow-rail {
+    grid-template-columns: 1fr;
+  }
+
+  .flow-rail div {
+    min-height: 132px;
+  }
+
+  .auth-shell,
+  .portal-workspace {
+    padding: 16px;
+    border-radius: 22px;
   }
 
   .hero h1 {

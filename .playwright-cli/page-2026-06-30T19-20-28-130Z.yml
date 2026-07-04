@@ -1,0 +1,423 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - link "Well of Wellness home" [ref=e4] [cursor=pointer]:
+      - /url: "#home"
+      - generic [ref=e5]:
+        - generic [ref=e6]: Well of Wellness Hawaii
+        - generic [ref=e7]: Colon Hydrotherapy with Silke
+    - navigation "Primary navigation" [ref=e8]:
+      - link "Home" [ref=e9] [cursor=pointer]:
+        - /url: "#home"
+      - group [ref=e10]:
+        - generic "About" [ref=e11] [cursor=pointer]
+      - link "Shop" [ref=e12] [cursor=pointer]:
+        - /url: /preview/wellofwellness/shop
+      - link "Reviews" [ref=e13] [cursor=pointer]:
+        - /url: "#testimonials"
+      - group [ref=e14]:
+        - generic "Process" [ref=e15] [cursor=pointer]
+      - link "Contact" [ref=e16] [cursor=pointer]:
+        - /url: "#contact"
+    - link "Book Now" [ref=e17] [cursor=pointer]:
+      - /url: https://calendar.app.google/g94t1bTAxkctpe7H9
+  - region "Gentle colon hydrotherapy care" [ref=e18]:
+    - generic [ref=e19]:
+      - heading "Gentle care for a healthier you." [level=1] [ref=e20]
+      - paragraph [ref=e21]: Professional colon hydrotherapy in a safe, clean, and relaxing environment in Pahoa, Hawaii.
+      - link "Book Your Appointment" [ref=e22] [cursor=pointer]:
+        - /url: https://calendar.app.google/g94t1bTAxkctpe7H9
+    - img "Silke standing in her colon hydrotherapy treatment room" [ref=e24]
+  - region "How colon hydrotherapy can help" [ref=e25]:
+    - paragraph [ref=e26]: How colon hydrotherapy can help
+    - generic [ref=e27]:
+      - article [ref=e28]:
+        - heading "Detoxify" [level=2] [ref=e30]
+        - paragraph [ref=e31]: Supports the body's natural elimination process in a calm, private setting.
+      - article [ref=e32]:
+        - heading "Improve Digestion" [level=2] [ref=e34]
+        - paragraph [ref=e35]: Encourages regularity and a more comfortable digestive rhythm.
+      - article [ref=e36]:
+        - heading "Boost Energy" [level=2] [ref=e38]
+        - paragraph [ref=e39]: Clients often seek sessions during reset, cleanse, and renewal seasons.
+      - article [ref=e40]:
+        - heading "Support Immunity" [level=2] [ref=e42]
+        - paragraph [ref=e43]: A clean internal routine can be part of a broader wellness practice.
+  - region "Herbal Goods & Handmade Candles" [ref=e44]:
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - paragraph [ref=e47]: Herbal Goods & Handmade Candles
+        - heading "Thoughtfully made goods for moments of balance and restoration." [level=2] [ref=e48]
+      - link "Shop Products" [ref=e49] [cursor=pointer]:
+        - /url: /preview/wellofwellness/shop
+    - generic "Featured products" [ref=e50]:
+      - article [ref=e51]:
+        - link "Add Mamaki Hawaiian Herbal Tea to cart" [ref=e52] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=mamaki
+          - img "Mamaki Hawaiian Herbal Tea product image" [ref=e54]
+          - generic [ref=e55]: Tea Blend
+          - strong [ref=e56]: Mamaki Hawaiian Herbal Tea
+          - generic [ref=e57]: 2 oz
+          - generic [ref=e58]: A naturally caffeine-free Hawaiian herbal tea.
+          - emphasis [ref=e59]: $20.00
+      - article [ref=e60]:
+        - link "Add Colon Cleanse to cart" [ref=e61] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=colon-cleanse
+          - img "Colon Cleanse product image" [ref=e63]
+          - generic [ref=e64]: Tea Blend
+          - strong [ref=e65]: Colon Cleanse
+          - generic [ref=e66]: 3 oz
+          - generic [ref=e67]: An organic powder blend for cleanse routines.
+          - emphasis [ref=e68]: $20.00
+      - article [ref=e69]:
+        - link "Add Kidney Cleanse Tea to cart" [ref=e70] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=kidney-cleanse
+          - img "Kidney Cleanse Tea product image" [ref=e72]
+          - generic [ref=e73]: Tea Blend
+          - strong [ref=e74]: Kidney Cleanse Tea
+          - generic [ref=e75]: 4 oz
+          - generic [ref=e76]: A certified organic herbal tea blend.
+          - emphasis [ref=e77]: $20.00
+      - article [ref=e78]:
+        - link "Add Liver Support Tea to cart" [ref=e79] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=liver-support
+          - img "Liver Support Tea product image" [ref=e81]
+          - generic [ref=e82]: Tea Blend
+          - strong [ref=e83]: Liver Support Tea
+          - generic [ref=e84]: 4 oz
+          - generic [ref=e85]: A certified organic herbal tea blend.
+          - emphasis [ref=e86]: $20.00
+      - article [ref=e87]:
+        - link "Add Spilanthes Tincture to cart" [ref=e88] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=spilanthes-tincture
+          - img "Spilanthes Tincture product image" [ref=e90]
+          - generic [ref=e91]: Tincture
+          - strong [ref=e92]: Spilanthes Tincture
+          - generic [ref=e93]: 1 oz
+          - generic [ref=e94]: A small-batch botanical tincture.
+          - emphasis [ref=e95]: $18.00
+      - article [ref=e96]:
+        - link "Add Swedish Bitters to cart" [ref=e97] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=swedish-bitters
+          - img "Swedish Bitters product image" [ref=e99]
+          - generic [ref=e100]: Tincture
+          - strong [ref=e101]: Swedish Bitters
+          - generic [ref=e102]: 1 oz
+          - generic [ref=e103]: A classic bitter herbal tincture.
+          - emphasis [ref=e104]: $18.00
+      - article [ref=e105]:
+        - link "Add Propolis Tincture to cart" [ref=e106] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=propolis-tincture
+          - img "Propolis Tincture product image" [ref=e108]
+          - generic [ref=e109]: Tincture
+          - strong [ref=e110]: Propolis Tincture
+          - generic [ref=e111]: 1 oz
+          - generic [ref=e112]: A concentrated propolis tincture.
+          - emphasis [ref=e113]: $18.00
+      - article [ref=e114]:
+        - link "Add Horse Candle to cart" [ref=e115] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=horse-candle
+          - img "Horse Candle product image" [ref=e117]
+          - generic [ref=e118]: Handmade Candle
+          - strong [ref=e119]: Horse Candle
+          - generic [ref=e120]: Hand-poured sculptural candle
+          - generic [ref=e121]: A sculpted horse candle with a protective hand motif.
+          - emphasis [ref=e122]: $15.00
+      - article [ref=e123]:
+        - link "Add Angel Candle to cart" [ref=e124] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=angel-candle
+          - img "Angel Candle product image" [ref=e126]
+          - generic [ref=e127]: Handmade Candle
+          - strong [ref=e128]: Angel Candle
+          - generic [ref=e129]: Hand-poured sculptural candle
+          - generic [ref=e130]: A winged angel candle with delicate dress and feather detail.
+          - emphasis [ref=e131]: $15.00
+      - article [ref=e132]:
+        - link "Add Day of the Dead Candle Figure to cart" [ref=e133] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=day-of-the-dead-candle
+          - img "Day of the Dead Candle Figure product image" [ref=e135]
+          - generic [ref=e136]: Handmade Candle
+          - strong [ref=e137]: Day of the Dead Candle Figure
+          - generic [ref=e138]: One figure candle
+          - generic [ref=e139]: Small sculptural figure candles inspired by Day of the Dead imagery.
+          - emphasis [ref=e140]: $8.00
+      - article [ref=e141]:
+        - link "Add Hand Holding Heart Candle to cart" [ref=e142] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=hand-heart-candle
+          - img "Hand Holding Heart Candle product image" [ref=e144]
+          - generic [ref=e145]: Handmade Candle
+          - strong [ref=e146]: Hand Holding Heart Candle
+          - generic [ref=e147]: Hand-poured sculptural candle
+          - generic [ref=e148]: A symbolic candle with hands holding a heart at the center.
+          - emphasis [ref=e149]: $20.00
+      - article [ref=e150]:
+        - link "Add Vulva Candle to cart" [ref=e151] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=vulva-candle
+          - img "Vulva Candle product image" [ref=e153]
+          - generic [ref=e154]: Handmade Candle
+          - strong [ref=e155]: Vulva Candle
+          - generic [ref=e156]: Hand-poured sculptural candle
+          - generic [ref=e157]: A sculptural candle celebrating feminine form and creative energy.
+          - emphasis [ref=e158]: $15.00
+      - article [ref=e159]:
+        - link "Add Rose Candle to cart" [ref=e160] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=rose-candle
+          - img "Rose Candle product image" [ref=e162]
+          - generic [ref=e163]: Handmade Candle
+          - strong [ref=e164]: Rose Candle
+          - generic [ref=e165]: Hand-poured sculptural candle
+          - generic [ref=e166]: A floral candle with layered rose-petal detail.
+          - emphasis [ref=e167]: $15.00
+      - article [ref=e168]:
+        - link "Add Mini Kitten Candle to cart" [ref=e169] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=mini-kitten-candle
+          - img "Mini Kitten Candle product image" [ref=e171]
+          - generic [ref=e172]: Mini Handmade Candle
+          - strong [ref=e173]: Mini Kitten Candle
+          - generic [ref=e174]: Small sculptural candle
+          - generic [ref=e175]: A tiny kitten candle for adding a sweet beeswax accent to an order.
+          - emphasis [ref=e176]: $3.00
+      - article [ref=e177]:
+        - link "Add Mini Flower Candle to cart" [ref=e178] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=mini-flower-candle
+          - img "Mini Flower Candle product image" [ref=e180]
+          - generic [ref=e181]: Mini Handmade Candle
+          - strong [ref=e182]: Mini Flower Candle
+          - generic [ref=e183]: Small sculptural candle
+          - generic [ref=e184]: A tiny flower candle with petal detail for small beeswax gifts.
+          - emphasis [ref=e185]: $3.00
+      - article [ref=e186]:
+        - link "Add Mini Owl Candle to cart" [ref=e187] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=mini-owl-candle
+          - img "Mini Owl Candle product image" [ref=e189]
+          - generic [ref=e190]: Mini Handmade Candle
+          - strong [ref=e191]: Mini Owl Candle
+          - generic [ref=e192]: Small sculptural candle
+          - generic [ref=e193]: A tiny owl candle with carved feather detail.
+          - emphasis [ref=e194]: $3.00
+      - article [ref=e195]:
+        - link "Add Mini Turtle Candle to cart" [ref=e196] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=mini-turtle-candle
+          - img "Mini Turtle Candle product image" [ref=e198]
+          - generic [ref=e199]: Mini Handmade Candle
+          - strong [ref=e200]: Mini Turtle Candle
+          - generic [ref=e201]: Small sculptural candle
+          - generic [ref=e202]: A tiny turtle candle with shell detail.
+          - emphasis [ref=e203]: $3.00
+      - article [ref=e204]:
+        - link "Add Buddha Prayer Candle to cart" [ref=e205] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=buddha-prayer-candle
+          - img "Buddha Prayer Candle product image" [ref=e207]
+          - generic [ref=e208]: Handmade Candle
+          - strong [ref=e209]: Buddha Prayer Candle
+          - generic [ref=e210]: One small prayer-position candle
+          - generic [ref=e211]: A small Buddha candle available in three prayer positions.
+          - emphasis [ref=e212]: $6.00
+      - article [ref=e213]:
+        - link "Add Small Pregnant Goddess Candle to cart" [ref=e214] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=small-pregnant-goddess-candle
+          - img "Small Pregnant Goddess Candle product image" [ref=e216]
+          - generic [ref=e217]: Handmade Candle
+          - strong [ref=e218]: Small Pregnant Goddess Candle
+          - generic [ref=e219]: Small sculptural candle
+          - generic [ref=e220]: A small pregnant goddess candle with gentle sculptural detail.
+          - emphasis [ref=e221]: $6.00
+      - article [ref=e222]:
+        - link "Add Large Pregnant Goddess Candle to cart" [ref=e223] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=large-pregnant-goddess-candle
+          - img "Large Pregnant Goddess Candle product image" [ref=e225]
+          - generic [ref=e226]: Handmade Candle
+          - strong [ref=e227]: Large Pregnant Goddess Candle
+          - generic [ref=e228]: Large sculptural candle
+          - generic [ref=e229]: A larger version of the pregnant goddess candle mold.
+          - emphasis [ref=e230]: $20.00
+      - article [ref=e231]:
+        - link "Add Maiden Mother Crown Goddess Candle to cart" [ref=e232] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=maiden-mother-crown-goddess-candle
+          - img "Maiden Mother Crown Goddess Candle product image" [ref=e234]
+          - generic [ref=e235]: Handmade Candle
+          - strong [ref=e236]: Maiden Mother Crown Goddess Candle
+          - generic [ref=e237]: Hand-poured sculptural candle
+          - generic [ref=e238]: A goddess candle honoring the maiden, mother, and crown forms.
+          - emphasis [ref=e239]: $15.00
+      - article [ref=e240]:
+        - link "Add Tapered Flower Styled Candle to cart" [ref=e241] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=tapered-flower-candle
+          - img "Tapered Flower Styled Candle product image" [ref=e243]
+          - generic [ref=e244]: Handmade Candle
+          - strong [ref=e245]: Tapered Flower Styled Candle
+          - generic [ref=e246]: Floral tapered candle
+          - generic [ref=e247]: A tapered candle with raised floral styling.
+          - emphasis [ref=e248]: $15.00
+      - article [ref=e249]:
+        - link "Add Tapered Candle to cart" [ref=e250] [cursor=pointer]:
+          - /url: /preview/wellofwellness/shop?add=tapered-candle
+          - img "Tapered Candle product image" [ref=e252]
+          - generic [ref=e253]: Handmade Candle
+          - strong [ref=e254]: Tapered Candle
+          - generic [ref=e255]: One tapered candle
+          - generic [ref=e256]: A classic hand-poured beeswax taper.
+          - emphasis [ref=e257]: $4.50
+  - generic [ref=e258]:
+    - img "Portrait of Silke" [ref=e260]
+    - generic [ref=e261]:
+      - paragraph [ref=e262]: About Silke
+      - heading "A Private Space for Cleansing, Renewal, and Well-Being" [level=2] [ref=e263]
+      - paragraph [ref=e264]: Colon hydrotherapy with Silke is centered around comfort, respect, and mindful care. Sessions are personalized and offered in a peaceful Hawaii setting that encourages relaxation and renewal.
+      - link "View on Google" [ref=e265] [cursor=pointer]:
+        - /url: https://www.google.com/maps?cid=4448085509110956924
+  - region "Massage and Access Bars" [ref=e266]:
+    - generic [ref=e267]:
+      - paragraph [ref=e268]: Massage and Access Bars
+      - heading "Bodywork and gentle energy work for deep relaxation." [level=2] [ref=e269]
+      - paragraph [ref=e270]: Silke is a minister of Universal Light Church offering physical and spiritual healing. She has practiced bodywork for more than 20 years, with training in Lomilomi, Shiatsu, and Reflexology.
+      - paragraph [ref=e271]: Sessions are custom designed around each client's needs and preferred pressure. Essential oils may be added with coconut oil.
+    - generic [ref=e272]:
+      - article [ref=e273]:
+        - generic [ref=e274]: Featured Session
+        - heading "90 minute bodywork + Access Bars" [level=3] [ref=e275]
+        - paragraph [ref=e276]: A deeply calming session with 1 hour of bodywork and 30 minutes of Access Bars, a gentle technique using light touch on points around the head to support relaxation and a quieter mind.
+        - generic "Massage session prices" [ref=e277]:
+          - generic [ref=e278]: 60 minutes $100
+          - generic [ref=e279]: 90 minutes $140
+        - link "Book Massage" [ref=e280] [cursor=pointer]:
+          - /url: https://calendar.app.google/g94t1bTAxkctpe7H9
+      - generic [ref=e281]:
+        - heading "Clients often seek Access Bars for" [level=3] [ref=e282]
+        - list [ref=e283]:
+          - listitem [ref=e284]: More calm and relaxation
+          - listitem [ref=e285]: Greater mental clarity
+          - listitem [ref=e286]: More restful sleep
+          - listitem [ref=e287]: Increased energy
+          - listitem [ref=e288]: Lower stress and body tension
+          - listitem [ref=e289]: Less reactivity
+        - paragraph [ref=e290]: The combination of bodywork and energy work is offered to help calm the nervous system and invite full-body ease.
+  - region "Client Reviews" [ref=e291]:
+    - generic [ref=e292]:
+      - paragraph [ref=e293]: Client Reviews
+      - heading "Clients describe Silke's work as calm, caring, and deeply supportive." [level=2] [ref=e294]
+      - link "Read More Reviews" [ref=e295] [cursor=pointer]:
+        - /url: https://www.google.com/maps?cid=4448085509110956924
+    - generic [ref=e296]:
+      - figure "Asa Lucas Google review" [ref=e297]:
+        - generic "5 star review" [ref=e298]: 5.0 Google review
+        - blockquote [ref=e299]: "\"Reset + realign... yes, please!\""
+        - generic [ref=e300]:
+          - strong [ref=e301]: Asa Lucas
+          - generic [ref=e302]: Google review
+      - figure "Daniel Levy Google review" [ref=e303]:
+        - generic "5 star review" [ref=e304]: 5.0 Google review
+        - blockquote [ref=e305]: "\"The space is really beautiful and serene.\""
+        - generic [ref=e306]:
+          - strong [ref=e307]: Daniel Levy
+          - generic [ref=e308]: Google review
+      - figure "Hope Johnson Google review" [ref=e309]:
+        - generic "5 star review" [ref=e310]: 5.0 Google review
+        - blockquote [ref=e311]: "\"caring, nurturing, joyful\""
+        - generic [ref=e312]:
+          - strong [ref=e313]: Hope Johnson
+          - generic [ref=e314]: Google review
+      - figure "Simona Alladio Google review" [ref=e315]:
+        - generic "5 star review" [ref=e316]: 5.0 Google review
+        - blockquote [ref=e317]: "\"safe, held, supported, and guided\""
+        - generic [ref=e318]:
+          - strong [ref=e319]: Simona Alladio
+          - generic [ref=e320]: Google review
+  - region "Process" [ref=e321]:
+    - generic [ref=e322]:
+      - paragraph [ref=e323]: Process
+      - heading "Simple session options for your cleanse rhythm." [level=2] [ref=e324]
+    - generic [ref=e325]:
+      - article [ref=e326]:
+        - generic [ref=e327]:
+          - heading "Single Session" [level=3] [ref=e328]
+          - paragraph [ref=e329]: 45-60 minute colon hydrotherapy session with personalized support.
+        - strong [ref=e330]: $100
+      - article [ref=e331]:
+        - generic [ref=e332]:
+          - heading "3 Session Cleanse" [level=3] [ref=e333]
+          - paragraph [ref=e334]: A focused series for clients who want deeper cleanse support over multiple visits.
+        - strong [ref=e335]: $280
+      - article [ref=e336]:
+        - generic [ref=e337]:
+          - heading "10 Session Detox" [level=3] [ref=e338]
+          - paragraph [ref=e339]: An extended detox-focused package with dietary guidance and ongoing support.
+        - strong [ref=e340]: $900
+      - article [ref=e341]:
+        - generic [ref=e342]:
+          - img "Fast Like a Girl Certified" [ref=e343]
+          - heading "Fast Like a Girl Health Coaching" [level=3] [ref=e344]:
+            - link "Fast Like a Girl Health Coaching" [ref=e345] [cursor=pointer]:
+              - /url: "#fast-like-a-girl-bio"
+          - paragraph [ref=e346]: A 4-session coaching package for clients who want guided fasting, nutrition, and wellness support.
+        - strong [ref=e347]: $999
+      - article [ref=e348]:
+        - generic [ref=e349]:
+          - heading "Massage and Energy Work" [level=3] [ref=e350]
+          - paragraph [ref=e351]: Customized bodywork with optional essential oils, coconut oil, and gentle Access Bars energy work.
+        - strong [ref=e352]: $100-$140
+  - region "Before Your Visit" [ref=e353]:
+    - generic [ref=e354]:
+      - paragraph [ref=e355]: Before Your Visit
+      - heading "Complete your intake before your appointment." [level=2] [ref=e356]
+      - paragraph [ref=e357]: Save time when you arrive by filling out the secure online intake for your session. Fillable PDFs are also available if you prefer to complete and bring your intake with you.
+    - generic [ref=e358]:
+      - article [ref=e359]:
+        - heading "Colon Hydrotherapy" [level=3] [ref=e360]
+        - generic [ref=e361]:
+          - link "Online Form" [ref=e362] [cursor=pointer]:
+            - /url: https://docs.google.com/forms/d/e/1FAIpQLSfZHRYnxG_cTN4ytCSmFqN0BxGUVu15G7FukzzLsQlVRtd25g/viewform
+          - link "Fillable PDF" [ref=e363] [cursor=pointer]:
+            - /url: /preview/wellofwellness/forms/well-of-wellness-intake.pdf
+      - article [ref=e364]:
+        - heading "Restorative Touch & Energy Healing" [level=3] [ref=e365]
+        - generic [ref=e366]:
+          - link "Online Form" [ref=e367] [cursor=pointer]:
+            - /url: https://docs.google.com/forms/d/e/1FAIpQLSfBc2E54iYEzZcqtX1Y8oXm2SWMdDQMIK5ieN_jaqb0UGeA0g/viewform
+          - link "Fillable PDF" [ref=e368] [cursor=pointer]:
+            - /url: /preview/wellofwellness/forms/restorative-touch-energy-healing-intake.pdf
+  - region "FAQ" [ref=e369]:
+    - paragraph [ref=e370]: FAQ
+    - generic [ref=e371]:
+      - group [ref=e372]:
+        - generic "Where is Colon Hydrotherapy with Silke located?" [ref=e373] [cursor=pointer]
+      - group [ref=e374]:
+        - generic "How do I book?" [ref=e375] [cursor=pointer]
+      - group [ref=e376]:
+        - generic "What hours are listed?" [ref=e377] [cursor=pointer]
+  - generic [ref=e380]:
+    - heading "Ready to feel the difference?" [level=2] [ref=e381]
+    - paragraph [ref=e382]: Book your appointment today.
+    - link "Book Now" [ref=e383] [cursor=pointer]:
+      - /url: https://calendar.app.google/g94t1bTAxkctpe7H9
+  - generic [ref=e384]:
+    - link "Well of Wellness home" [ref=e385] [cursor=pointer]:
+      - /url: "#home"
+      - generic [ref=e386]:
+        - generic [ref=e387]: Well of Wellness Hawaii
+        - generic [ref=e388]: Colon Hydrotherapy with Silke
+    - navigation "Footer navigation" [ref=e389]:
+      - link "Home" [ref=e390] [cursor=pointer]:
+        - /url: "#home"
+      - link "About" [ref=e391] [cursor=pointer]:
+        - /url: "#about"
+      - link "Massage" [ref=e392] [cursor=pointer]:
+        - /url: "#massage"
+      - link "Shop" [ref=e393] [cursor=pointer]:
+        - /url: /preview/wellofwellness/shop
+      - link "Reviews" [ref=e394] [cursor=pointer]:
+        - /url: "#testimonials"
+      - link "Process" [ref=e395] [cursor=pointer]:
+        - /url: "#process"
+      - link "Intake" [ref=e396] [cursor=pointer]:
+        - /url: "#intake"
+      - link "FAQ" [ref=e397] [cursor=pointer]:
+        - /url: "#faq"
+    - generic [ref=e398]:
+      - link "(808) 430-8165" [ref=e399] [cursor=pointer]:
+        - /url: tel:+18084308165
+      - generic [ref=e400]: 13-3194 Pahoa Kalapana Rd, Pahoa, HI 96778
+    - paragraph [ref=e401]:
+      - text: Designed by
+      - link "dnalevity.com" [ref=e402] [cursor=pointer]:
+        - /url: https://dnalevity.com
+      - text: . All rights reserved 2026.

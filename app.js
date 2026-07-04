@@ -14,7 +14,7 @@ const DEFAULT_PORTAL_CONFIG = {
   showApiBaseLabel: true,
   authEyebrow: "Protected Portal",
   authTitle: "Project updates",
-  authCopy: "Enter the portal password to view and submit work requests.",
+  authCopy: "Sign in with your email and password to view and submit work requests.",
   heroEyebrow: "Client Delivery Portal",
   heroTitle: "Send work, watch it move, and keep the list growing.",
   heroCopy: "Add a task and keep building your list while work moves in the background.",
@@ -26,6 +26,7 @@ const DEFAULT_PORTAL_CONFIG = {
   agentLabel: "Team",
   externalReplyAuthorLabel: "Client",
   labels: {
+    email: "Email",
     password: "Password",
     title: "Title",
     details: "Details",
@@ -71,7 +72,8 @@ const DEFAULT_PORTAL_CONFIG = {
     requestQueued: "Todo item queued. It is in motion.",
     requestQueuedToast: "New todo item added. You can keep adding while work moves.",
     followUpCreatedToast: "New todo item created from that suggestion.",
-    passwordRequired: "Enter the password.",
+    passwordRequired: "Enter your password.",
+    emailRequired: "Enter your email address.",
     incorrectPassword: "Incorrect password.",
     blockedPublicText: "This item needs a bit of direction before it keeps moving.",
     failedPublicText: "This item hit a snag. Add a note and it can be reworked.",
@@ -178,6 +180,7 @@ function mergePortalConfig(base, override) {
 
 const PORTAL_CONFIG = mergePortalConfig(DEFAULT_PORTAL_CONFIG, window.PORTAL_TEMPLATE_CONFIG || {});
 const STORAGE_NAMESPACE = String(PORTAL_CONFIG.storageNamespace || "client-portal-template");
+const EMAIL_STORAGE_KEY = `${STORAGE_NAMESPACE}:email`;
 const PASSWORD_STORAGE_KEY = `${STORAGE_NAMESPACE}:password`;
 const API_BASE_STORAGE_KEY = `${STORAGE_NAMESPACE}:api-base`;
 const API_BASE = window.localStorage.getItem(API_BASE_STORAGE_KEY) || PORTAL_CONFIG.apiBase;
@@ -192,6 +195,7 @@ const SITE_ACTIONS_ENDPOINT = PORTAL_CONFIG.siteActionsPath
 
 const authShell = document.querySelector("#authShell");
 const authForm = document.querySelector("#authForm");
+const emailInput = document.querySelector("#emailInput");
 const passwordInput = document.querySelector("#passwordInput");
 const authStatus = document.querySelector("#authStatus");
 const requestForm = document.querySelector("#requestForm");
@@ -238,6 +242,7 @@ let lastRequestsSignature = "";
 let helperMessageTick = 0;
 let cachedRequests = [];
 let cachedWorkspace = null;
+let workspaceGateStatus = "idle";
 let pendingRevealRequestId = "";
 let activeRequestModalId = "";
 let pendingModalOpenRequestId = "";
@@ -309,6 +314,7 @@ function applyPortalConfig() {
   setText("#authEyebrow", PORTAL_CONFIG.authEyebrow);
   setText("#authTitle", PORTAL_CONFIG.authTitle);
   setText("#authCopy", PORTAL_CONFIG.authCopy);
+  setText("#emailLabel", PORTAL_CONFIG.labels.email || "Email");
   setText("#passwordLabel", PORTAL_CONFIG.labels.password);
   setText("#unlockButton", PORTAL_CONFIG.buttons.unlock);
   setText("#heroEyebrow", PORTAL_CONFIG.heroEyebrow);
@@ -348,6 +354,22 @@ function getPortalPassword() {
     || "";
 }
 
+function getPortalEmail() {
+  return window.sessionStorage.getItem(EMAIL_STORAGE_KEY)
+    || window.localStorage.getItem(EMAIL_STORAGE_KEY)
+    || "";
+}
+
+function setPortalEmail(value) {
+  if (value) {
+    window.sessionStorage.setItem(EMAIL_STORAGE_KEY, value);
+    window.localStorage.setItem(EMAIL_STORAGE_KEY, value);
+  } else {
+    window.sessionStorage.removeItem(EMAIL_STORAGE_KEY);
+    window.localStorage.removeItem(EMAIL_STORAGE_KEY);
+  }
+}
+
 function setPortalPassword(value) {
   if (value) {
     window.sessionStorage.setItem(PASSWORD_STORAGE_KEY, value);
@@ -360,11 +382,16 @@ function setPortalPassword(value) {
 
 function authHeaders() {
   const password = getPortalPassword();
-  return password ? { "X-Portal-Password": password } : {};
+  const email = getPortalEmail();
+  const headers = {};
+  if (email) headers["X-Portal-Email"] = email;
+  if (password) headers["X-Portal-Password"] = password;
+  return headers;
 }
 
 function setLockedState(locked) {
   authShell.classList.toggle("hidden", !locked);
+  document.body.classList.toggle("portal-locked", locked);
 }
 
 function formatDate(value) {
@@ -456,6 +483,12 @@ function getPublicWaitingMessage(request) {
   return waitingMessages[index];
 }
 
+function hasReviewableCompletionScreenshot(request) {
+  const screenshot = request?.completion_screenshot;
+  const verification = screenshot?.verification || request?.completion_screenshot_verification || {};
+  return Boolean(screenshot?.url) && String(verification?.status || "").toLowerCase() !== "failed";
+}
+
 function getCompletionSummary(request) {
   if (!isRequestCompleted(request)) return "";
   const explicitSummary = clampText(request?.completion_summary, 220);
@@ -467,7 +500,7 @@ function getCompletionSummary(request) {
   const publicStatus = clampText(request?.public_status_text, 220);
   if (publicStatus) return publicStatus;
 
-  if (request?.completion_screenshot?.url) {
+  if (hasReviewableCompletionScreenshot(request)) {
     return "The requested update is complete and a fresh screenshot is ready to review.";
   }
 
@@ -576,28 +609,106 @@ function renderWorkspaceActions() {
   }
 
   const actions = new Set(getWorkspaceAvailableActions());
+  const recoveryLocked = ["checking", "syncing"].includes(workspaceGateStatus);
+  const locked = isWorkspaceGateLocked();
   const syncBusy = workspaceActionsInFlight.has("sync");
   const previewBusy = workspaceActionsInFlight.has("preview");
   const discardBusy = workspaceActionsInFlight.has("discard");
   const deployBusy = workspaceActionsInFlight.has("deploy");
 
-  syncButton.disabled = syncBusy || !actions.has("sync");
+  syncButton.disabled = syncBusy || recoveryLocked || !actions.has("sync");
   syncButton.textContent = syncBusy
     ? PORTAL_CONFIG.buttons.syncBusy
     : PORTAL_CONFIG.buttons.sync;
-  previewButton.disabled = previewBusy || !actions.has("preview");
+  previewButton.disabled = previewBusy || locked || !actions.has("preview");
   previewButton.textContent = previewBusy
     ? PORTAL_CONFIG.buttons.previewBusy
     : PORTAL_CONFIG.buttons.preview;
-  discardButton.disabled = discardBusy || !Boolean(cachedWorkspace?.dirty) || !actions.has("discard");
+  discardButton.disabled = discardBusy || locked || !Boolean(cachedWorkspace?.dirty) || !actions.has("discard");
   discardButton.textContent = discardBusy
     ? PORTAL_CONFIG.buttons.discardBusy
     : PORTAL_CONFIG.buttons.discard;
 
-  deployButton.disabled = deployBusy || !Boolean(cachedWorkspace?.dirty) || !actions.has("deploy");
+  deployButton.disabled = deployBusy || locked || !Boolean(cachedWorkspace?.dirty) || !actions.has("deploy");
   deployButton.textContent = deployBusy
     ? PORTAL_CONFIG.buttons.deployBusy
     : PORTAL_CONFIG.buttons.deploy;
+}
+
+function workspaceRemoteBehind() {
+  const value = Number(cachedWorkspace?.behind || 0);
+  return Number.isFinite(value) && value > 0 ? value : 0;
+}
+
+function isWorkspaceGateLocked() {
+  return ["checking", "syncing", "blocked"].includes(workspaceGateStatus);
+}
+
+function workspaceGateMessage() {
+  if (workspaceGateStatus === "checking") {
+    return "Checking GitHub for the latest version...";
+  }
+  if (workspaceGateStatus === "syncing") {
+    return "Updating this workspace from GitHub before it can be used...";
+  }
+  return "This workspace is blocked until it updates from GitHub.";
+}
+
+async function ensureWorkspaceCurrent() {
+  if (!supportsWorkspaceActions() || !cachedWorkspace) {
+    workspaceGateStatus = "ready";
+    return;
+  }
+  workspaceGateStatus = "checking";
+  renderWorkspaceActions();
+  const remoteError = String(cachedWorkspace.remote_error || "").trim();
+  if (remoteError) {
+    workspaceGateStatus = "blocked";
+    showToast(`Unable to confirm the latest GitHub version: ${remoteError}`, "warn");
+    renderWorkspaceActions();
+    return;
+  }
+  const behind = workspaceRemoteBehind();
+  if (!behind) {
+    workspaceGateStatus = "ready";
+    renderWorkspaceActions();
+    return;
+  }
+
+  workspaceGateStatus = "syncing";
+  workspaceActionsInFlight.add("sync");
+  renderWorkspaceActions();
+  showToast(`Updating from GitHub before use (${behind} commit${behind === 1 ? "" : "s"} behind)...`, "info");
+  try {
+    const response = await fetch(SITE_ACTIONS_ENDPOINT, {
+      method: "POST",
+      headers: {
+        ...authHeaders(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ action: "sync" }),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      if (response.status === 401) {
+        setPortalEmail("");
+        setPortalPassword("");
+        setLockedState(true);
+        throw new Error(PORTAL_CONFIG.messages.passwordRequired);
+      }
+      throw new Error(payload.error || PORTAL_CONFIG.messages.syncError);
+    }
+    syncWorkspace(payload.workspace);
+    workspaceGateStatus = "ready";
+    showToast(PORTAL_CONFIG.messages.syncSuccessToast, "success");
+    await fetchRequests();
+  } catch (error) {
+    workspaceGateStatus = "blocked";
+    showToast(`Workspace blocked: ${error.message || PORTAL_CONFIG.messages.syncError}`, "warn");
+  } finally {
+    workspaceActionsInFlight.delete("sync");
+    renderWorkspaceActions();
+  }
 }
 
 function showToast(message, tone = "info") {
@@ -749,7 +860,7 @@ function renderRequestDetailContent(request) {
   const canReply = isCompleted || Boolean(request.has_unprocessed_replies);
   const replies = Array.isArray(request.replies) ? request.replies : [];
   const attachments = Array.isArray(request.attachments) ? request.attachments : [];
-  const completionScreenshot = request.completion_screenshot || null;
+  const completionScreenshot = hasReviewableCompletionScreenshot(request) ? request.completion_screenshot : null;
 
   return `
     ${request.details ? `
@@ -1024,6 +1135,7 @@ async function fetchRequests() {
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
       if (response.status === 401) {
+        setPortalEmail("");
         setPortalPassword("");
         setLockedState(true);
         throw new Error(PORTAL_CONFIG.messages.passwordRequired);
@@ -1058,6 +1170,8 @@ async function fetchWorkspace() {
   if (!supportsWorkspaceActions() || WORKSPACE_ENDPOINT === REQUESTS_ENDPOINT) {
     return;
   }
+  workspaceGateStatus = "checking";
+  renderWorkspaceActions();
 
   const response = await fetch(WORKSPACE_ENDPOINT, {
     cache: "no-store",
@@ -1066,6 +1180,7 @@ async function fetchWorkspace() {
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
     if (response.status === 401) {
+      setPortalEmail("");
       setPortalPassword("");
       setLockedState(true);
       throw new Error(PORTAL_CONFIG.messages.passwordRequired);
@@ -1074,10 +1189,15 @@ async function fetchWorkspace() {
   }
 
   syncWorkspace(payload.workspace);
+  await ensureWorkspaceCurrent();
 }
 
 async function submitRequest(event) {
   event.preventDefault();
+  if (isWorkspaceGateLocked()) {
+    formStatus.textContent = workspaceGateMessage();
+    return;
+  }
   formStatus.textContent = "";
   submitButton.disabled = true;
   submitButton.textContent = PORTAL_CONFIG.buttons.submitBusy;
@@ -1101,6 +1221,7 @@ async function submitRequest(event) {
 
     if (!response.ok) {
       if (response.status === 401) {
+        setPortalEmail("");
         setPortalPassword("");
         setLockedState(true);
         throw new Error(PORTAL_CONFIG.messages.passwordRequired);
@@ -1162,6 +1283,11 @@ function closeReplyDialog() {
 
 async function submitReply(event) {
   event.preventDefault();
+  if (isWorkspaceGateLocked()) {
+    replyFormStatus.textContent = workspaceGateMessage();
+    replyFormStatus.className = "reply-form-status error";
+    return;
+  }
 
   const text = replyTextArea.value.trim();
   if (!text && replyFilesInput.files.length === 0) {
@@ -1198,6 +1324,7 @@ async function submitReply(event) {
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
       if (response.status === 401) {
+        setPortalEmail("");
         setPortalPassword("");
         setLockedState(true);
         closeReplyDialog();
@@ -1228,6 +1355,10 @@ function getSuggestionKey(requestId, suggestionIdOrIndex) {
 
 async function createFollowUpTodo(event) {
   const button = event.currentTarget;
+  if (isWorkspaceGateLocked()) {
+    showToast(workspaceGateMessage(), "warn");
+    return;
+  }
   const requestId = button.dataset.requestId;
   const suggestionIndex = Number(button.dataset.suggestionIndex);
   const request = cachedRequests.find(item => getRequestId(item) === requestId);
@@ -1265,6 +1396,7 @@ async function createFollowUpTodo(event) {
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
       if (response.status === 401) {
+        setPortalEmail("");
         setPortalPassword("");
         setLockedState(true);
         throw new Error(PORTAL_CONFIG.messages.passwordRequired);
@@ -1289,6 +1421,10 @@ async function createFollowUpTodo(event) {
 
 async function handleRequestAction(event) {
   const button = event.currentTarget;
+  if (isWorkspaceGateLocked()) {
+    showToast(workspaceGateMessage(), "warn");
+    return;
+  }
   const requestId = String(button.dataset.requestId || "");
   const action = String(button.dataset.requestAction || "").toLowerCase();
   if (!requestId || !["archive", "cancel"].includes(action)) {
@@ -1315,6 +1451,7 @@ async function handleRequestAction(event) {
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
       if (response.status === 401) {
+        setPortalEmail("");
         setPortalPassword("");
         setLockedState(true);
         throw new Error(PORTAL_CONFIG.messages.passwordRequired);
@@ -1349,6 +1486,10 @@ async function handleWorkspaceAction(event) {
   if (workspaceActionsInFlight.has(action)) {
     return;
   }
+  if (isWorkspaceGateLocked() && action !== "sync") {
+    showToast(workspaceGateMessage(), "warn");
+    return;
+  }
 
   workspaceActionsInFlight.add(action);
   renderWorkspaceActions();
@@ -1365,6 +1506,7 @@ async function handleWorkspaceAction(event) {
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
       if (response.status === 401) {
+        setPortalEmail("");
         setPortalPassword("");
         setLockedState(true);
         throw new Error(PORTAL_CONFIG.messages.passwordRequired);
@@ -1428,6 +1570,7 @@ function startPolling() {
       document.visibilityState === "hidden"
       || !replyDialogShell.classList.contains("hidden")
       || !requestModalShell.classList.contains("hidden")
+      || !getPortalPassword()
     ) {
       return;
     }
@@ -1449,14 +1592,21 @@ function startHelperMessageRotation() {
 
 async function unlockPortal(event) {
   event.preventDefault();
+  const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
   authStatus.textContent = "";
+
+  if (!email) {
+    authStatus.textContent = PORTAL_CONFIG.messages.emailRequired || "Enter your email address.";
+    return;
+  }
 
   if (!password) {
     authStatus.textContent = PORTAL_CONFIG.messages.passwordRequired;
     return;
   }
 
+  setPortalEmail(email);
   setPortalPassword(password);
   await fetchRequests();
 
@@ -1518,6 +1668,7 @@ renderPriorityOptions();
 updateSelectedFiles();
 updateReplySelectedFiles();
 renderWorkspaceActions();
+emailInput.value = getPortalEmail();
 setLockedState(!getPortalPassword());
 
 if (getPortalPassword()) {

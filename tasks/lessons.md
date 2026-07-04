@@ -1,5 +1,22 @@
 # Lessons
 
+## 2026-05-14
+
+- Smart Todo client login should be presented as email plus password. Do not describe the user-facing gate as a single shared portal password unless the target is explicitly a legacy password-only portal.
+- If a client text number is not found, report the missing phone number instead of treating an email-address iMessage handle as equivalent to a requested text message unless the user explicitly asked for that handle.
+- When the user provides corrected client contact info, immediately update the CRM contact record and activity timeline so future outreach uses the corrected channel.
+- For major UI redesigns, do not replace the public live Smart Todo surface first. Ship the new experience behind a secret link or feature gate, verify the public route still renders the current production UI, and only promote it after explicit approval.
+- When using `serve -s`, do not rely on arbitrary `.html` or directory routes for hidden variants because SPA fallback can rewrite them to the root app. Prefer a query-gated loader or an explicitly verified route.
+- Do not ship an end-user freshness gate that can only fail closed. If Git sync is blocked by dirty local changes, the backend must automatically preserve those changes in a recoverable stash/branch and continue updating, while the frontend keeps at least refresh/retry feedback available.
+- Do not use browser `SpeechRecognition` for Smart Todo dictated requests. It can auto-end with `no-speech` before the user finishes; record audio until the user explicitly presses Stop, transcribe server-side with local Whisper, and delete temporary audio artifacts after transcription.
+- When integrating a local CLI, verify the exact installed binary's flags with a real input file on the target server. Do not assume flags from another Whisper implementation or version; unsupported flags can exit without an error code and leave the app with empty output.
+- Chat-style Smart Todo interactions must render the user's submitted message optimistically before waiting for Cowork. Waiting for the task/reply API response makes the send action feel broken even when the backend is working.
+- Do not start parallel Cowork agent tasks for follow-up replies on an already running Smart Todo request. Queue those replies visibly, let users delete queued items, and promote one queued reply after the active task leaves `queued`/`running`.
+- For Smart Todo multipart submits, never rebuild upload payloads from the raw form file input after rendering. Use the app-tracked file list, because text-only browser forms can still expose an empty file part with `filename=""` that Cowork rejects.
+- When a user supplies the missing phone number after a credential-delivery blocker, immediately update the live CRM phone/preferred channel, record an activity, then send through the requested SMS path using the already-verified credentials.
+- For Smart Todo chat UI fixes, verify both the request-history card count and the selected-thread transcript depth. The request list can be complete while the thread still hides older agent messages if the API only exposes `latest_message`.
+- After Smart Todo tenant provisioning or backend reload work, re-check every named client account with `list_memberships_for_user` and the live `/api/auth/me` membership payload. A valid user plus valid tenant is still broken if `portal_memberships.json` lost the client row.
+
 ## 2026-03-13
 
 - When targeting `piko.local`, do not assume the local macOS username is the SSH username. Verify or use the user-provided SSH target explicitly, currently `dna@piko.local`.

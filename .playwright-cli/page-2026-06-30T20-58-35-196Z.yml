@@ -1,0 +1,111 @@
+- generic [ref=e145]:
+  - complementary [ref=e146]:
+    - generic [ref=e148]:
+      - paragraph [ref=e149]: Smart Todo
+      - heading "Well of Wellness" [level=1] [ref=e150]
+    - generic [ref=e151]:
+      - generic [ref=e152]: Workspace
+      - combobox "Workspace" [ref=e153]:
+        - option "Well of Wellness · client_user" [selected]
+    - button "New Chat" [ref=e154] [cursor=pointer]
+    - navigation "Request history" [ref=e155]:
+      - button "succulent pillar. succulent pillar. $18 Add it as a product to match the style of the others In Progress 6/30/2026, 10:44:57 AM" [ref=e156] [cursor=pointer]:
+        - generic [ref=e157]: succulent pillar.
+        - generic [ref=e158]: succulent pillar. $18 Add it as a product to match the style of the others
+        - generic [ref=e159]:
+          - generic [ref=e160]: In Progress
+          - generic [ref=e161]: 6/30/2026, 10:44:57 AM
+      - button "big cat candle dollar eighteen make it the same style then the other candles and added to produce [BLANK_AUDIO] big cat candle dollar eighteen make it the same style then the other candles and added to pr Done 6/30/2026, 10:49:57 AM" [ref=e162] [cursor=pointer]:
+        - generic [ref=e163]: big cat candle dollar eighteen make it the same style then the other candles and added to produce [BLANK_AUDIO]
+        - generic [ref=e164]: big cat candle dollar eighteen make it the same style then the other candles and added to pr
+        - generic [ref=e165]:
+          - generic [ref=e166]: Done
+          - generic [ref=e167]: 6/30/2026, 10:49:57 AM
+      - button "hawaiian hula dancer $ 16. hawaiian hula dancer $ 16. Add to product and make it the same style then the other candles Queued 6/30/2026, 10:46:52 AM" [ref=e168] [cursor=pointer]:
+        - generic [ref=e169]: hawaiian hula dancer $ 16.
+        - generic [ref=e170]: hawaiian hula dancer $ 16. Add to product and make it the same style then the other candles
+        - generic [ref=e171]:
+          - generic [ref=e172]: Queued
+          - generic [ref=e173]: 6/30/2026, 10:46:52 AM
+      - button "add this pineapple candle as a product $20 .. add this pineapple candle as a product $20 .. image should be edited in same style as the ot Queued 6/30/2026, 10:41:07 AM" [ref=e174] [cursor=pointer]:
+        - generic [ref=e175]: add this pineapple candle as a product $20 ..
+        - generic [ref=e176]: add this pineapple candle as a product $20 .. image should be edited in same style as the ot
+        - generic [ref=e177]:
+          - generic [ref=e178]: Queued
+          - generic [ref=e179]: 6/30/2026, 10:41:07 AM
+      - button "Add this is a small 'Lovers' candle. Add this is a small 'Lovers' candle. it's $8.. edit the image so it matches the style of the Queued 6/30/2026, 10:39:42 AM" [ref=e180] [cursor=pointer]:
+        - generic [ref=e181]: Add this is a small 'Lovers' candle.
+        - generic [ref=e182]: Add this is a small 'Lovers' candle. it's $8.. edit the image so it matches the style of the
+        - generic [ref=e183]:
+          - generic [ref=e184]: Queued
+          - generic [ref=e185]: 6/30/2026, 10:39:42 AM
+      - button "So these are all different images of the Mother Maiden Chrome candle. So these are all different images of the Mother Maiden Chrome candle. I want to make them al Queued 6/30/2026, 10:37:13 AM" [ref=e186] [cursor=pointer]:
+        - generic [ref=e187]: So these are all different images of the Mother Maiden Chrome candle.
+        - generic [ref=e188]: So these are all different images of the Mother Maiden Chrome candle. I want to make them al
+        - generic [ref=e189]:
+          - generic [ref=e190]: Queued
+          - generic [ref=e191]: 6/30/2026, 10:37:13 AM
+    - generic [ref=e192]:
+      - generic [ref=e193]: Silke Korfmacher
+      - button "Logout" [ref=e195] [cursor=pointer]
+  - main [ref=e196]:
+    - generic [ref=e197]:
+      - generic [ref=e198]:
+        - paragraph [ref=e199]: Selected Thread
+        - heading "big cat candle dollar eighteen make it the same style then the other candles and added to produce [BLANK_AUDIO]" [level=2] [ref=e200]
+      - generic [ref=e201]:
+        - button "Sync" [ref=e202] [cursor=pointer]
+        - button "Preview" [ref=e203] [cursor=pointer]
+        - button "Discard Changes" [ref=e204] [cursor=pointer]
+        - button "Deploy" [ref=e205] [cursor=pointer]
+        - button "Refresh" [ref=e206] [cursor=pointer]
+    - generic [ref=e207]:
+      - generic [ref=e208]: "Repo: /home/dna/Code/wellofwellness"
+      - generic [ref=e209]: "Branch: main"
+      - generic [ref=e210]:
+        - text: "Preview:"
+        - link "https://piko.dnalevity.com/preview/wellofwellness" [ref=e211] [cursor=pointer]:
+          - /url: https://piko.dnalevity.com/preview/wellofwellness?_preview=1782853113786
+    - region "Selected request conversation" [ref=e213]:
+      - generic [ref=e214]:
+        - generic [ref=e215]:
+          - paragraph [ref=e216]: Request Thread
+          - heading "big cat candle dollar eighteen make it the same style then the other candles and added to produce [BLANK_AUDIO]" [level=2] [ref=e217]
+        - generic [ref=e218]:
+          - generic [ref=e219]: Done
+          - generic [ref=e220]: Normal
+      - article [ref=e221]:
+        - generic [ref=e222]: You
+        - generic [ref=e223]:
+          - generic [ref=e224]:
+            - strong [ref=e225]: You
+            - generic [ref=e226]: 6/30/2026, 10:49:57 AM
+          - paragraph [ref=e227]: big cat candle dollar eighteen make it the same style then the other candles and added to produce [BLANK_AUDIO]
+          - link "IMG_20260620_114116117.jpg" [ref=e229] [cursor=pointer]:
+            - /url: https://cowork-api.dnalevity.com/portal-assets/wellofwellness/c664afb8-7609-4742-abc6-db6374663319-a630ba4f7d-IMG_20260620_114116117.jpg
+      - article [ref=e230]:
+        - generic [ref=e231]: AI
+        - generic [ref=e232]:
+          - generic [ref=e233]:
+            - strong [ref=e234]: Smart Todo
+            - generic [ref=e235]: 6/30/2026, 10:55:16 AM
+          - paragraph [ref=e236]: Implemented the Big Cat Candle in
+          - generic [ref=e237]:
+            - generic [ref=e238]: What was done
+            - paragraph [ref=e239]: Implemented the Big Cat Candle in
+          - generic [ref=e240]:
+            - generic [ref=e241]: Screenshot
+            - link "Updated preview for big cat candle dollar eighteen make it the same style then the other candles and added to produce [BLANK_AUDIO]" [ref=e242] [cursor=pointer]:
+              - /url: https://cowork-api.dnalevity.com/portal-assets/wellofwellness/c664afb8-7609-4742-abc6-db6374663319-completion-screenshot.png
+              - img "Updated preview for big cat candle dollar eighteen make it the same style then the other candles and added to produce [BLANK_AUDIO]" [ref=e243]
+          - button "Archive" [ref=e245] [cursor=pointer]
+    - generic [ref=e246]:
+      - generic [ref=e248]: Replying to big cat candle dollar eighteen make it the same style then the other candles and added to produce [BLANK_AUDIO]
+      - textbox "Send a follow-up or clarification" [ref=e249]
+      - button "Choose File" [ref=e250]
+      - generic [ref=e251]:
+        - button "Attach" [ref=e252] [cursor=pointer]
+        - button "Record Audio" [ref=e253] [cursor=pointer]
+        - button "Send" [ref=e254] [cursor=pointer]
+      - paragraph [ref=e255]: No files selected.
+      - paragraph [ref=e256]
