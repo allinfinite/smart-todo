@@ -1,0 +1,172 @@
+- main [ref=f13e2]:
+  - generic [ref=f13e3]:
+    - navigation "Primary navigation" [ref=f13e7]:
+      - link "Relax & Roam Travel home" [ref=f13e8] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel
+        - img "Relax & Roam Travel" [ref=f13e9]
+      - generic [ref=f13e10]:
+        - link "About" [ref=f13e11] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/about
+        - link "Journeys" [ref=f13e12] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/itineraries
+        - link "Services" [ref=f13e13] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services
+        - link "FAQ" [ref=f13e14] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services#faq
+        - link "Blog" [ref=f13e15] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog
+        - link "Contact" [ref=f13e16] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/contact
+      - link "Book a consultation" [ref=f13e17] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f13e18]:
+      - generic [ref=f13e19]:
+        - paragraph [ref=f13e20]: Journeys & sample itineraries
+        - heading "Trips with rhythm, texture, and a point of view." [level=1] [ref=f13e21]
+        - paragraph [ref=f13e22]: Explore the shape of a Relax & Roam itinerary - smart routing, standout hotels, tucked-away meals, and enough breathing room for the trip to feel personal.
+        - generic [ref=f13e23]:
+          - link "Start planning" [ref=f13e24] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/contact
+          - link "View samples" [ref=f13e25] [cursor=pointer]:
+            - /url: "#sample-itineraries"
+      - complementary "Featured itinerary" [ref=f13e26]:
+        - paragraph [ref=f13e27]: Featured sample
+        - heading "Adventure Through Portugal" [level=2] [ref=f13e28]
+        - paragraph [ref=f13e29]: An eight-day Portugal itinerary through the Douro Valley, Porto, Aveiro, Coimbra, Lisbon, Sintra, and Cascais.
+        - generic [ref=f13e30]:
+          - generic [ref=f13e31]: Portugal
+          - generic [ref=f13e32]: 8 days
+        - link "Open the itinerary" [ref=f13e33] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/itineraries/adventure-through-portugal
+    - generic "Planning elements" [ref=f13e34]:
+      - generic [ref=f13e35]: Private guides
+      - generic [ref=f13e36]: Hotel strategy
+      - generic [ref=f13e37]: Dining texture
+      - generic [ref=f13e38]: Transfer timing
+      - generic [ref=f13e39]: Room to wander
+  - generic [ref=f13e40]:
+    - generic [ref=f13e41]:
+      - generic [ref=f13e42]:
+        - paragraph [ref=f13e43]: Trip styles
+        - heading "Each trip gets its own mood, pace, and logic." [level=2] [ref=f13e44]
+      - paragraph [ref=f13e45]: Beach escapes, cultural routes, milestone weeks, food-focused journeys - the category is only the starting point.
+    - generic [ref=f13e46]:
+      - article [ref=f13e47]:
+        - generic [ref=f13e49]:
+          - heading "Japan with rhythm" [level=3] [ref=f13e50]
+          - paragraph [ref=f13e51]: Thoughtful routing, standout hotels, and the right mix of city energy and restorative quiet.
+      - article [ref=f13e52]:
+        - generic [ref=f13e54]:
+          - heading "Greece at ease" [level=3] [ref=f13e55]
+          - paragraph [ref=f13e56]: Island pacing, elevated stays, and enough structure to feel effortless rather than overpacked.
+      - article [ref=f13e57]:
+        - generic [ref=f13e59]:
+          - heading "Italy with depth" [level=3] [ref=f13e60]
+          - paragraph [ref=f13e61]: The vineyard lunches, the perfectly placed hotels, the restaurants only locals know about. Italy is best lived slowly - and we'll make sure every day earns its place on the itinerary.
+      - article [ref=f13e62]:
+        - generic [ref=f13e64]:
+          - heading "Move. Explore. Breathe." [level=3] [ref=f13e65]
+          - paragraph [ref=f13e66]: Active days, beautiful places, and enough room to actually enjoy both.
+      - article [ref=f13e67]:
+        - generic [ref=f13e69]:
+          - heading "Africa, unforgettable" [level=3] [ref=f13e70]
+          - paragraph [ref=f13e71]: The bush at dawn, the silence between game drives, and a lodge that feels like it was placed there just for you. Africa doesn't just meet expectations - it redefines them.
+  - generic [ref=f13e72]:
+    - generic [ref=f13e73]:
+      - generic [ref=f13e74]:
+        - paragraph [ref=f13e75]: Planning philosophy
+        - heading "The best trips leave room for both movement and pause." [level=2] [ref=f13e76]
+      - paragraph [ref=f13e77]: We look for the right splurge, the lesser-known gem, the hidden restaurant, the quiet hotel moment, and the logistics that keep the trip from feeling frantic.
+    - generic [ref=f13e78]:
+      - article [ref=f13e79]:
+        - generic [ref=f13e80]: "01"
+        - heading "Hotels with purpose" [level=3] [ref=f13e81]
+        - paragraph [ref=f13e82]: The stay should support the rhythm of the trip, not just look beautiful in photos.
+      - article [ref=f13e83]:
+        - generic [ref=f13e84]: "02"
+        - heading "Experiences with texture" [level=3] [ref=f13e85]
+        - paragraph [ref=f13e86]: Restaurants, guides, activities, and downtime are chosen around how you want the trip to feel.
+      - article [ref=f13e87]:
+        - generic [ref=f13e88]: "03"
+        - heading "Logistics that disappear" [level=3] [ref=f13e89]
+        - paragraph [ref=f13e90]: Transfers, timing, routes, and reservations are handled so the journey feels easier.
+  - region "Relax & Roam Travel itineraries" [ref=f13e91]:
+    - generic [ref=f13e92]:
+      - generic [ref=f13e93]:
+        - paragraph [ref=f13e94]: Sample itineraries
+        - heading "A closer look at how a trip can come together day by day." [level=2] [ref=f13e95]
+      - paragraph [ref=f13e96]: These examples show our approach to routing, stays, activity pacing, and destination notes.
+    - generic [ref=f13e97]:
+      - article [ref=f13e98]:
+        - link "Adventure Through Portugal" [ref=f13e99] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/itineraries/adventure-through-portugal
+        - generic [ref=f13e100]:
+          - paragraph [ref=f13e101]: Sample 01 / 8 days
+          - heading [level=2] [ref=f13e102]:
+            - link "Adventure Through Portugal" [ref=f13e103] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/itineraries/adventure-through-portugal
+          - paragraph [ref=f13e104]: An eight-day Portugal itinerary through the Douro Valley, Porto, Aveiro, Coimbra, Lisbon, Sintra, and Cascais.
+          - generic "Adventure Through Portugal highlights" [ref=f13e105]:
+            - generic [ref=f13e106]: Douro Valley arrival and Six Senses stay
+            - generic [ref=f13e107]: River cruise and wine experience
+            - generic [ref=f13e108]: Serra do Marão Jeep adventure
+          - link "View itinerary" [ref=f13e109] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/itineraries/adventure-through-portugal
+      - article [ref=f13e110]:
+        - link "4 Nights in Sardinia" [ref=f13e111] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/itineraries/sardinia-four-nights
+        - generic [ref=f13e112]:
+          - paragraph [ref=f13e113]: Sample 02 / 4 nights
+          - heading [level=2] [ref=f13e114]:
+            - link "4 Nights in Sardinia" [ref=f13e115] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/itineraries/sardinia-four-nights
+          - paragraph [ref=f13e116]: A Sardinia itinerary balancing arrival logistics, Su Gologone, archaeological touring, wine, Porto Cervo, and La Maddalena.
+          - generic "4 Nights in Sardinia highlights" [ref=f13e117]:
+            - generic [ref=f13e118]: Su Gologone arrival and experiential dining
+            - generic [ref=f13e119]: Orgosolo and archaeological touring
+            - generic [ref=f13e120]: Wine tasting and coastal elegance
+          - link "View itinerary" [ref=f13e121] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/itineraries/sardinia-four-nights
+      - article [ref=f13e122]:
+        - link "St. Barths Sample Itinerary" [ref=f13e123] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/itineraries/st-barths-sample-itinerary
+        - generic [ref=f13e124]:
+          - paragraph [ref=f13e125]: Sample 03 / 4 days
+          - heading [level=2] [ref=f13e126]:
+            - link "St. Barths Sample Itinerary" [ref=f13e127] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/itineraries/st-barths-sample-itinerary
+          - paragraph [ref=f13e128]: A St. Barths sample itinerary with hotel, beach, shopping, dining, nightlife, yacht, and Sunday beach club recommendations.
+          - generic "St. Barths Sample Itinerary highlights" [ref=f13e129]:
+            - generic [ref=f13e130]: Hotel and beach club recommendations
+            - generic [ref=f13e131]: Colombier, Saline, and snorkeling ideas
+            - generic [ref=f13e132]: Gustavia shopping and harbor dinners
+          - link "View itinerary" [ref=f13e133] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/itineraries/st-barths-sample-itinerary
+  - generic [ref=f13e134]:
+    - generic [ref=f13e135]:
+      - img "Relax & Roam Travel" [ref=f13e136]
+      - paragraph [ref=f13e137]: Destination expertise, hotel strategy, and planning support for travelers who want the trip to feel seamless from the start.
+    - generic [ref=f13e139]:
+      - generic [ref=f13e140]:
+        - paragraph [ref=f13e141]: Travel notes
+        - heading "The good stuff." [level=3] [ref=f13e142]
+        - paragraph [ref=f13e143]: Hotels, destinations, and travel inspiration - curated and delivered straight to your inbox.
+      - generic [ref=f13e145]:
+        - text: Email
+        - textbox "Email" [ref=f13e146]
+      - generic [ref=f13e147]:
+        - button "Join" [ref=f13e148]
+        - paragraph [ref=f13e149]: Your information is used only for Relax & Roam Travel follow-up and updates.
+    - generic [ref=f13e150]:
+      - link "sandra.hodes@fora.travel" [ref=f13e151] [cursor=pointer]:
+        - /url: mailto:sandra.hodes@fora.travel
+      - link "(954) 401-8794" [ref=f13e156] [cursor=pointer]:
+        - /url: tel:+19544018794
+      - link "Instagram" [ref=f13e157] [cursor=pointer]:
+        - /url: https://www.instagram.com/relax_androamtravel/
+      - link "Book Consultation" [ref=f13e163] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f13e164]:
+      - generic [ref=f13e165]: © 2026 Relax & Roam Travel. All rights reserved.
+      - link "Website by DNA Levity" [ref=f13e166] [cursor=pointer]:
+        - /url: https://dnalevity.com

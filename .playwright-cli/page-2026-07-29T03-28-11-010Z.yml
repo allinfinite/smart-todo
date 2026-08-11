@@ -1,0 +1,190 @@
+- main [ref=f18e2]:
+  - generic [ref=f18e3]:
+    - navigation "Primary navigation" [ref=f18e7]:
+      - link "Relax & Roam Travel home" [ref=f18e8] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel
+        - img "Relax & Roam Travel" [ref=f18e9]
+      - generic [ref=f18e10]:
+        - link "About" [ref=f18e11] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/about
+        - link "Journeys" [ref=f18e12] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/itineraries
+        - link "Services" [ref=f18e13] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services
+        - link "FAQ" [ref=f18e14] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services#faq
+        - link "Blog" [ref=f18e15] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog
+        - link "Contact" [ref=f18e16] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/contact
+      - link "Book a consultation" [ref=f18e17] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f18e19]:
+      - link "Back to itineraries" [ref=f18e20] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/itineraries
+      - paragraph [ref=f18e21]: Portugal
+      - heading "Adventure Through Portugal" [level=1] [ref=f18e22]
+      - paragraph [ref=f18e23]: An eight-day Portugal itinerary through the Douro Valley, Porto, Aveiro, Coimbra, Lisbon, Sintra, and Cascais.
+      - list "Trip facts" [ref=f18e24]:
+        - listitem [ref=f18e25]: 8 days
+        - listitem [ref=f18e26]: Portugal
+        - listitem [ref=f18e27]: 5 planned moments
+  - article [ref=f18e28]:
+    - generic [ref=f18e29]:
+      - paragraph [ref=f18e30]: Sample itinerary
+      - heading "A day-by-day look at the trip architecture." [level=2] [ref=f18e31]
+      - paragraph [ref=f18e32]: This sample shows the balance of hotels, routing, activities, and downtime that makes a custom itinerary feel easy once travelers are on the ground.
+    - complementary "Itinerary details" [ref=f18e33]:
+      - generic [ref=f18e34]:
+        - paragraph [ref=f18e35]: Trip frame
+        - list [ref=f18e36]:
+          - listitem [ref=f18e37]: 8 days
+          - listitem [ref=f18e38]: Portugal
+      - generic [ref=f18e39]:
+        - paragraph [ref=f18e40]: Highlights
+        - list [ref=f18e41]:
+          - listitem [ref=f18e42]: Douro Valley arrival and Six Senses stay
+          - listitem [ref=f18e43]: River cruise and wine experience
+          - listitem [ref=f18e44]: Serra do Marão Jeep adventure
+          - listitem [ref=f18e45]: Lisbon cooking class and sidecar tour
+          - listitem [ref=f18e46]: Sintra, Cascais, Pena Palace, and Fado farewell
+      - generic [ref=f18e47]:
+        - paragraph [ref=f18e48]: Ready to plan?
+        - paragraph [ref=f18e49]: Use the consultation form when you want Relax & Roam Travel to turn a trip idea into a clear plan.
+        - link "Book a consultation" [ref=f18e50] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f18e51]:
+      - heading "Trip Summary" [level=2] [ref=f18e52]
+      - paragraph [ref=f18e53]: Day Activities
+      - paragraph [ref=f18e54]: Arrival in Porto
+      - paragraph [ref=f18e55]: River Cruise Adventure
+      - paragraph [ref=f18e56]: Serra do Marão Adventure
+      - paragraph [ref=f18e57]: Wine Tasting Experience
+      - paragraph [ref=f18e58]: Journey to Aveiro & Coimbra
+      - paragraph [ref=f18e59]: Lisbon Cooking Class
+      - paragraph [ref=f18e60]: Pena Palace Visit
+      - paragraph [ref=f18e61]: Departure
+      - 'heading "Afternoon: Arrival" [level=3] [ref=f18e62]'
+      - paragraph [ref=f18e63]: "1:00 PM: Private Transfer from Porto Airport to hotel"
+      - paragraph [ref=f18e64]: "4:00 PM: Six Senses Douro Valley Check-in"
+      - paragraph [ref=f18e65]: "4:30 PM - 6:30 PM: Alchemy Bar Workshop"
+      - heading "Six Senses Douro Valley" [level=2] [ref=f18e66]
+      - paragraph [ref=f18e67]: Samodães, Viseu district, Portugal | 5 star hotel
+      - paragraph [ref=f18e68]: Address
+      - paragraph [ref=f18e69]: Quinta Vale de Abrão, Samodães, Viseu district, 5100-758, Portugal
+      - paragraph [ref=f18e70]: Description
+      - paragraph [ref=f18e71]: Six Senses Douro Valley, set within a UNESCO World Heritage region, overlooks the River Douro as it meanders through the world’s oldest demarcated wine region. The estate spans 19 acres and features 50 guestrooms. Guests can enjoy three distinct dining experiences, all emphasizing regional produce, complemented by a dedicated wine cellar showcasing local vintages. The Six Senses Spa includes 10 treatment rooms, indoor and outdoor pools, and a gym, offering specialty and local therapies alongside multi-day wellness programs. An outdoor yoga pavilion provides an ideal space for individual or group sessions. Nestled in the sun-drenched valley, the resort is perfectly located to explore the region through a variety of activities and excursions by foot, vehicle, or boat.
+      - paragraph [ref=f18e72]: Website
+      - paragraph [ref=f18e73]: https://www.sixsenses.com/en/resorts/douro-valley/destination
+      - 'heading "Evening: Resort Experience" [level=3] [ref=f18e74]'
+      - paragraph [ref=f18e75]: "6:00 PM: Dinner at Six Senses Douro Valley"
+      - paragraph [ref=f18e76]: "8:00 PM: Evening at leisure - enjoy resort amenities and Douro Valley views"
+      - 'heading "Morning: Douro River Cruise Adventure" [level=3] [ref=f18e77]'
+      - paragraph [ref=f18e78]: "10:30 AM: Meet driver at hotel lobby for transport to departure point"
+      - paragraph [ref=f18e79]: "11:00 AM: Boarding in Folgosa"
+      - 'heading "Afternoon: River Cruise and Wine Experience" [level=3] [ref=f18e80]'
+      - paragraph [ref=f18e81]: "12:00 PM: Disembark at Cais do Ferrão - Transfer by car from the Quinta"
+      - paragraph [ref=f18e82]: "12:15 PM: Visit to the cellar and Wine Museum center"
+      - paragraph [ref=f18e83]: "1:00 PM: Lunch at Terraco's Restaurant - paired with QN Wines"
+      - paragraph [ref=f18e84]: "3:30 PM: Transfer by car from Quinta Nova to Ferrão pier"
+      - paragraph [ref=f18e85]: "3:45 PM: Board in Ferrão"
+      - 'heading "Evening: Return Journey" [level=3] [ref=f18e86]'
+      - paragraph [ref=f18e87]: "4:30 PM: Disembark in Folgosa"
+      - paragraph [ref=f18e88]: "6:00 PM: Return transport to hotel (estimated arrival time)"
+      - heading "Serra do Marão Adventure & Porto Stay" [level=2] [ref=f18e89]
+      - 'heading "Morning: Hotel Checkout and Departure" [level=3] [ref=f18e90]'
+      - paragraph [ref=f18e91]: "9:50 AM: Check out from Six Senses Douro Valley 11:00 AM: Transfer from Douro to Porto by Jeep with tour in Serra do Marão with Picnic"
+      - 'heading "Afternoon: Serra do Marão Adventure and Travel" [level=3] [ref=f18e92]'
+      - paragraph [ref=f18e93]: "12:00 PM - 4:00 PM: Jeep tour through Serra do Marão with picnic lunch and scenic viewpoints 4:00 PM - 5:00 PM: Continue transfer to Porto"
+      - 'heading "Evening: Porto Hotel Check-in" [level=3] [ref=f18e94]'
+      - paragraph [ref=f18e95]: "5:00 PM: Check-in at The Largo Porto"
+      - paragraph [ref=f18e96]: "8:00 PM: Evening at leisure to explore Porto's historic center"
+      - heading "The Largo" [level=2] [ref=f18e97]
+      - paragraph [ref=f18e98]: Porto, Portugal | 5 star hotel
+      - paragraph [ref=f18e99]: Address
+      - paragraph [ref=f18e100]: Largo De Sao Domingos 60, Porto, 4050-545, Portugal
+      - paragraph [ref=f18e101]: Description Located in Porto’s lively Largo de Sao Domingos square, The Largo is a boutique hotel with 18 rooms housed in five interconnected buildings dating from the 15th to 19th centuries. Carefully restored to preserve original features, the hotel blends historic charm with modern design by architect Frederico Valsassina and interiors by Space Copenhagen. Since opening in 2017, The Largo has actively engaged with local cultural communities, creating authentic experiences and connections. This innovative hotel concept by Copenhagen-based Annassurra redefines luxury and is just an 8-minute walk from the Douro River. Adjacent are sister venues Cozinha das Flores and Flor, led by renowned chef Nuno Mendes, enhancing guests’ immersion in Porto’s vibrant culture.
+      - paragraph [ref=f18e102]: Website
+      - paragraph [ref=f18e103]: https://thelargo.com/
+      - 'heading "Morning: Culinary Adventure in Porto" [level=3] [ref=f18e104]'
+      - paragraph [ref=f18e105]: "10:00 AM: Culinary Backstreets Experience in Porto"
+      - paragraph [ref=f18e106]: "1:30 PM: Complete food tour and return to hotel"
+      - 'heading "Afternoon: Wine Tasting Experience" [level=3] [ref=f18e107]'
+      - paragraph [ref=f18e108]: "4:15 PM: Private Visit & Wine Tasting at Graham's Cellars"
+      - paragraph [ref=f18e109]: "5:45 PM: Complete wine tasting experience"
+      - 'heading "Evening: Free Time in Porto" [level=3] [ref=f18e110]'
+      - paragraph [ref=f18e111]: "6:00 PM: Return to hotel"
+      - paragraph [ref=f18e112]: "8:00 PM: Evening at leisure to explore Porto or dine at local restaurants"
+      - heading "Journey to Aveiro, Coimbra & Lisbon" [level=2] [ref=f18e113]
+      - 'heading "Morning: Porto Checkout and Journey to Aveiro & Coimbra" [level=3] [ref=f18e114]'
+      - paragraph [ref=f18e115]: "8:50 AM: Check out from Hospes Infante Sagres Porto"
+      - paragraph [ref=f18e116]: "9:00 AM: Transfer to Lisbon visiting Aveiro & Coimbra on the way"
+      - 'heading "Afternoon: Aveiro Canal Experience and Coimbra University" [level=3] [ref=f18e117]'
+      - paragraph [ref=f18e118]: "10:00 AM: Navigate the canals of the \"Portuguese Venice\" aboard a Moliceiro"
+      - paragraph [ref=f18e119]: "10:45 AM: Complete canal tour in Aveiro"
+      - paragraph [ref=f18e120]: "2:00 PM: Visit University of Coimbra and Joanina Library"
+      - 'heading "Evening: Continue to Lisbon and Hotel Check-in" [level=3] [ref=f18e121]'
+      - paragraph [ref=f18e122]: "3:00 PM: Complete university visit and depart for Lisbon"
+      - paragraph [ref=f18e123]: "6:00 PM: Check-in at Bairro Alto Hotel"
+      - paragraph [ref=f18e124]: "8:00 PM: Evening at leisure to explore Lisbon's Bairro Alto district"
+      - 'heading "Hotel: Bairro Alto Hotel" [level=3] [ref=f18e125]'
+      - heading "Bairro Alto Hotel" [level=2] [ref=f18e126]
+      - paragraph [ref=f18e127]: Lisbon, Portugal | 5 star hotel
+      - paragraph [ref=f18e128]: Address
+      - paragraph [ref=f18e129]: Praca Luis De Camoes No 2, Lisbon, 1200-243, Portugal
+      - paragraph [ref=f18e130]: Description
+      - paragraph [ref=f18e131]: Nestled in Lisbon’s vibrant heart, Bairro Alto Hotel blends tradition with modern luxury as a member of The Leading Hotels of the World. This 5-star boutique hotel reflects the city’s spirit through its textures, colors, and materials. Situated between the elegance of Chiado and the bohemian Bairro Alto, the hotel was redesigned by architect Souto de Moura with interiors by Atelier Bastir and TheStudio, marrying style, sophistication, and classic charm. Its exceptional terrace offers unmatched views of the city and Tejo River—perfect for savoring the seasonal menu or a cocktail while enjoying unforgettable moments.
+      - paragraph [ref=f18e132]: Website
+      - paragraph [ref=f18e133]: https://www.bairroaltohotel.com/en/
+      - 'heading "Morning: Cooking Class and Market Visit" [level=3] [ref=f18e134]'
+      - paragraph [ref=f18e135]: "9:00 AM: Cooking Class with Visit to the Local Market in Lisbon"
+      - paragraph [ref=f18e136]: "1:30 PM: Complete cooking class and meal"
+      - 'heading "Afternoon: Sidecar Adventure Through Lisbon" [level=3] [ref=f18e137]'
+      - paragraph [ref=f18e138]: "2:00 PM: Discover Lisbon by Sidecar"
+      - paragraph [ref=f18e139]: "5:00 PM: Complete sidecar tour and return to hotel"
+      - 'heading "Evening: Free Time in Lisbon" [level=3] [ref=f18e140]'
+      - paragraph [ref=f18e141]: "6:00 PM: Return to Bairro Alto Hotel"
+      - paragraph [ref=f18e142]: "8:00 PM: Evening at leisure to explore Lisbon's neighborhoods and dining scene"
+      - heading "Sintra & Cascais Day Trip with Fado Farewell" [level=2] [ref=f18e143]
+      - 'heading "Morning: Sintra & Cascais Day Trip" [level=3] [ref=f18e144]'
+      - paragraph [ref=f18e145]: "9:00 AM: Meet guide at hotel lobby for Tour Sintra & Cascais"
+      - paragraph [ref=f18e146]: "9:30 AM: Depart for Sintra"
+      - 'heading "Afternoon: Pena Palace and Coastal Exploration" [level=3] [ref=f18e147]'
+      - paragraph [ref=f18e148]: "10:30 AM: Visit Pena National Palace - Fast Track"
+      - paragraph [ref=f18e149]: "12:30 PM: Complete palace visit and continue exploring Sintra and Cascais"
+      - paragraph [ref=f18e150]: "5:00 PM: Return journey to Lisbon"
+      - 'heading "Evening: Farewell Fado Experience" [level=3] [ref=f18e151]'
+      - paragraph [ref=f18e152]: "7:30 PM: Return to hotel"
+      - paragraph [ref=f18e153]: "8:00 PM: Farewell dinner @ Fado Tour in Lisbon with Show and Dinner at Casa de Linhares"
+      - paragraph [ref=f18e154]: "11:30 PM: Complete Fado experience and return to hotel"
+      - heading "Departure from Lisbon" [level=2] [ref=f18e155]
+      - 'heading "Morning: Hotel Checkout and Departure" [level=3] [ref=f18e156]'
+      - paragraph [ref=f18e157]: "12:00 PM: Check out from Bairro Alto Hotel"
+  - generic [ref=f18e158]:
+    - generic [ref=f18e159]:
+      - img "Relax & Roam Travel" [ref=f18e160]
+      - paragraph [ref=f18e161]: Destination expertise, hotel strategy, and planning support for travelers who want the trip to feel seamless from the start.
+    - generic [ref=f18e163]:
+      - generic [ref=f18e164]:
+        - paragraph [ref=f18e165]: Travel notes
+        - heading "The good stuff." [level=3] [ref=f18e166]
+        - paragraph [ref=f18e167]: Hotels, destinations, and travel inspiration - curated and delivered straight to your inbox.
+      - generic [ref=f18e169]:
+        - text: Email
+        - textbox "Email" [ref=f18e170]
+      - generic [ref=f18e171]:
+        - button "Join" [ref=f18e172]
+        - paragraph [ref=f18e173]: Your information is used only for Relax & Roam Travel follow-up and updates.
+    - generic [ref=f18e174]:
+      - link "sandra.hodes@fora.travel" [ref=f18e175] [cursor=pointer]:
+        - /url: mailto:sandra.hodes@fora.travel
+      - link "(954) 401-8794" [ref=f18e180] [cursor=pointer]:
+        - /url: tel:+19544018794
+      - link "Instagram" [ref=f18e181] [cursor=pointer]:
+        - /url: https://www.instagram.com/relax_androamtravel/
+      - link "Book Consultation" [ref=f18e187] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f18e188]:
+      - generic [ref=f18e189]: © 2026 Relax & Roam Travel. All rights reserved.
+      - link "Website by DNA Levity" [ref=f18e190] [cursor=pointer]:
+        - /url: https://dnalevity.com

@@ -1,0 +1,84 @@
+[    7496ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[    7713ms] [LOG] Initializing app services... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[    7713ms] [LOG] Checking email templates... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[    8070ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/chakra-emblem.png:0
+[    8863ms] [LOG] [HMR] connected @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[    9075ms] [LOG] Template exists: booking_confirmation_customer @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[    9390ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[    9425ms] [LOG] [Fast Refresh] done in 137ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[    9751ms] [LOG] Template exists: booking_confirmation_admin @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   10320ms] [LOG] Initializing app services... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   10320ms] [LOG] Checking email templates... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   10473ms] [LOG] Template exists: invoice_generated @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   10880ms] [LOG] Template exists: booking_confirmation_customer @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   11097ms] [LOG] [HMR] connected @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   11144ms] [LOG] Template exists: welcome_email @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   11228ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/favicon.ico:0
+[   11296ms] [LOG] Template exists: booking_confirmation_admin @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   11716ms] [LOG] Template exists: invoice_generated @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   11793ms] [LOG] Template exists: video_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   12129ms] [LOG] Template exists: welcome_email @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   12468ms] [LOG] Template exists: module_reminder @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   12569ms] [LOG] Template exists: video_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   13010ms] [LOG] Template exists: module_reminder @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   13211ms] [LOG] Template exists: journey_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   13211ms] [LOG] Email template check complete @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   13211ms] [LOG] App services initialized successfully @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   13616ms] [LOG] Template exists: journey_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   13616ms] [LOG] Email template check complete @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   13616ms] [LOG] App services initialized successfully @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   14646ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   14772ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   15423ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/__nextjs_font/geist-latin.woff2:0
+[   15868ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/__nextjs_font/geist-latin.woff2:0
+[   16190ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   16551ms] [LOG] [Fast Refresh] done in 2004ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   16559ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   16560ms] [LOG] [Fast Refresh] done in 1888ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   16724ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   16726ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   16759ms] [LOG] [Fast Refresh] done in 133ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   16759ms] [LOG] [Fast Refresh] done in 135ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   19937ms] [LOG] Initializing app services... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   19937ms] [LOG] Checking email templates... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   20385ms] [LOG] Template exists: booking_confirmation_customer @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   20809ms] [LOG] Template exists: booking_confirmation_admin @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   20846ms] [LOG] [HMR] connected @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   21230ms] [LOG] Template exists: invoice_generated @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   21641ms] [LOG] Template exists: welcome_email @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   22065ms] [LOG] Template exists: video_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   22497ms] [LOG] Template exists: module_reminder @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   22911ms] [LOG] Template exists: journey_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   22911ms] [LOG] Email template check complete @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   22911ms] [LOG] App services initialized successfully @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   35112ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   35112ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   35877ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/__nextjs_font/geist-latin.woff2:0
+[   36300ms] [LOG] [Fast Refresh] done in 1288ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   36300ms] [LOG] [Fast Refresh] done in 1289ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   40169ms] [LOG] Initializing app services... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   40169ms] [LOG] Checking email templates... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   40690ms] [LOG] Template exists: booking_confirmation_customer @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   40739ms] [LOG] [HMR] connected @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   41120ms] [LOG] Template exists: booking_confirmation_admin @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   41545ms] [LOG] Template exists: invoice_generated @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   41957ms] [LOG] Template exists: welcome_email @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   42364ms] [LOG] Template exists: video_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   42773ms] [LOG] Template exists: module_reminder @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   43183ms] [LOG] Template exists: journey_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   43183ms] [LOG] Email template check complete @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   43183ms] [LOG] App services initialized successfully @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287

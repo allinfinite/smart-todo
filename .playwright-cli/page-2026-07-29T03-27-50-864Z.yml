@@ -1,0 +1,211 @@
+- main [ref=f16e2]:
+  - generic [ref=f16e3]:
+    - navigation "Primary navigation" [ref=f16e5]:
+      - link "Relax & Roam Travel home" [ref=f16e6] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel
+        - img "Relax & Roam Travel" [ref=f16e7]
+      - generic [ref=f16e8]:
+        - link "About" [ref=f16e9] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/about
+        - link "Journeys" [ref=f16e10] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/itineraries
+        - link "Services" [ref=f16e11] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services
+        - link "FAQ" [ref=f16e12] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services#faq
+        - link "Blog" [ref=f16e13] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog
+        - link "Contact" [ref=f16e14] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/contact
+      - link "Book a consultation" [ref=f16e15] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f16e16]:
+      - paragraph [ref=f16e17]: Travel Blog
+      - heading "Destination guides, insider travel notes, and honest planning perspective." [level=1] [ref=f16e18]
+      - paragraph [ref=f16e19]: For travelers who want to go somewhere extraordinary.
+  - region "Relax & Roam Travel blog posts" [ref=f16e20]:
+    - generic [ref=f16e21]:
+      - article [ref=f16e22]:
+        - link "Insider's Guide to Kenya" [ref=f16e23] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog/kenya-guide
+        - generic [ref=f16e24]:
+          - paragraph [ref=f16e25]: Safari Guide / Kenya
+          - paragraph [ref=f16e26]: By Sandra Hodes
+          - heading [level=2] [ref=f16e27]:
+            - link "Insider's Guide to Kenya" [ref=f16e28] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/blog/kenya-guide
+          - paragraph [ref=f16e29]: A complete Kenya planning guide covering Nairobi, safari regions, ethical wildlife viewing, cruises, cultural context, and trip extensions.
+          - link "Read article" [ref=f16e30] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/kenya-guide
+      - article [ref=f16e31]:
+        - 'link "Hot List 2026: Destinations and Trends to Watch" [ref=f16e32] [cursor=pointer]':
+          - /url: /preview/relax-and-roam-travel/blog/foras-hot-list-2026-destinations-trends
+        - generic [ref=f16e33]:
+          - paragraph [ref=f16e34]: Travel Trends / Global
+          - paragraph [ref=f16e35]: By Sandra Hodes
+          - heading [level=2] [ref=f16e36]:
+            - 'link "Hot List 2026: Destinations and Trends to Watch" [ref=f16e37] [cursor=pointer]':
+              - /url: /preview/relax-and-roam-travel/blog/foras-hot-list-2026-destinations-trends
+          - paragraph [ref=f16e38]: A forward-looking guide to the places, styles, and planning shifts shaping thoughtful travel in 2026.
+          - link "Read article" [ref=f16e39] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/foras-hot-list-2026-destinations-trends
+      - article [ref=f16e40]:
+        - link "Insider's Guide to Italy's Wine Regions" [ref=f16e41] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog/italys-wine-regions-guide
+        - generic [ref=f16e42]:
+          - paragraph [ref=f16e43]: Destination Guide / Italy
+          - paragraph [ref=f16e44]: By Sandra Hodes
+          - heading [level=2] [ref=f16e45]:
+            - link "Insider's Guide to Italy's Wine Regions" [ref=f16e46] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/blog/italys-wine-regions-guide
+          - paragraph [ref=f16e47]: A wine-country planning guide for travelers who want Italy to feel indulgent, rooted, and well paced.
+          - link "Read article" [ref=f16e48] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/italys-wine-regions-guide
+      - article [ref=f16e49]:
+        - link "What's New in Cruise Travel for 2026" [ref=f16e50] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog/cruise-travel-2026
+        - generic [ref=f16e51]:
+          - paragraph [ref=f16e52]: Cruise / Global
+          - paragraph [ref=f16e53]: By Sandra Hodes
+          - heading [level=2] [ref=f16e54]:
+            - link "What's New in Cruise Travel for 2026" [ref=f16e55] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/blog/cruise-travel-2026
+          - paragraph [ref=f16e56]: A practical look at how cruise travel is evolving for travelers who want more style, specificity, and ease.
+          - link "Read article" [ref=f16e57] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/cruise-travel-2026
+      - article [ref=f16e58]:
+        - link "Insider's Guide to Dude Ranches" [ref=f16e59] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog/dude-ranches-guide
+        - generic [ref=f16e60]:
+          - paragraph [ref=f16e61]: Active Travel / American West
+          - paragraph [ref=f16e62]: By Sandra Hodes
+          - heading [level=2] [ref=f16e63]:
+            - link "Insider's Guide to Dude Ranches" [ref=f16e64] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/blog/dude-ranches-guide
+          - paragraph [ref=f16e65]: A planning angle for travelers who want wide-open space, comfort, and days that feel active without being overproduced.
+          - link "Read article" [ref=f16e66] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/dude-ranches-guide
+      - article [ref=f16e67]:
+        - link "Insider's Guide to St. Barths" [ref=f16e68] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog/st-barths-guide
+        - generic [ref=f16e69]:
+          - paragraph [ref=f16e70]: Island Guide / Caribbean
+          - paragraph [ref=f16e71]: By Sandra Hodes
+          - heading [level=2] [ref=f16e72]:
+            - link "Insider's Guide to St. Barths" [ref=f16e73] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/blog/st-barths-guide
+          - paragraph [ref=f16e74]: A polished island guide for travelers who want the beach, dining, and hotel scene to feel effortless.
+          - link "Read article" [ref=f16e75] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/st-barths-guide
+      - article [ref=f16e76]:
+        - link "Insider's Guide to European Ski Destinations" [ref=f16e77] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog/european-ski-destinations-guide
+        - generic [ref=f16e78]:
+          - paragraph [ref=f16e79]: Ski Travel / Europe
+          - paragraph [ref=f16e80]: By Sandra Hodes
+          - heading [level=2] [ref=f16e81]:
+            - link "Insider's Guide to European Ski Destinations" [ref=f16e82] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/blog/european-ski-destinations-guide
+          - paragraph [ref=f16e83]: A guide to ski trips where mountain access, village atmosphere, hotels, and après-ski all matter.
+          - link "Read article" [ref=f16e84] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/european-ski-destinations-guide
+      - article [ref=f16e85]:
+        - link "Insider's Guide to Bhutan" [ref=f16e86] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog/bhutan-guide
+        - generic [ref=f16e87]:
+          - paragraph [ref=f16e88]: Destination Guide / Bhutan
+          - paragraph [ref=f16e89]: By Sandra Hodes
+          - heading [level=2] [ref=f16e90]:
+            - link "Insider's Guide to Bhutan" [ref=f16e91] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/blog/bhutan-guide
+          - paragraph [ref=f16e92]: A guide to Bhutan for travelers drawn to culture, landscape, quiet luxury, and a deeper sense of place.
+          - link "Read article" [ref=f16e93] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/bhutan-guide
+      - article [ref=f16e94]:
+        - link "Insider's Guide to Paris and Beyond" [ref=f16e95] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog/paris-and-beyond-guide
+        - generic [ref=f16e96]:
+          - paragraph [ref=f16e97]: Destination Guide / France
+          - paragraph [ref=f16e98]: By Sandra Hodes
+          - heading [level=2] [ref=f16e99]:
+            - link "Insider's Guide to Paris and Beyond" [ref=f16e100] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/blog/paris-and-beyond-guide
+          - paragraph [ref=f16e101]: A France planning guide for pairing Paris with the countryside, coast, wine regions, or slower local discoveries.
+          - link "Read article" [ref=f16e102] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/paris-and-beyond-guide
+      - article [ref=f16e103]:
+        - link "10 Underrated European Cities You Should Know About" [ref=f16e104] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog/underrated-european-cities
+        - generic [ref=f16e105]:
+          - paragraph [ref=f16e106]: City Guide / Europe
+          - paragraph [ref=f16e107]: By Sandra Hodes
+          - heading [level=2] [ref=f16e108]:
+            - link "10 Underrated European Cities You Should Know About" [ref=f16e109] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/blog/underrated-european-cities
+          - paragraph [ref=f16e110]: A guide for travelers who want Europe with character, culture, and fewer default choices.
+          - link "Read article" [ref=f16e111] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/underrated-european-cities
+      - article [ref=f16e112]:
+        - link "Where to Go With Teens This Summer" [ref=f16e113] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog/where-to-go-with-teens-this-summer
+        - generic [ref=f16e114]:
+          - paragraph [ref=f16e115]: Family Travel / Global
+          - paragraph [ref=f16e116]: By Sandra Hodes
+          - heading [level=2] [ref=f16e117]:
+            - link "Where to Go With Teens This Summer" [ref=f16e118] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/blog/where-to-go-with-teens-this-summer
+          - paragraph [ref=f16e119]: Summer trip ideas for families balancing activity, independence, comfort, and enough downtime for everyone.
+          - link "Read article" [ref=f16e120] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/where-to-go-with-teens-this-summer
+      - article [ref=f16e121]:
+        - link "Insider's Guide to CDMX and Central Mexico Getaways" [ref=f16e122] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog/cdmx-central-mexico-getaways
+        - generic [ref=f16e123]:
+          - paragraph [ref=f16e124]: Destination Guide / Mexico
+          - paragraph [ref=f16e125]: By Sandra Hodes
+          - heading [level=2] [ref=f16e126]:
+            - link "Insider's Guide to CDMX and Central Mexico Getaways" [ref=f16e127] [cursor=pointer]:
+              - /url: /preview/relax-and-roam-travel/blog/cdmx-central-mexico-getaways
+          - paragraph [ref=f16e128]: A Mexico City and Central Mexico planning guide for food, design, culture, and layered long-weekend travel.
+          - link "Read article" [ref=f16e129] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/cdmx-central-mexico-getaways
+      - article [ref=f16e130]:
+        - 'link "Where to Drink Matcha in Japan: My Top Six Picks" [ref=f16e131] [cursor=pointer]':
+          - /url: /preview/relax-and-roam-travel/blog/matcha-in-japan
+        - generic [ref=f16e132]:
+          - paragraph [ref=f16e133]: Japan / Japan
+          - paragraph [ref=f16e134]: By Sandra Hodes
+          - heading [level=2] [ref=f16e135]:
+            - 'link "Where to Drink Matcha in Japan: My Top Six Picks" [ref=f16e136] [cursor=pointer]':
+              - /url: /preview/relax-and-roam-travel/blog/matcha-in-japan
+          - paragraph [ref=f16e137]: A personal Japan note for travelers who want small rituals, local flavor, and memorable pauses between bigger itinerary moments.
+          - link "Read article" [ref=f16e138] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog/matcha-in-japan
+  - generic [ref=f16e139]:
+    - generic [ref=f16e140]:
+      - img "Relax & Roam Travel" [ref=f16e141]
+      - paragraph [ref=f16e142]: Destination expertise, hotel strategy, and planning support for travelers who want the trip to feel seamless from the start.
+    - generic [ref=f16e144]:
+      - generic [ref=f16e145]:
+        - paragraph [ref=f16e146]: Travel notes
+        - heading "The good stuff." [level=3] [ref=f16e147]
+        - paragraph [ref=f16e148]: Hotels, destinations, and travel inspiration - curated and delivered straight to your inbox.
+      - generic [ref=f16e150]:
+        - text: Email
+        - textbox "Email" [ref=f16e151]
+      - generic [ref=f16e152]:
+        - button "Join" [ref=f16e153]
+        - paragraph [ref=f16e154]: Your information is used only for Relax & Roam Travel follow-up and updates.
+    - generic [ref=f16e155]:
+      - link "sandra.hodes@fora.travel" [ref=f16e156] [cursor=pointer]:
+        - /url: mailto:sandra.hodes@fora.travel
+      - link "(954) 401-8794" [ref=f16e161] [cursor=pointer]:
+        - /url: tel:+19544018794
+      - link "Instagram" [ref=f16e162] [cursor=pointer]:
+        - /url: https://www.instagram.com/relax_androamtravel/
+      - link "Book Consultation" [ref=f16e168] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f16e169]:
+      - generic [ref=f16e170]: © 2026 Relax & Roam Travel. All rights reserved.
+      - link "Website by DNA Levity" [ref=f16e171] [cursor=pointer]:
+        - /url: https://dnalevity.com

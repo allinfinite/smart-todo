@@ -1003,7 +1003,7 @@
         </div>
         <textarea name="message" rows="3" placeholder="${request ? "Send a follow-up or clarification" : "Describe what you want changed or built"}" ${passwordManagerIgnoreAttrs()} ${locked ? "disabled" : ""}>${escapeHtml(state.composerText || "")}</textarea>
         ${composerFileChipsMarkup()}
-        <input class="shared-file-input" id="sharedChatFiles" name="files" type="file" multiple data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
+        <input class="shared-file-input" id="sharedChatFiles" name="files" type="file" multiple accept="image/*,video/mp4,video/quicktime,video/webm,.mov,.mp4,.m4v,.webm,.pdf,.txt,.md,.m4a,.mp3,.wav" data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
         <div class="shared-composer-actions">
           <button class="secondary" id="attachFilesButton" type="button" ${locked ? "disabled" : ""}>Attach</button>
           <button class="secondary" id="recordAudioButton" type="button" ${locked ? "disabled" : ""}>${recording ? "Stop Recording" : "Record Audio"}</button>
@@ -1263,7 +1263,7 @@
                 ` : ""}
                 <form class="shared-reply-form" data-request-id="${escapeHtml(requestId)}" ${passwordManagerIgnoreAttrs()}>
                   <textarea name="reply" rows="3" placeholder="Add a reply or clarification" ${workspaceGateLocked() ? "disabled" : ""} ${passwordManagerIgnoreAttrs()}>${escapeHtml(replyDraft.text || "")}</textarea>
-                  <input class="shared-file-input" id="sharedReplyFiles-${escapeAttribute(requestId)}" name="files" type="file" multiple ${workspaceGateLocked() ? "disabled" : ""} data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
+                  <input class="shared-file-input" id="sharedReplyFiles-${escapeAttribute(requestId)}" name="files" type="file" multiple accept="image/*,video/mp4,video/quicktime,video/webm,.mov,.mp4,.m4v,.webm,.pdf,.txt,.md,.m4a,.mp3,.wav" ${workspaceGateLocked() ? "disabled" : ""} data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
                   <div
                     class="shared-dropzone"
                     data-dropzone="reply"

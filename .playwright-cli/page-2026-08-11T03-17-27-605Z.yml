@@ -1,0 +1,26 @@
+- main [ref=e2]:
+  - heading "Connect Smart Todo" [level=1] [ref=e3]
+  - paragraph [ref=e4]:
+    - strong [ref=e5]: Codex
+    - text: wants to connect to Smart Todo.
+  - list [ref=e6]:
+    - listitem [ref=e7]: Stay connected until you disconnect
+    - listitem [ref=e8]: See your Smart Todo identity
+    - listitem [ref=e9]: See your work requests and replies
+    - listitem [ref=e10]: Create, reply to, retry, cancel, and archive requests
+    - listitem [ref=e11]: Commit, push, and deploy site changes
+    - listitem [ref=e12]: Discard local site changes
+    - listitem [ref=e13]: Start site previews
+    - listitem [ref=e14]: See your sites and their current status
+    - listitem [ref=e15]: Read tracked, non-sensitive site source files
+    - listitem [ref=e16]: Sync the latest site version
+    - listitem [ref=e17]: Let this assistant patch approved site source files directly
+  - generic [ref=e18]:
+    - generic [ref=e19]:
+      - text: Email
+      - textbox "Email" [ref=e20]
+    - generic [ref=e21]:
+      - text: Password
+      - textbox "Password" [ref=e22]
+    - button "Connect Smart Todo" [ref=e23] [cursor=pointer]
+  - text: Your assistant receives only the Smart Todo permissions shown here. Smart Todo never receives your ChatGPT or Claude password or session token.

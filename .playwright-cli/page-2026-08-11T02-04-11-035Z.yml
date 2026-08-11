@@ -1,0 +1,118 @@
+- generic [active] [ref=f1e1]:
+  - main [ref=f1e2]:
+    - generic [ref=f1e4]:
+      - paragraph [ref=f1e5]: 42 CHAKRA POINT ENERGY SCAN
+      - img "42 Chakra Point emblem" [ref=f1e7]
+      - heading "42 CHAKRA POINT ENERGY SCAN" [level=1] [ref=f1e8]
+      - paragraph [ref=f1e9]: A clear, private energetic map of all 42 chakra points—created to help you understand your unique pattern, identify where support may be needed, and choose your next step with intention.
+      - button "BOOK YOUR 42 CHAKRA SCAN" [ref=f1e10]
+      - generic "SEVEN CHAKRAS, SIX POINTS IN ONE CHAKRA, 42 POINTS" [ref=f1e14]:
+        - generic [ref=f1e15]: SEVEN CHAKRAS
+        - generic [ref=f1e16]: SIX POINTS IN ONE CHAKRA
+        - generic [ref=f1e17]: 42 POINTS
+    - generic [ref=f1e18]:
+      - generic [ref=f1e19]:
+        - heading "THE PURPOSE OF THE 42 CHAKRA POINT MODALITY" [level=2] [ref=f1e20]
+        - generic [ref=f1e22]:
+          - paragraph [ref=f1e23]: The 42 Chakra Point modality is designed to bring greater awareness to energetic imbalances across the body’s 42 chakra points. The assessment identifies which points may be carrying blockages and provides a clear foundation for understanding where energetic support may be needed.
+          - paragraph [ref=f1e24]: After receiving their private results, clients may choose to purchase a separate personalized program. Their aligned activations are then delivered through a private portal and released gradually—one each week—to support a gentle, intentional journey.
+      - generic [ref=f1e25]:
+        - article [ref=f1e26]:
+          - heading "CONSCIOUSNESS" [level=3] [ref=f1e31]
+          - paragraph [ref=f1e32]: Step into a new level of awareness and being
+        - article [ref=f1e33]:
+          - heading "VITALITY" [level=3] [ref=f1e37]
+          - paragraph [ref=f1e38]: Revitalize your energy and life force
+        - article [ref=f1e39]:
+          - heading "ALIGNMENT" [level=3] [ref=f1e44]
+          - paragraph [ref=f1e45]: Harmonize your being with universal energy
+    - region [ref=f1e46]:
+      - generic [ref=f1e47]:
+        - paragraph [ref=f1e48]: THE MODALITY FRAMEWORK
+        - heading "UNDERSTANDING THE 42 CHAKRA POINT SYSTEM" [level=2] [ref=f1e49]
+        - paragraph [ref=f1e50]: The chakra-man map shows all seven centers and their front/back references. The approved framework image is shown exactly as supplied.
+      - figure "Approved 42 Chakra Point framework chart" [ref=f1e51]:
+        - generic [ref=f1e52]:
+          - img "Approved 42 Chakra Point framework chart" [ref=f1e53]
+          - 'generic "MIDDLE: HARMONY OF MASCULINE AND FEMININE ENERGY POLARITY"':
+            - generic: MIDDLE
+            - generic:
+              - generic: HARMONY OF
+              - generic: MASCULINE AND
+              - generic: FEMININE ENERGY
+              - generic: POLARITY
+    - figure "SEVEN CHAKRA CENTERS · SIX ENERGY POINTS PER CENTER · 42 POINTS" [ref=f1e56]:
+      - generic "Animated seated chakra-man body chart with seven chakra centers and front and back reference lines" [ref=f1e57]
+    - region [ref=f1e59]:
+      - generic [ref=f1e60]:
+        - heading "THE 42-POINT ASSESSMENT PATH" [level=2] [ref=f1e61]
+        - paragraph [ref=f1e62]: A straightforward sequence from remote assessment to optional personalized support.
+      - generic [ref=f1e63]:
+        - article [ref=f1e64]:
+          - generic [ref=f1e65]: "01"
+          - generic [ref=f1e66]:
+            - heading "42 CHAKRA POINT ENERGY SCAN" [level=3] [ref=f1e67]
+            - paragraph [ref=f1e68]: Begin with the remote 42 Chakra Point Energy Scan. The scan is $144 and identifies imbalances and unique affected energy points.
+        - article [ref=f1e69]:
+          - generic [ref=f1e70]: "02"
+          - generic [ref=f1e71]:
+            - heading "YOUR PERSONAL RESULTS" [level=3] [ref=f1e72]
+            - paragraph [ref=f1e73]: You receive your unique affected-point count and the recommended order for your sessions.
+        - article [ref=f1e74]:
+          - generic [ref=f1e75]: "03"
+          - generic [ref=f1e76]:
+            - heading "OPTIONAL PERSONALIZED PROGRAM" [level=3] [ref=f1e77]
+            - paragraph [ref=f1e78]: After receiving your results, you may choose the personalized program. Each unique affected energy point equals one $55 session. Multiple blocks within the same point count only once. Klarna installment plans may be available for this separate program at checkout, subject to eligibility.
+        - article [ref=f1e79]:
+          - generic [ref=f1e80]: "04"
+          - generic [ref=f1e81]:
+            - heading "PRIVATE PORTAL & WEEKLY ACTIVATIONS" [level=3] [ref=f1e82]
+            - paragraph [ref=f1e83]: After the personalized program is purchased, your aligned activations appear in your private portal and unlock one per week.
+      - paragraph [ref=f1e85]:
+        - generic [ref=f1e86]: "GENTLE PACING:"
+        - text: Healing is not about moving fast. It is about allowing the body to release harmoniously and gradually, becoming lighter and bringing more light into the body.
+    - generic [ref=f1e88]:
+      - generic [ref=f1e89]: "42"
+      - heading "ACTIVATE YOUR HEALING JOURNEY WITH THIS FIRST STEP" [level=2] [ref=f1e90]
+      - paragraph [ref=f1e91]: 42 CHAKRA POINT ENERGY SCAN · ASSESSMENT ONLY
+      - paragraph [ref=f1e92]: $144
+      - paragraph [ref=f1e93]: Start with your private remote assessment. Your results identify the unique affected energy points and guide any optional next step.
+      - button "BOOK YOUR 42 CHAKRA SCAN" [ref=f1e94]
+    - generic [ref=f1e99]:
+      - img "Morayana smiling portrait" [ref=f1e102]
+      - generic [ref=f1e103]:
+        - heading "ABOUT MORAYANA" [level=2] [ref=f1e104]
+        - paragraph [ref=f1e105]: A magical inner-dimensional channel and explorer of higher realms, Morayana is dedicated to enhancing humanity’s interconnectedness and the evolution of consciousness in modern times.
+        - paragraph [ref=f1e106]: Morayana expands into higher dimensions, unlocking her innate abilities such as intuitive healing, channeling higher-dimensional beings, light language, automatic writing, and claircognitive and clairsentient gifts.
+        - paragraph [ref=f1e107]: As the founder of the 42 Point Healing Modality and a Theta Healing practitioner, she works in the quantum realms to shift limiting beliefs stored in the subconscious mind, guiding the collective rise in consciousness.
+    - generic [ref=f1e108]:
+      - generic [ref=f1e109]:
+        - paragraph [ref=f1e110]: A GALACTIC TRANSMISSION
+        - heading "A GIFT TO HUMANITY" [level=2] [ref=f1e111]
+        - paragraph [ref=f1e112]: A transmission of awareness, connection, and planetary alignment.
+      - generic [ref=f1e113]:
+        - article [ref=f1e114]:
+          - heading "ANCESTRAL HEALING" [level=3] [ref=f1e115]
+          - paragraph [ref=f1e116]: Resolve past patterns and make space for a clearer energetic path.
+        - article [ref=f1e117]:
+          - heading "COLLECTIVE EVOLUTION" [level=3] [ref=f1e118]
+          - paragraph [ref=f1e119]: Support a wider field of consciousness through intentional alignment.
+        - article [ref=f1e120]:
+          - heading "EARTH TRANSFORMATION" [level=3] [ref=f1e121]
+          - paragraph [ref=f1e122]: Support planetary grid awakening and balance.
+    - region [ref=f1e123]:
+      - generic [ref=f1e124]:
+        - heading "FREQUENTLY ASKED QUESTIONS" [level=2] [ref=f1e125]
+        - paragraph [ref=f1e126]: Answers about the 42 Chakra Point Energy Scan and personalized program.
+      - generic [ref=f1e127]:
+        - group [ref=f1e128]:
+          - heading "WHAT IS THE 42 CHAKRA POINT ENERGY SCAN?" [level=3] [ref=f1e130] [cursor=pointer]
+        - group [ref=f1e133]:
+          - heading "HOW DOES THE $144 ASSESSMENT WORK?" [level=3] [ref=f1e135] [cursor=pointer]
+        - group [ref=f1e138]:
+          - heading "HOW MANY SESSIONS WILL I NEED?" [level=3] [ref=f1e140] [cursor=pointer]
+        - group [ref=f1e143]:
+          - heading "IS THIS DONE REMOTELY OR IN PERSON?" [level=3] [ref=f1e145] [cursor=pointer]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f1e153] [cursor=pointer]
+  - alert [ref=f1e157]

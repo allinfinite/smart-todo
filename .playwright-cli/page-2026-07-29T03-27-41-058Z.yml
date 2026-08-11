@@ -1,0 +1,198 @@
+- main [ref=f15e2]:
+  - generic [ref=f15e3]:
+    - navigation "Primary navigation" [ref=f15e5]:
+      - link "Relax & Roam Travel home" [ref=f15e6] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel
+        - img "Relax & Roam Travel" [ref=f15e7]
+      - generic [ref=f15e8]:
+        - link "About" [ref=f15e9] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/about
+        - link "Journeys" [ref=f15e10] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/itineraries
+        - link "Services" [ref=f15e11] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services
+        - link "FAQ" [ref=f15e12] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services#faq
+        - link "Blog" [ref=f15e13] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog
+        - link "Contact" [ref=f15e14] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/contact
+      - link "Book a consultation" [ref=f15e15] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f15e16]:
+      - paragraph [ref=f15e17]: Services
+      - heading "Every trip is different - and so is the support behind it." [level=1] [ref=f15e18]
+      - paragraph [ref=f15e19]: From a single hotel booking to a fully mapped itinerary - we meet you wherever you are in the planning process.
+  - generic [ref=f15e20]:
+    - generic [ref=f15e22]:
+      - paragraph [ref=f15e23]: How to work together
+      - heading "Choose the planning support that fits the trip." [level=2] [ref=f15e24]
+    - generic [ref=f15e25]:
+      - article [ref=f15e26]:
+        - generic [ref=f15e27]:
+          - paragraph [ref=f15e28]: Complimentary
+          - generic [ref=f15e29]: No planning fee
+        - heading "Hotel Only Booking + Cruise Support" [level=3] [ref=f15e30]
+        - paragraph [ref=f15e31]: You know where you want to go - we'll handle the booking and make sure you get the best rates and exclusive VIP perks and service that come with booking through us.
+        - list [ref=f15e32]:
+          - listitem [ref=f15e33]: Best for hotel, resort, and cruise bookings that don't need full itinerary planning
+          - listitem [ref=f15e34]: Ideal when you already know the property, dates, or room category
+          - listitem [ref=f15e35]: A strong fit for one-stop stays, quick escapes, and travelers who love their own research but want us to upgrade the experience
+        - generic [ref=f15e36]:
+          - link "Learn more" [ref=f15e37] [cursor=pointer]:
+            - /url: "#planning-process"
+          - link "Book a consultation" [ref=f15e38] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/contact
+      - article [ref=f15e39]:
+        - generic [ref=f15e40]:
+          - paragraph [ref=f15e41]: Most popular
+          - generic [ref=f15e42]: Starting at $500
+        - heading "Itinerary Planning" [level=3] [ref=f15e43]
+        - paragraph [ref=f15e44]: Have a destination in mind - or just a feeling? We'll take it from there. Hotels, routing, logistics, and curated experiences - every detail handled, every moving part connected, white-glove service so your trip feels seamless.
+        - list [ref=f15e45]:
+          - listitem [ref=f15e46]: Best for multi-stop vacations where pacing, routing, and logistics matter
+          - listitem [ref=f15e47]: A strong fit for Europe, Asia, the Middle East, Africa, milestone travel, and layered itineraries with multiple destinations
+          - listitem [ref=f15e48]: Includes research, booking, and coordination across accommodations, private transfers, curated experiences, restaurant reservations, and special requests
+          - listitem [ref=f15e49]: Final fee confirmed after your consultation based on destination, group size, and trip complexity
+        - generic [ref=f15e50]:
+          - link "Learn more" [ref=f15e51] [cursor=pointer]:
+            - /url: "#planning-process"
+          - link "Book a consultation" [ref=f15e52] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f15e53]:
+      - paragraph [ref=f15e54]:
+        - emphasis [ref=f15e55]: Every trip is different. If neither option feels quite right, contact us and we'll create something that does.
+      - link "Book a consultation" [ref=f15e56] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+  - generic [ref=f15e57]:
+    - generic [ref=f15e58]:
+      - generic [ref=f15e59]:
+        - paragraph [ref=f15e60]: Ready to book?
+        - heading "Preferred relationships make the arrival feel different." [level=2] [ref=f15e61]
+      - paragraph [ref=f15e62]: When you book through Relax & Roam Travel, our preferred partner perks typically include priority for room upgrades, early check-in and late check-out, a welcome amenity, VIP guest status, and a $100+ property credit to use toward dining or spa - plus other exclusive additions that simply aren't available when you book on your own.
+    - generic [ref=f15e63]:
+      - paragraph [ref=f15e64]: We spend time personally vetting hotels and cultivating relationships with hoteliers around the world - so when you book through us, you're not just another reservation. You're a known and valued guest.
+      - paragraph [ref=f15e65]: "Here are some of the partners we work with:"
+    - generic [ref=f15e66]:
+      - article [ref=f15e67]:
+        - heading "Four Seasons Preferred Partner" [level=3] [ref=f15e69]
+      - article [ref=f15e70]:
+        - heading "Belmond" [level=3] [ref=f15e72]
+      - article [ref=f15e73]:
+        - heading "Virtuoso" [level=3] [ref=f15e75]
+      - article [ref=f15e76]:
+        - heading "Rocco Forte" [level=3] [ref=f15e78]
+      - article [ref=f15e79]:
+        - heading "Rosewood Elite" [level=3] [ref=f15e81]
+      - article [ref=f15e82]:
+        - heading "Aman" [level=3] [ref=f15e84]
+      - article [ref=f15e85]:
+        - heading "Mandarin Oriental Fan Club" [level=3] [ref=f15e87]
+      - article [ref=f15e88]:
+        - heading "Peninsula PenClub" [level=3] [ref=f15e90]
+      - article [ref=f15e91]:
+        - heading "Relais & Chateaux" [level=3] [ref=f15e93]
+      - article [ref=f15e94]:
+        - heading "One&Only" [level=3] [ref=f15e96]
+      - article [ref=f15e97]:
+        - heading "Singita" [level=3] [ref=f15e99]
+      - article [ref=f15e100]:
+        - heading "Auberge" [level=3] [ref=f15e102]
+      - article [ref=f15e103]:
+        - heading "Leading Hotels" [level=3] [ref=f15e105]
+      - article [ref=f15e106]:
+        - heading "Ritz-Carlton STARS" [level=3] [ref=f15e108]
+      - article [ref=f15e109]:
+        - heading "Waldorf Astoria" [level=3] [ref=f15e111]
+      - article [ref=f15e112]:
+        - heading "Oetker Pearl Partner" [level=3] [ref=f15e114]
+      - article [ref=f15e115]:
+        - heading "Preferred Hotels" [level=3] [ref=f15e117]
+      - article [ref=f15e118]:
+        - heading "Dorchester Diamond Club" [level=3] [ref=f15e120]
+      - article [ref=f15e121]:
+        - heading "Hyatt Prive" [level=3] [ref=f15e123]
+      - article [ref=f15e124]:
+        - heading "Small Luxury Hotels" [level=3] [ref=f15e126]
+  - generic [ref=f15e127]:
+    - generic [ref=f15e128]:
+      - generic [ref=f15e129]:
+        - paragraph [ref=f15e130]: Where we start
+        - heading "Every great trip begins with a conversation." [level=2] [ref=f15e131]
+      - paragraph [ref=f15e132]: Before anything else, we schedule a consultation call to get to know you - how you like to travel, who's coming with you, what's been on your list forever, and what kind of experience you're really after. The more we know, the better we can design something that feels like it was made specifically for you - because it was.
+    - generic [ref=f15e133]:
+      - paragraph [ref=f15e134]: The process
+      - heading "From first conversation to dream trip - here's what to expect." [level=2] [ref=f15e135]
+    - generic [ref=f15e136]:
+      - article [ref=f15e137]:
+        - generic [ref=f15e138]: "01"
+        - heading "Let's Talk" [level=3] [ref=f15e139]
+        - paragraph [ref=f15e140]: Every great trip starts with getting to know each other. We'll dig into how you like to travel, the destinations that keep calling your name, the hotels you've been dreaming about, the needs and wishes of everyone coming along - and everything in between that makes your ideal trip uniquely yours.
+      - article [ref=f15e141]:
+        - generic [ref=f15e142]: "02"
+        - heading "We Get to Work" [level=3] [ref=f15e143]
+        - paragraph [ref=f15e144]: No more tabs, saved links, or second-guessing. We take everything you've shared and shape it into a clear plan - the right hotels, the right routing, the right experiences, in the right order.
+      - article [ref=f15e145]:
+        - generic [ref=f15e146]: "03"
+        - heading "Book With Confidence" [level=3] [ref=f15e147]
+        - paragraph [ref=f15e148]: Once the plan feels right, we handle the bookings, lock in the details, and make sure everything is organized, elevated, and ready for you to just show up and enjoy.
+  - generic [ref=f15e149]:
+    - generic [ref=f15e150]:
+      - generic [ref=f15e151]:
+        - paragraph [ref=f15e152]: Frequently asked questions
+        - heading "A few details clients often ask before we begin." [level=2] [ref=f15e153]
+      - paragraph [ref=f15e154]: Whether you want a single hotel stay elevated or a full itinerary planned from scratch, the process starts with understanding how you like to travel.
+    - generic [ref=f15e155]:
+      - group [ref=f15e156]:
+        - generic "Why should I use a travel advisor?" [ref=f15e157] [cursor=pointer]
+      - group [ref=f15e160]:
+        - generic "Do you specialize in certain destinations?" [ref=f15e161] [cursor=pointer]
+      - group [ref=f15e164]:
+        - generic "I love doing my own research. How would working with you help me?" [ref=f15e165] [cursor=pointer]
+      - group [ref=f15e168]:
+        - generic "Will I pay more if I book through you?" [ref=f15e169] [cursor=pointer]
+      - group [ref=f15e172]:
+        - generic "I book hotels through my credit card and get perks that way. Is it the same thing?" [ref=f15e173] [cursor=pointer]
+      - group [ref=f15e176]:
+        - generic "Do you charge planning fees?" [ref=f15e177] [cursor=pointer]
+      - group [ref=f15e180]:
+        - generic "How far in advance should I start planning?" [ref=f15e181] [cursor=pointer]
+      - group [ref=f15e184]:
+        - generic "What do you need from me to get started?" [ref=f15e185] [cursor=pointer]
+      - group [ref=f15e188]:
+        - generic "Do you plan corporate retreats or group trips?" [ref=f15e189] [cursor=pointer]
+  - generic [ref=f15e192]:
+    - generic [ref=f15e193]:
+      - paragraph [ref=f15e194]: Next step
+      - heading "Ready to share more trip details?" [level=2] [ref=f15e195]
+      - paragraph [ref=f15e196]: Use the consultation form to share where you are in the planning process, and we'll recommend the right level of support.
+    - link "Book a consultation" [ref=f15e198] [cursor=pointer]:
+      - /url: /preview/relax-and-roam-travel/contact
+  - generic [ref=f15e199]:
+    - generic [ref=f15e200]:
+      - img "Relax & Roam Travel" [ref=f15e201]
+      - paragraph [ref=f15e202]: Destination expertise, hotel strategy, and planning support for travelers who want the trip to feel seamless from the start.
+    - generic [ref=f15e204]:
+      - generic [ref=f15e205]:
+        - paragraph [ref=f15e206]: Travel notes
+        - heading "The good stuff." [level=3] [ref=f15e207]
+        - paragraph [ref=f15e208]: Hotels, destinations, and travel inspiration - curated and delivered straight to your inbox.
+      - generic [ref=f15e210]:
+        - text: Email
+        - textbox "Email" [ref=f15e211]
+      - generic [ref=f15e212]:
+        - button "Join" [ref=f15e213]
+        - paragraph [ref=f15e214]: Your information is used only for Relax & Roam Travel follow-up and updates.
+    - generic [ref=f15e215]:
+      - link "sandra.hodes@fora.travel" [ref=f15e216] [cursor=pointer]:
+        - /url: mailto:sandra.hodes@fora.travel
+      - link "(954) 401-8794" [ref=f15e221] [cursor=pointer]:
+        - /url: tel:+19544018794
+      - link "Instagram" [ref=f15e222] [cursor=pointer]:
+        - /url: https://www.instagram.com/relax_androamtravel/
+      - link "Book Consultation" [ref=f15e228] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f15e229]:
+      - generic [ref=f15e230]: © 2026 Relax & Roam Travel. All rights reserved.
+      - link "Website by DNA Levity" [ref=f15e231] [cursor=pointer]:
+        - /url: https://dnalevity.com

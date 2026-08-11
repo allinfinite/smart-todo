@@ -4,6 +4,12 @@ Static client portal template for collecting work requests, showing compact task
 
 This frontend is template-ready. You can brand it and point it at any compatible API entirely through env vars at build time.
 
+## ChatGPT and Claude
+
+Smart Todo includes an OAuth 2.1 remote MCP server for ChatGPT and Claude. Connect `https://cowork-api.dnalevity.com/mcp` with a normal Smart Todo login to review requests, update a site, open previews, and deploy from the conversation.
+
+See [Smart Todo for ChatGPT and Claude](/Users/daniellevy/Code/smart-todo/docs/MCP.md) for installation, permissions, account boundaries, and verification.
+
 The repo now supports two runtime modes:
 
 - `legacy`: the existing per-client branded portal driven by slug-scoped API paths and portal passwords
@@ -157,7 +163,7 @@ Shared tenant workspace config may include:
 - `appPath`: runtime app directory when different from `repoPath`
 - `deployBranch`: required branch for `Sync` and `Deploy`
 - `enabledActions`: optional allowlist for workspace actions such as `preview`, `sync`, `discard`, and `deploy`
-- `defaultModel`: default model for tenant work requests; smart-todo client provisioning defaults this to `gpt-5.5`
+- `defaultModel`: Smart Todo tenant work requests use `gpt-5.6-luna`
 
 Shared-mode write endpoints should accept either JSON or multipart form uploads:
 

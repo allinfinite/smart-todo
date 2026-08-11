@@ -1,0 +1,134 @@
+- main [ref=f6e2]:
+  - navigation "Primary navigation" [ref=f6e5]:
+    - link "Relax & Roam Travel home" [ref=f6e6] [cursor=pointer]:
+      - /url: /preview/relax-and-roam-travel
+      - img "Relax & Roam Travel" [ref=f6e7]
+    - generic [ref=f6e8]:
+      - link "About" [ref=f6e9] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/about
+      - link "Journeys" [ref=f6e10] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/itineraries
+      - link "Services" [ref=f6e11] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/services
+      - link "FAQ" [ref=f6e12] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/services#faq
+      - link "Blog" [ref=f6e13] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/blog
+      - link "Contact" [ref=f6e14] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - link "Book a consultation" [ref=f6e15] [cursor=pointer]:
+      - /url: /preview/relax-and-roam-travel/contact
+  - generic [ref=f6e16]:
+    - figure [ref=f6e18]:
+      - img "Sandra Hodes" [ref=f6e19]
+    - generic [ref=f6e20]:
+      - paragraph [ref=f6e21]: Meet Sandra
+      - heading "Some call it obsessive. I call it knowing exactly what makes a trip extraordinary." [level=2] [ref=f6e22]
+      - paragraph [ref=f6e23]: I'm an attorney and founder of a boutique luxury travel agency, which means I research like it's my job - because it is. I know the difference between a good hotel and the right hotel for you, between a logical itinerary and one that actually flows - and I've spent decades traveling the world to learn exactly that.
+      - paragraph [ref=f6e24]: My love of travel started early. I grew up devouring travel guides the same way I read novels, dreaming about the places I'd go. I studied in Italy, Spain, and London, fell hard for Europe, and never really came back - at least not in spirit. Italy has my heart in a way that's hard to explain to anyone who hasn't stood in a Florentine piazza at dusk or lingered over a long lunch in Tuscany.
+      - paragraph [ref=f6e25]: "How do I love to travel? Immersing myself fully in a place: meandering through hidden streets, discovering local flavors and vibrant bars, and ending the day with a handcrafted cocktail at a stunning hotel bar where every detail feels effortless. Whether savoring a slow lunch in a village trattoria, hiking rugged cliffs, or finding peaceful stillness beneath ancient trees at a shrine in Japan, I've learned that travel's true magic is both movement and pause."
+      - paragraph [ref=f6e26]: I'm based in South Florida and escape to the mountains of Colorado whenever I can, and I've been lucky enough to travel extensively - with friends, with my family, and on my own, always with a notebook and an eye for what actually makes a place sing. I've also traveled with my kids since they were infants, which means I know firsthand what works for families and multi-generational groups at every stage.
+      - paragraph [ref=f6e27]: I'm affiliated with Fora(X) and Virtuoso - the world's leading luxury travel network - which means my clients get access to preferred partnerships, VIP amenities, and relationships with hoteliers around the world that simply can't be replicated by booking on your own. But honestly? These relationships are what I'm most proud of. When I call ahead for a client, someone picks up - and they know my name.
+      - paragraph [ref=f6e28]: Everyone has their own sweet spot when it comes to travel planning - and I'm happy to meet you wherever you are. If you simply want help securing the right hotel or cruise and prefer to do your own research, I'll still bring my industry relationships to the table and make sure you're getting the VIP treatment, at no additional cost to you. And if you want more, I plan every trip as if it were my own.
+      - paragraph [ref=f6e29]: If you want someone who will dig in, get it right, and stay in your corner from the first conversation to the moment you get home - let's talk.
+      - generic [ref=f6e30]:
+        - paragraph [ref=f6e31]: Sandra Hodes
+        - generic [ref=f6e32]: Founder, Relax & Roam Travel/Fora(X)
+  - region [ref=f6e33]:
+    - generic:
+      - generic:
+        - heading [level=2]
+      - paragraph
+    - figure "Sandra Hodes travel photos" [ref=f6e34]:
+      - img "Sandra Hodes standing beside a camel in the desert" [ref=f6e36]
+      - img "Sandra Hodes wearing a sun hat in a garden overlook" [ref=f6e38]
+      - img "Sandra Hodes holding a bicycle in a lavender field" [ref=f6e40]
+      - img "Sandra Hodes standing beside a stone wall" [ref=f6e42]
+      - img "Sandra Hodes walking through a Paris square" [ref=f6e44]
+      - img "Sandra Hodes standing on a shoreline" [ref=f6e46]
+      - img "Sandra Hodes skiing through fresh snow" [ref=f6e48]
+      - img "Sandra Hodes standing in front of a colorful wings mural" [ref=f6e50]
+      - img "Sandra Hodes hiking through a desert landscape" [ref=f6e52]
+  - generic [ref=f6e53]:
+    - generic [ref=f6e54]:
+      - paragraph [ref=f6e55]: Reviews
+      - heading "The best trips speak for themselves." [level=2] [ref=f6e56]
+      - paragraph [ref=f6e57]: Here's what our clients have to say.
+    - generic [ref=f6e59]:
+      - generic [ref=f6e60]:
+        - img "Switzerland and Italy & Japan travel scene" [ref=f6e63]
+        - article [ref=f6e64]:
+          - generic [ref=f6e65]: “
+          - paragraph [ref=f6e66]: Sandra Hodes is, without a doubt, the best travel advisor we have ever worked with. She helped us plan a multigenerational trip across Europe, and every detail exceeded our expectations. From the start, Sandra demonstrated an incredible depth of knowledge, professionalism, and genuine care for our experience. She recommended hotels that were perfectly located, with outstanding hospitality and high standards, and went above and beyond by arranging upgrades, thoughtful welcome packages, and even personalized handwritten notes. Her attention to detail made us feel truly special throughout our journey. Sandra was always communicative and accommodating, monitoring all our reservations closely. She even leveraged her expertise and tools to secure better rates for us, ensuring we got exceptional value. Beyond logistics, she suggested activities tailored to our group's interests and coordinated seamlessly with her on-the-ground liaisons to ensure everything ran smoothly. What stood out most was her commitment to our trip during our stay, checking in to make sure everything was perfect and addressing any needs immediately. Sandra is approachable, knowledgeable, and a genuine pleasure to work with. She takes the stress out of travel planning and transforms a trip into an effortless, unforgettable experience. We cannot recommend Sandra highly enough. If you want a travel advisor who combines expertise, personal attention, and thoughtful service, Sandra Hodes is the professional to choose.
+          - generic [ref=f6e67]:
+            - strong [ref=f6e68]: S.F.
+            - generic [ref=f6e69]: Travel to Switzerland and Italy
+        - article [ref=f6e70]:
+          - generic [ref=f6e71]: “
+          - paragraph [ref=f6e72]: Sandra was great from the very early planning stages. We live in Mexico City and we managed to walk through every detail every time we had doubts or questions. She works with local partners that are available when she is sleeping. She is passionate about her work and she definitely knows what she is talking about. Sandi gave us a tailored experience, and molded the whole trip to our needs, desires and budget. Our experience was amazing thanks to Sandi and we would definitely do our future trips with her and recommend her highly as well.
+          - generic [ref=f6e73]:
+            - strong [ref=f6e74]: M.L.
+            - generic [ref=f6e75]: Travel to Japan
+      - generic [ref=f6e76]:
+        - button "Show previous testimonial slide" [ref=f6e77] [cursor=pointer]: Previous
+        - generic "Choose a testimonial slide" [ref=f6e78]:
+          - button "Show testimonial slide 1" [pressed] [ref=f6e79] [cursor=pointer]
+          - button "Show testimonial slide 2" [ref=f6e80] [cursor=pointer]
+          - button "Show testimonial slide 3" [ref=f6e81] [cursor=pointer]
+          - button "Show testimonial slide 4" [ref=f6e82] [cursor=pointer]
+          - button "Show testimonial slide 5" [ref=f6e83] [cursor=pointer]
+          - button "Show testimonial slide 6" [ref=f6e84] [cursor=pointer]
+          - button "Show testimonial slide 7" [ref=f6e85] [cursor=pointer]
+        - button "Show next testimonial slide" [ref=f6e86] [cursor=pointer]: Next
+      - paragraph [ref=f6e87]:
+        - generic [ref=f6e88]: "01"
+        - generic [ref=f6e89]: /
+        - generic [ref=f6e90]: "07"
+  - generic [ref=f6e91]:
+    - generic [ref=f6e92]:
+      - paragraph [ref=f6e93]: Why Relax & Roam
+      - heading "Personal, organized, and grounded in how you actually like to travel." [level=2] [ref=f6e94]
+    - generic [ref=f6e95]:
+      - article [ref=f6e96]:
+        - heading "The insider access you can't book yourself" [level=3] [ref=f6e98]
+        - paragraph [ref=f6e99]: Through our global preferred partnerships at the world's finest hotels, we advocate for the best room, work relationships behind the scenes, and secure complimentary perks you simply can't get on your own.
+      - article [ref=f6e100]:
+        - heading "A trip that actually flows" [level=3] [ref=f6e102]
+        - paragraph [ref=f6e103]: A great trip is not just a list of great hotels. It is the pace, routing, balance of activity and rest, and the moments in between that make it feel effortless.
+      - article [ref=f6e104]:
+        - heading "Someone in your corner, start to finish" [level=3] [ref=f6e106]
+        - paragraph [ref=f6e107]: Spending hours searching online or with AI? From the first conversation to the moment you get home, we handle the details, track the moving parts, and make sure nothing falls through the cracks.
+  - generic [ref=f6e108]:
+    - generic [ref=f6e109]:
+      - paragraph [ref=f6e110]: Next step
+      - heading "Start with a consultation and let Relax & Roam Travel shape the right planning path." [level=2] [ref=f6e111]
+    - link "Book a consultation" [ref=f6e112] [cursor=pointer]:
+      - /url: /preview/relax-and-roam-travel/contact
+  - generic [ref=f6e113]:
+    - generic [ref=f6e114]:
+      - img "Relax & Roam Travel" [ref=f6e115]
+      - paragraph [ref=f6e116]: Destination expertise, hotel strategy, and planning support for travelers who want the trip to feel seamless from the start.
+    - generic [ref=f6e118]:
+      - generic [ref=f6e119]:
+        - paragraph [ref=f6e120]: Travel notes
+        - heading "The good stuff." [level=3] [ref=f6e121]
+        - paragraph [ref=f6e122]: Hotels, destinations, and travel inspiration - curated and delivered straight to your inbox.
+      - generic [ref=f6e124]:
+        - text: Email
+        - textbox "Email" [ref=f6e125]
+      - generic [ref=f6e126]:
+        - button "Join" [ref=f6e127]
+        - paragraph [ref=f6e128]: Your information is used only for Relax & Roam Travel follow-up and updates.
+    - generic [ref=f6e129]:
+      - link "sandra.hodes@fora.travel" [ref=f6e130] [cursor=pointer]:
+        - /url: mailto:sandra.hodes@fora.travel
+      - link "(954) 401-8794" [ref=f6e135] [cursor=pointer]:
+        - /url: tel:+19544018794
+      - link "Instagram" [ref=f6e136] [cursor=pointer]:
+        - /url: https://www.instagram.com/relax_androamtravel/
+      - link "Book Consultation" [ref=f6e142] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f6e143]:
+      - generic [ref=f6e144]: © 2026 Relax & Roam Travel. All rights reserved.
+      - link "Website by DNA Levity" [ref=f6e145] [cursor=pointer]:
+        - /url: https://dnalevity.com

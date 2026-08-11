@@ -17,7 +17,7 @@ from urllib.request import Request, urlopen
 
 
 VERCEL_SCOPE = "dnalevity"
-DEFAULT_CLIENT_MODEL = "gpt-5.5"
+DEFAULT_CLIENT_MODEL = "gpt-5.6-luna"
 BUILTIN_PREVIEW_PORTS = {
     "samanayo": 3101,
     "soulfire": 3102,
@@ -568,14 +568,13 @@ class Provisioner:
                         "add",
                         "PORTAL_TEMPLATE_CONFIG_JSON",
                         environment,
-                        "--value",
-                        config_json,
                         "--yes",
                         "--force",
                         "--scope",
                         VERCEL_SCOPE,
                     ],
                     cwd=checkout,
+                    input_text=config_json,
                     timeout=120,
                 )
 

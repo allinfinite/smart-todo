@@ -1,0 +1,190 @@
+- main [ref=f2e2]:
+  - generic [ref=f2e3]:
+    - navigation "Primary navigation" [ref=f2e7]:
+      - link "Relax & Roam Travel home" [ref=f2e8] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel
+        - img "Relax & Roam Travel" [ref=f2e9]
+      - generic [ref=f2e10]:
+        - link "About" [ref=f2e11] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/about
+        - link "Journeys" [ref=f2e12] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/itineraries
+        - link "Services" [ref=f2e13] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services
+        - link "FAQ" [ref=f2e14] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services#faq
+        - link "Blog" [ref=f2e15] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog
+        - link "Contact" [ref=f2e16] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/contact
+      - link "Book a consultation" [ref=f2e17] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f2e19]:
+      - paragraph [ref=f2e20]: Boutique luxury travel agency
+      - heading "The world is extraordinary. Your trip should be too." [level=1] [ref=f2e21]
+      - paragraph [ref=f2e22]: From a beloved Paris bistro to a once-in-a-lifetime safari - every journey tells a story. Relax & Roam crafts deeply personal itineraries for travelers who expect the extraordinary, backed by decades of firsthand experience and relationships with the world's finest hotels.
+      - link "Book a consultation" [ref=f2e24] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+  - generic [ref=f2e25]:
+    - figure "Sandra Hodes travel photos" [ref=f2e27]:
+      - img "Sandra Hodes standing beside a camel in the desert" [ref=f2e29]
+      - img "Sandra Hodes wearing a sun hat in a garden overlook" [ref=f2e31]
+      - img "Sandra Hodes holding a bicycle in a lavender field" [ref=f2e33]
+      - img "Sandra Hodes standing beside a stone wall" [ref=f2e35]
+      - img "Sandra Hodes walking through a Paris square" [ref=f2e37]
+      - img "Sandra Hodes standing on a shoreline" [ref=f2e39]
+      - img "Sandra Hodes skiing through fresh snow" [ref=f2e41]
+      - img "Sandra Hodes standing in front of a colorful wings mural" [ref=f2e43]
+      - img "Sandra Hodes hiking through a desert landscape" [ref=f2e45]
+    - generic [ref=f2e46]:
+      - paragraph [ref=f2e47]: Meet Sandra
+      - heading "Some call it obsessive. I call it knowing exactly what makes a trip extraordinary." [level=2] [ref=f2e48]
+      - paragraph [ref=f2e49]: I'm a former attorney and founder of a boutique luxury travel agency, which means I research like it's my job - because it is. I know the difference between a good hotel and the right hotel for you, between a logical itinerary and one that actually flows.
+      - link "Learn more about Sandra" [ref=f2e50] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/about
+  - generic [ref=f2e51]:
+    - generic [ref=f2e52]:
+      - paragraph [ref=f2e53]: Why Relax & Roam
+      - heading "Because the right travel company does more than make a reservation." [level=2] [ref=f2e54]
+    - generic [ref=f2e55]:
+      - article [ref=f2e56]:
+        - heading "The insider access you can't book yourself" [level=3] [ref=f2e58]
+        - paragraph [ref=f2e59]: Through our global preferred partnerships at the world's finest hotels, we advocate for the best room, work relationships behind the scenes, and secure complimentary perks you simply can't get on your own.
+      - article [ref=f2e60]:
+        - heading "A trip that actually flows" [level=3] [ref=f2e62]
+        - paragraph [ref=f2e63]: A great trip is not just a list of great hotels. It is the pace, routing, balance of activity and rest, and the moments in between that make it feel effortless.
+      - article [ref=f2e64]:
+        - heading "Someone in your corner, start to finish" [level=3] [ref=f2e66]
+        - paragraph [ref=f2e67]: Spending hours searching online or with AI? From the first conversation to the moment you get home, we handle the details, track the moving parts, and make sure nothing falls through the cracks.
+  - generic [ref=f2e68]:
+    - generic [ref=f2e70]:
+      - paragraph [ref=f2e71]: How to work together
+      - heading "Whether you know exactly where you're going or need help figuring that out - we've got you." [level=2] [ref=f2e72]
+    - generic [ref=f2e73]:
+      - article [ref=f2e74]:
+        - generic [ref=f2e75]:
+          - paragraph [ref=f2e76]: Complimentary
+          - generic [ref=f2e77]: No planning fee
+        - heading "Hotel Only Booking + Cruise Support" [level=3] [ref=f2e78]
+        - paragraph [ref=f2e79]: You know where you want to go - we'll handle the booking and make sure you get the best rates and exclusive VIP perks and service that come with booking through us.
+        - generic [ref=f2e80]:
+          - link "Learn more" [ref=f2e81] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/services
+          - link "Book a consultation" [ref=f2e82] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/contact
+      - article [ref=f2e83]:
+        - generic [ref=f2e84]:
+          - paragraph [ref=f2e85]: Most popular
+          - generic [ref=f2e86]: Starting at $500
+        - heading "Itinerary Planning" [level=3] [ref=f2e87]
+        - paragraph [ref=f2e88]: Have a destination in mind - or just a feeling? We'll take it from there. Hotels, routing, logistics, and curated experiences - every detail handled, every moving part connected, white-glove service so your trip feels seamless.
+        - generic [ref=f2e89]:
+          - link "Learn more" [ref=f2e90] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/services
+          - link "Book a consultation" [ref=f2e91] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/contact
+  - generic [ref=f2e92]:
+    - generic [ref=f2e93]:
+      - generic [ref=f2e94]:
+        - paragraph [ref=f2e95]: What clients are saying
+        - heading "From the details they didn't have to think about to the memories they'll never forget." [level=2] [ref=f2e96]
+      - paragraph [ref=f2e97]: Here's what our clients have to say.
+    - generic [ref=f2e98]:
+      - generic [ref=f2e99]:
+        - paragraph [ref=f2e100]: Testimonials
+        - heading "What our clients say" [level=3] [ref=f2e101]
+      - generic [ref=f2e102]:
+        - generic [ref=f2e103]:
+          - img "Lucerne & Japan travel scene" [ref=f2e106]
+          - article [ref=f2e107]:
+            - generic [ref=f2e108]: “
+            - paragraph [ref=f2e109]: Sandra Hodes is, without a doubt, the best travel advisor we have ever worked with. She helped us plan a multigenerational trip across Europe, and every detail exceeded our expectations.
+            - generic [ref=f2e110]:
+              - strong [ref=f2e111]: S.F.
+              - generic [ref=f2e112]: Travel to Lucerne
+          - article [ref=f2e113]:
+            - generic [ref=f2e114]: “
+            - paragraph [ref=f2e115]: Sandi gave us a tailored experience, and molded the whole trip to our needs, desires and budget. Our experience was amazing thanks to Sandi.
+            - generic [ref=f2e116]:
+              - strong [ref=f2e117]: M.L.
+              - generic [ref=f2e118]: Travel to Japan
+        - generic [ref=f2e119]:
+          - button "Show previous testimonial slide" [ref=f2e120] [cursor=pointer]: Previous
+          - generic "Choose a testimonial slide" [ref=f2e121]:
+            - button "Show testimonial slide 1" [pressed] [ref=f2e122] [cursor=pointer]
+            - button "Show testimonial slide 2" [ref=f2e123] [cursor=pointer]
+            - button "Show testimonial slide 3" [ref=f2e124] [cursor=pointer]
+          - button "Show next testimonial slide" [ref=f2e125] [cursor=pointer]: Next
+        - paragraph [ref=f2e126]:
+          - generic [ref=f2e127]: "01"
+          - generic [ref=f2e128]: /
+          - generic [ref=f2e129]: "03"
+    - link "Read all reviews" [ref=f2e131] [cursor=pointer]:
+      - /url: /preview/relax-and-roam-travel/about#reviews
+  - generic [ref=f2e132]:
+    - generic [ref=f2e134]:
+      - paragraph [ref=f2e135]: Explore the work
+      - heading "A closer look at the trips we plan, some destinations we love, and the clients we've worked with." [level=2] [ref=f2e136]
+    - generic [ref=f2e137]:
+      - article [ref=f2e138]:
+        - link "Journeys" [ref=f2e139] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/itineraries
+        - generic [ref=f2e140]:
+          - paragraph [ref=f2e141]: Journeys
+          - heading "Journeys" [level=3] [ref=f2e142]
+          - paragraph [ref=f2e143]: From multi-stop European adventures to active escapes and beach retreats - a look at the destinations, pacing, and planning style that define a Relax & Roam trip.
+          - link "Explore journeys" [ref=f2e144] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/itineraries
+      - article [ref=f2e145]:
+        - link "Blog" [ref=f2e146] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog
+        - generic [ref=f2e147]:
+          - paragraph [ref=f2e148]: Blog
+          - heading "Blog" [level=3] [ref=f2e149]
+          - paragraph [ref=f2e150]: Destination guides, hotel finds, and planning insights - everything worth knowing before you go, from someone who has already been there.
+          - link "Read the blog" [ref=f2e151] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/blog
+      - article [ref=f2e152]:
+        - link "Reviews" [ref=f2e153] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/about#reviews
+        - generic [ref=f2e154]:
+          - paragraph [ref=f2e155]: Reviews
+          - heading "Reviews" [level=3] [ref=f2e156]
+          - paragraph [ref=f2e157]: From the details they didn't have to think about to the memories they'll never forget - hear it straight from our clients.
+          - link "View reviews" [ref=f2e158] [cursor=pointer]:
+            - /url: /preview/relax-and-roam-travel/about#reviews
+  - generic [ref=f2e159]:
+    - generic [ref=f2e160]:
+      - paragraph [ref=f2e161]: Let's start planning
+      - heading "Every great trip starts with a conversation." [level=2] [ref=f2e162]
+      - paragraph [ref=f2e163]: Reach out and let's start planning something extraordinary.
+    - link "Book a consultation" [ref=f2e164] [cursor=pointer]:
+      - /url: /preview/relax-and-roam-travel/contact
+  - generic [ref=f2e165]:
+    - generic [ref=f2e166]:
+      - img "Relax & Roam Travel" [ref=f2e167]
+      - paragraph [ref=f2e168]: Destination expertise, hotel strategy, and planning support for travelers who want the trip to feel seamless from the start.
+    - generic [ref=f2e170]:
+      - generic [ref=f2e171]:
+        - paragraph [ref=f2e172]: Travel notes
+        - heading "The good stuff." [level=3] [ref=f2e173]
+        - paragraph [ref=f2e174]: Hotels, destinations, and travel inspiration - curated and delivered straight to your inbox.
+      - generic [ref=f2e176]:
+        - text: Email
+        - textbox "Email" [ref=f2e177]
+      - generic [ref=f2e178]:
+        - button "Join" [ref=f2e179]
+        - paragraph [ref=f2e180]: Your information is used only for Relax & Roam Travel follow-up and updates.
+    - generic [ref=f2e181]:
+      - link "sandra.hodes@fora.travel" [ref=f2e182] [cursor=pointer]:
+        - /url: mailto:sandra.hodes@fora.travel
+      - link "(954) 401-8794" [ref=f2e187] [cursor=pointer]:
+        - /url: tel:+19544018794
+      - link "Instagram" [ref=f2e188] [cursor=pointer]:
+        - /url: https://www.instagram.com/relax_androamtravel/
+      - link "Book Consultation" [ref=f2e194] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f2e195]:
+      - generic [ref=f2e196]: © 2026 Relax & Roam Travel. All rights reserved.
+      - link "Website by DNA Levity" [ref=f2e197] [cursor=pointer]:
+        - /url: https://dnalevity.com

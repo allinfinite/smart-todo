@@ -1,5 +1,9 @@
 # Lessons
 
+## 2026-07-28
+
+- Smart Todo has one canonical admin identity: `me@dnalevity.com`. Do not treat the legacy bootstrap account `owner@dnalevity.local` as a second admin; keep the bootstrap email configured to the canonical account and verify inactive legacy accounts cannot log in.
+
 ## 2026-05-14
 
 - Smart Todo client login should be presented as email plus password. Do not describe the user-facing gate as a single shared portal password unless the target is explicitly a legacy password-only portal.
@@ -66,3 +70,14 @@
 - After any portal request finishes or a verification retry completes, check that the request record actually has a populated `completion_screenshot`; a `done` status alone is not enough for a reviewable card.
 - In Cowork portal evidence handling, do not silently return on `Evidence route: none` when a completed request still lacks a `completion_screenshot`; queue another evidence repair path or keep the screenshot that was captured.
 - In the shared auth bootstrap, do not key unauthenticated handling only on the literal string `Request failed (401)`; the live Cowork API can return `Unauthorized`, and the frontend must treat that as the same login-required state.
+- When the user says "send [client] the skill," treat "send" as direct client communication (normally email when a verified address exists), not a Smart Todo agent-task handoff, unless they explicitly mention the tenant agent or portal.
+
+## 2026-08-10
+
+- Smart Todo renders Cowork agent messages almost verbatim, so “simple bot language” must be enforced in the backend prompt contract, not only by changing frontend labels. Apply the same non-technical, short-sentence rules to initial requests, follow-ups, and automatic retries, then verify the generated prompt in the live service runtime.
+# OAuth Retry Verification (2026-08-10)
+
+- When retrying a Codex MCP OAuth login, do not assume the CLI opened the newly printed authorization URL. Explicitly open the exact current URL, then verify the live OAuth store contains an unexpired authorization request for that same client ID before asking the user to sign in. Old browser tabs can otherwise keep showing a valid-looking but expired request.
+- After resetting a password for browser authentication, do not trust clipboard contents or an existing password-manager value. Verify the new credential against the production login endpoint, transfer it through an ephemeral secure store, and inspect the browser field before submission.
+- For OAuth forms protected by `form-action 'self'`, do not rely on the browser's implicit current-document action when the authorization URL has a long query string. Set an explicit same-origin POST action and verify an actual browser POST, not only the button's client-side state.
+- OAuth `form-action` CSP also governs redirects after a successful form POST. A fake-password test proves only that the POST reaches the server; verify the accepted-credential redirect to the registered callback, and include only that exact callback origin in the authorization page policy.

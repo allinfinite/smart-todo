@@ -1,0 +1,105 @@
+- main [ref=f19e2]:
+  - generic [ref=f19e3]:
+    - navigation "Primary navigation" [ref=f19e5]:
+      - link "Relax & Roam Travel home" [ref=f19e6] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel
+        - img "Relax & Roam Travel" [ref=f19e7]
+      - generic [ref=f19e8]:
+        - link "About" [ref=f19e9] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/about
+        - link "Journeys" [ref=f19e10] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/itineraries
+        - link "Services" [ref=f19e11] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services
+        - link "FAQ" [ref=f19e12] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/services#faq
+        - link "Blog" [ref=f19e13] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/blog
+        - link "Contact" [ref=f19e14] [cursor=pointer]:
+          - /url: /preview/relax-and-roam-travel/contact
+      - link "Book a consultation" [ref=f19e15] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f19e16]:
+      - paragraph [ref=f19e17]: Contact
+      - heading "Let's start planning." [level=1] [ref=f19e18]
+      - paragraph [ref=f19e19]: Whether you have a destination in mind, a hotel booking only, or just a trip idea you're ready to explore - reach out and let's figure out the best way to work together.
+  - generic [ref=f19e20]:
+    - generic [ref=f19e21]:
+      - paragraph [ref=f19e22]: Start here
+      - heading "Send the trip details we need first." [level=2] [ref=f19e23]
+      - paragraph [ref=f19e24]: The consultation form is the primary first step. Share what you know now - approximate dates, early destination ideas, and open questions are all welcome.
+      - generic [ref=f19e25]:
+        - link "sandra.hodes@fora.travel" [ref=f19e26] [cursor=pointer]:
+          - /url: mailto:sandra.hodes@fora.travel
+        - link "(954) 401-8794" [ref=f19e27] [cursor=pointer]:
+          - /url: tel:+19544018794
+        - link "Instagram" [ref=f19e28] [cursor=pointer]:
+          - /url: https://www.instagram.com/relax_androamtravel/
+      - paragraph [ref=f19e29]: Your submission is used only for Relax & Roam Travel consultation follow-up and updates.
+    - generic [ref=f19e31]:
+      - heading "Consultation inquiry" [level=3] [ref=f19e32]
+      - paragraph [ref=f19e33]: Share a few details here and we will follow up to help clarify the right next step.
+      - generic [ref=f19e34]:
+        - generic [ref=f19e35]:
+          - text: Name
+          - textbox "Name" [ref=f19e36]
+        - generic [ref=f19e37]:
+          - text: Email
+          - textbox "Email" [ref=f19e38]
+      - generic [ref=f19e39]:
+        - generic [ref=f19e40]:
+          - text: Phone
+          - textbox "Phone" [ref=f19e41]
+        - generic [ref=f19e42]:
+          - text: Destination
+          - textbox "Destination" [ref=f19e43]:
+            - /placeholder: Japan, Greece, Italy...
+      - generic [ref=f19e44]:
+        - generic [ref=f19e45]:
+          - text: Travel dates
+          - textbox "Travel dates" [ref=f19e46]:
+            - /placeholder: Approximate is fine
+        - generic [ref=f19e47]:
+          - text: Service interest
+          - combobox "Service interest" [ref=f19e48]:
+            - option "Hotel-only booking"
+            - option "Itinerary planning"
+            - option "Cruise support"
+            - option "Not sure yet" [selected]
+      - generic [ref=f19e49]:
+        - text: Budget range
+        - textbox "Budget range" [ref=f19e50]:
+          - /placeholder: Optional
+      - generic [ref=f19e51]:
+        - text: What kind of trip are you imagining?
+        - textbox "What kind of trip are you imagining?" [ref=f19e52]
+      - button "Send consultation inquiry" [ref=f19e53]
+      - paragraph [ref=f19e54]: Your submission is used only for Relax & Roam Travel consultation follow-up.
+  - generic [ref=f19e55]:
+    - generic [ref=f19e56]:
+      - img "Relax & Roam Travel" [ref=f19e57]
+      - paragraph [ref=f19e58]: Destination expertise, hotel strategy, and planning support for travelers who want the trip to feel seamless from the start.
+    - generic [ref=f19e60]:
+      - generic [ref=f19e61]:
+        - paragraph [ref=f19e62]: Travel notes
+        - heading "The good stuff." [level=3] [ref=f19e63]
+        - paragraph [ref=f19e64]: Hotels, destinations, and travel inspiration - curated and delivered straight to your inbox.
+      - generic [ref=f19e66]:
+        - text: Email
+        - textbox "Email" [ref=f19e67]
+      - generic [ref=f19e68]:
+        - button "Join" [ref=f19e69]
+        - paragraph [ref=f19e70]: Your information is used only for Relax & Roam Travel follow-up and updates.
+    - generic [ref=f19e71]:
+      - link "sandra.hodes@fora.travel" [ref=f19e72] [cursor=pointer]:
+        - /url: mailto:sandra.hodes@fora.travel
+      - link "(954) 401-8794" [ref=f19e77] [cursor=pointer]:
+        - /url: tel:+19544018794
+      - link "Instagram" [ref=f19e78] [cursor=pointer]:
+        - /url: https://www.instagram.com/relax_androamtravel/
+      - link "Book Consultation" [ref=f19e84] [cursor=pointer]:
+        - /url: /preview/relax-and-roam-travel/contact
+    - generic [ref=f19e85]:
+      - generic [ref=f19e86]: © 2026 Relax & Roam Travel. All rights reserved.
+      - link "Website by DNA Levity" [ref=f19e87] [cursor=pointer]:
+        - /url: https://dnalevity.com

@@ -1,4 +1,267 @@
+# Prevent Duplicate OAuth Consent Submissions (2026-08-10)
+
+## Plan
+
+- [x] Inspect the OAuth authorization form and reproduce how repeat clicks reach the login rate limiter.
+- [x] Disable the submit button immediately on the first valid submission and show a connecting state.
+- [x] Add focused regression coverage and run the OAuth/MCP test suite.
+- [x] Deploy the narrow backend change and verify the live flow in a real browser with a fresh request.
+
+## Review
+
+- Root cause: the OAuth form had no submission lock, so rapid clicks could post the same credentials repeatedly and exhaust the per-email login rate limit.
+- Added a same-origin `/oauth/connect.js` guard under the existing restrictive CSP. On the first valid submit it marks the form as submitting, disables the button, adds `aria-disabled`, and changes the label to `Connecting…`; later submit events are canceled.
+- Added disabled-button styling and regression assertions for the form hook, same-origin script policy, script response, duplicate guard, disabled state, and connecting label.
+- Verification: Python compilation passed and all 19 focused OAuth/MCP tests passed. The deployed file hash is `14a7eb5f0eb0d532025e5e80c4005533c9bbcd58678b711c5f03fe4f78c13389`; `cowork-dashboard.service` restarted and is active.
+- Live browser verification used a fresh authorization page while preventing the form from reaching the login endpoint: the button changed from `Connect Smart Todo` to disabled `Connecting…` on the first valid click and remained disabled on a forced second click.
+- Recoverable live backup: `/home/dna/Code/Cowork/.dashboard_state/backups/oauth-single-submit-20260811T031616Z/smart_todo_mcp.py`.
+
+## CSP Follow-up
+
+- [x] Reproduce the browser `form-action 'self'` block on the implicit current-page action.
+- [x] Give the login form an explicit same-origin `/oauth/authorize` action and cover it in tests.
+- [x] Deploy the correction and verify a real POST using a disposable probe identity.
+
+### Follow-up Review
+
+- Added the explicit `action="/oauth/authorize"`, which avoids the browser CSP rejection while preserving `form-action 'self'`.
+- Re-ran Python compilation and all 19 focused OAuth/MCP tests successfully.
+- Deployed hash `8ea3f5ed9c429b7a2cbf919eab04080f253f2e0e6306dbd2119b50de67e9bcb3`; the live service is active. Backup: `/home/dna/Code/Cowork/.dashboard_state/backups/oauth-explicit-form-action-20260811T032000Z/smart_todo_mcp.py`.
+- A real headed-browser POST with `csp-probe-20260811@example.invalid` reached `/oauth/authorize` and returned the expected `401` login error. No CSP violation occurred, proving the browser no longer blocks submission. The user's email was not used for this test.
+- Cleared seven stale duplicate-click attempts only from `me@dnalevity.com`'s OAuth login bucket under the store lock. Recoverable state backup: `/home/dna/Code/Cowork/.dashboard_state/backups/oauth-rate-limit-clear-20260811T032100Z/smart_todo_oauth.json`.
+
+## Successful Redirect CSP Follow-up
+
+- [x] Allow only the exact registered callback origin in each authorization page's `form-action` policy.
+- [x] Cover loopback and hosted callback origins in tests.
+- [x] Verify an accepted-credential browser redirect end to end after action-time confirmation.
+
+### Redirect Fix Status
+
+- The production authorization page now returns `form-action 'self' http://127.0.0.1:53947` for the active Codex request, allowing only its exact loopback callback rather than a wildcard.
+- Python compilation and all 20 focused OAuth/MCP tests pass, including exact loopback-port and hosted Claude callback policies.
+- Deployed hash `0f27c929ebfca1b9cd9bb32b87c088d48f858c54468e728f7df84550c26fb4cb`; `cowork-dashboard.service` is active. Backup: `/home/dna/Code/Cowork/.dashboard_state/backups/oauth-callback-csp-20260811T032400Z/smart_todo_mcp.py`.
+- The final accepted-credential click creates the persistent OAuth grant, so browser automation is paused immediately before that action for user confirmation.
+- The user-submitted Brave flow reached the exact `127.0.0.1` callback, and the waiting Codex process reported `Successfully logged in to MCP server 'smart-todo'.`
+- `codex mcp list` now reports `smart-todo` as enabled with OAuth. A fresh read-only Codex session called `smart_todo_list_sites` successfully and returned all 12 expected sites: 42 Chakra Point, Ariya, Booch Bar, DNA Levity, Eufloria, Hope And The Honeybee, Kona Hawaii Massage, Relax & Roam Travel, Samanayo, Savvy Excursions, Soulfire, and Well of Wellness.
+- Removed and verified deletion of the temporary Keychain password entry after OAuth succeeded; the persistent OAuth connection remains active independently.
+
+# Smart Todo OAuth MCP Server (2026-08-10)
+
+## Plan
+
+- [x] Inventory every current end-user Smart Todo capability and its Cowork API contract.
+- [x] Define a minimal tool-only MCP contract with precise read/write/deploy annotations and tenant-safe OAuth scopes.
+- [x] Add OAuth 2.1 discovery, PKCE-compatible authorization, token issuance/refresh/revocation, and per-request token validation using Smart Todo accounts.
+- [x] Implement the streamable HTTP `/mcp` endpoint and map each tool to the existing Smart Todo service layer without bypassing tenant authorization.
+- [x] Add focused automated tests for OAuth discovery/PKCE/scopes, MCP initialization/tool listing, tenant isolation, mutations, and deployment approvals.
+- [x] Document ChatGPT and Claude installation, token/account boundaries, local operation, and production configuration.
+- [x] Run static, unit, local MCP, and live-safe verification; deploy only after the complete authenticated flow passes.
+
+## Review
+
+- Production MCP URL: `https://cowork-api.dnalevity.com/mcp`.
+- Added standards-based protected-resource and authorization-server discovery, public-client DCR, authorization code + PKCE S256, exact MCP resource binding, short-lived access tokens, rotating refresh tokens, revocation, rate limiting, and Smart Todo consent.
+- Exposed 28 annotated tools covering account/site/request/workspace actions, direct tracked-source search/read/patch, deployment, and global-admin operations. Smart Todo OAuth tokens are accepted only inside MCP dispatch and cannot be replayed against normal browser APIs.
+- Direct source access uses a separate consent scope, rejects hidden/sensitive/control files and unsafe paths/modes, and never executes repository scripts. A direct patch uses the same re-entrant cross-process site lock as every preview start, stops Cowork preview, and creates a permanent untrusted marker that later patches cannot re-baseline. The marker survives deployment and discard and only a trusted operator can clear it after review, so host-model code never executes with Cowork's environment. Direct patches and deploy/discard actions are tenant-policy checked, workspace locked, and bound to the exact reviewed HEAD and content digest.
+- Closed the existing global-admin REST gap so a tenant owner/operator cannot list all tenants or mutate global users, and made browser deploy/discard send the same reviewed revision proof.
+- Verification passed: Python compilation, frontend syntax check, diff checks, 19/19 focused MCP/OAuth/security tests, public HTTPS discovery and 401 challenge, DCR and authorization-page checks, and a temporary live authenticated `tools/list` call that was revoked immediately.
+- Full Cowork discovery passes 36/37 tests. The one failure is the independently reproducible pre-existing evidence-retry fixture error (`agent_task_id` missing) in `test_dashboard_evidence_verification`; it is unrelated to MCP/OAuth changes.
+- Live services: `cowork-dashboard.service` is active with zero restarts; Dokku `smart-todo` is deployed/running and serves the revision-bound browser action code.
+- Recoverable piko backups: `/home/dna/Code/Cowork/.dashboard_state/backups/smart-todo-mcp-20260811T022647Z`, `/home/dna/Code/Cowork/.dashboard_state/backups/smart-todo-mcp-hardening-20260811T023729Z`, `/home/dna/Code/Cowork/.dashboard_state/backups/smart-todo-mcp-preview-guard-20260811T024618Z`, `/home/dna/Code/Cowork/.dashboard_state/backups/smart-todo-mcp-trusted-head-20260811T024933Z`, `/home/dna/Code/Cowork/.dashboard_state/backups/smart-todo-mcp-permanent-guard-20260811T025249Z`, and `/home/dna/Code/smart-todo/shared-app.js.pre-mcp-revision-20260811T023729Z`.
+
+# Smart Todo All-User Login Audit (2026-08-09)
+
+## Plan
+
+- [x] Check Anna/Savvy's live CRM action and mark the access audit in progress.
+- [x] Reproduce Anna's live access failure and inventory every active Smart Todo user, tenant, membership, and password record.
+- [x] Compare missing access against verified historical memberships and back up live state before repair.
+- [x] Restore only historically evidenced memberships or other root-cause account state.
+- [x] Verify every active user through authenticated identity, tenant listing, and each assigned workspace endpoint.
+- [x] Verify Anna and the shared login flow in a clean production browser session.
+- [x] Update the CRM action and document final evidence.
+
+## Review
+
+- Root causes:
+  - Anna and eight other active client accounts had valid password hashes and prior authenticated sessions but had lost their tenant membership rows.
+  - Cowork's admin self-healing inferred global administration from any tenant-scoped `owner` or `internal_operator` row, which had expanded one client owner across unrelated sites.
+- Created CRM task `Audit and repair all Smart Todo user logins`, marked it `in_progress` before repair, then `done` with a completion activity after verification.
+- Recoverable live backup: `/home/dna/Code/Cowork/.dashboard_state/backups/all-user-login-pre-repair-20260809T174357Z`.
+- Restored nine historically verified `client_user` memberships: Anna/Savvy, Erin/Ariya, Gray/Samanayo, Kela/Booch Bar, Kaia/Soulfire, Evita/Kona Hawaii Massage, Eufloria/Eufloria, Sandra/Relax & Roam, and Silke/Well of Wellness.
+- Preserved Morayana/42 Chakra, restored Hope to only Hope And The Honeybee as `owner`, and removed 11 unintended cross-tenant owner memberships.
+- Patched Cowork locally and live so only the configured canonical bootstrap admin receives every tenant; tenant-scoped owners/operators remain tenant-scoped.
+- Verification:
+  - Python compilation passed locally and on piko.
+  - The focused admin-membership invariant unit test passed.
+  - All 12 active password hashes passed structural and cryptographic encoding validation.
+  - All 12 active users passed authenticated `/api/auth/me` and `/api/app/tenants` checks with exact expected membership sets.
+  - All 12 workspaces returned `200` through an assigned user's authenticated session.
+  - Anna's production browser session opened `Savvy Excursions`, showed only `Savvy Excursions · client_user`, survived refresh, and reported no browser errors.
+  - After a final Cowork restart, the store retained exactly 23 expected membership rows; Anna's identity, tenant list, and Savvy workspace endpoints each returned `200`.
+
+# Repair May Smart Todo Login (2026-08-07)
+
+## Plan
+
+- [x] Reproduce the live login failure without exposing the supplied password.
+- [x] Inspect the live user, tenant, and membership records; back up any state before repair.
+- [x] Apply the smallest root-cause fix to restore authentication and 42 Chakra access.
+- [x] Verify login, identity, tenant list, workspace access, and browser sign-in.
+- [x] Document the repair and verification evidence.
+
+## Review
+
+- Root cause: the live account was active and the supplied password was valid, but the account had zero tenant memberships, so the shared app could authenticate and then fail while loading a workspace.
+- Restored the historically verified `client_user` membership for the existing `42chakra` tenant using `MultiTenantStore.save_membership(...)` and recorded a `membership_restored` audit entry.
+- Recoverable backup: `/home/dna/Code/Cowork/.dashboard_state/backups/may-42chakra-login-pre-repair-20260807T235736Z`.
+- Live API verification passed: login `200`, `/api/auth/me` `200` with one membership, tenant list `200` with only `42chakra`, and the 42 Chakra workspace endpoint `200`.
+- Clean browser verification passed at `https://smart-todo.dnalevity.com`: the same credentials opened `42 Chakra Point`, displayed the correct `client_user` workspace, survived a page refresh, and produced no browser errors.
+- No password reset or application-code deployment was required.
+
 # Smart Todo Redesign Mockups (2026-06-11)
+
+# Restore Missing Admin Tenants (2026-07-28)
+
+## Plan
+
+- [x] Audit the live tenant store, registry, and canonical admin memberships.
+- [x] Restore the complete stable tenant registry from the latest verified backup.
+- [x] Rebuild `me@dnalevity.com` access across all active tenants.
+- [x] Verify live API responses and browser workspace selection.
+
+## Review
+
+- Root cause: live `config/portal-sites.json` had been reduced to only `hope-and-the-honeybee` and `relax-and-roam-travel`; Cowork rebuilt the tenant store from that incomplete registry.
+- Restored the verified 12-tenant registry from `/home/dna/Code/Cowork/.dashboard_state/backups/smart-todo-model-pre-luna-20260729T033754Z/portal-sites.json`.
+- `me@dnalevity.com` now receives all 12 active workspaces, including 42 Chakra Point, Savvy Excursions, Ariya, and Eufloria.
+- Live admin endpoint returns 12 tenants; clean browser reload shows all 12 workspace options.
+- Current config backup retained at `/home/dna/Code/Cowork/config/portal-sites.json.pre-full-registry-20260728`.
+- Hardened Cowork JSON state writes to use atomic replacement; three concurrent rounds of all 12 workspace checks returned `200` after deployment.
+
+# Connect Hope to Hope And The Honeybee (2026-07-28)
+
+## Plan
+
+- [x] Inspect the live user, tenant, and existing memberships.
+- [x] Back up and add the owner membership.
+- [x] Verify membership and tenant access live.
+- [x] Document the access change.
+
+## Review
+
+- Connected `hopefulopalus@gmail.com` (`Hope`) to tenant `hope-and-the-honeybee` as `owner`.
+- Tenant ID: `3b3d1477-fe55-4b98-99d5-c3ec885c438f`.
+- Membership ID: `98945a92-494f-48ad-bb8d-2703b782d5c2`.
+- Backup: `/home/dna/Code/Cowork/.dashboard_state/backups/hope-owner-membership-pre-connect-20260729T034757Z`.
+- Live store readback returns Hope's owner membership and the tenant workspace, whose model remains `gpt-5.6-luna`.
+
+# Enforce GPT-5.6 Luna for all Smart Todo users (2026-07-28)
+
+## Plan
+
+- [x] Inspect model-selection code and live Cowork user/tenant state.
+- [x] Determine whether model selection is global, per-user, per-tenant, or per-task.
+- [x] Apply the smallest live configuration change with a backup.
+- [x] Verify all active users and a live request use `gpt-5.6-luna`.
+- [x] Document results and evidence in this section.
+
+## Review
+
+- Model selection is applied per Smart Todo task, but every portal request, reply, retry, queued follow-up, and evidence retry routes through `portal_default_task_model`.
+- Pinned that server-side selector to `gpt-5.6-luna`, so stale or edited per-tenant model values cannot override it.
+- Updated provisioning defaults in both Smart Todo scripts and Cowork's tenant store, plus the documented site defaults.
+- Normalized all 12 active live tenant workspaces to `gpt-5.6-luna`.
+- Backup: `/home/dna/Code/Cowork/.dashboard_state/backups/smart-todo-model-pre-luna-20260729T033754Z`.
+- Restarted and verified the user-level `cowork-dashboard.service` is active with fresh Gunicorn workers.
+- Live verification: 13 active accounts, 12 active tenant workspaces, 12/12 tenant defaults are Luna; the live backend selector used by request creation returns Luna even when supplied a stale `gpt-5.5` tenant value.
+- The 7 stored tasks are historical completed/canceled records and remain labeled with the model that actually ran; there were no queued or running tasks to migrate.
+- Separate pre-existing issue: `hopefulopalus@gmail.com` is active but has no active tenant membership; this model-only change did not alter access records.
+
+# Admin Tenant Access / Tenant Not Found (2026-07-28)
+
+# Consolidate Smart Todo Admin Identity (2026-07-28)
+
+## Plan
+
+- [x] Confirm the duplicate admin identities and their live access.
+- [x] Disable `owner@dnalevity.local` and remove its admin memberships.
+- [x] Set `me@dnalevity.com` as the sole bootstrap admin identity.
+- [x] Verify live login behavior and service health.
+
+## Review
+
+- `owner@dnalevity.local` is now inactive, has zero memberships, and login returns `401`.
+- `me@dnalevity.com` is the only active admin account and receives all 6 currently active workspace memberships.
+- Live `cowork-dashboard.service` remains active after restart.
+- Backups retained on piko: `portal_users.json.pre-20260728T-admin-single` and `portal_memberships.json.pre-20260728T-admin-single`.
+
+## Plan
+
+- [x] Inspect repository, graph coverage, and current live tenant/membership lookup behavior.
+- [x] Reproduce the `Tenant not found` failure and identify the authoritative root cause.
+- [x] Implement the smallest durable fix so the admin account can access every workspace.
+- [x] Verify syntax, live API behavior, and browser-visible workspace selection.
+
+## Review
+
+- Root causes:
+  - `hope-and-the-honeybee` had no stable `tenant_id` in the live site registry, so concurrent Cowork workers could generate different IDs and leave the browser holding a stale tenant ID.
+  - Admin access was membership-based but not self-healing when a workspace was added after the admin’s existing memberships were established.
+- Fixes applied to live piko:
+  - pinned `hope-and-the-honeybee` to tenant ID `3b3d1477-fe55-4b98-99d5-c3ec885c438f` in `config/portal-sites.json`;
+  - added an admin-membership invariant for active owner/operator accounts during bootstrap, tenant creation, login, and `/api/auth/me`/tenant listing;
+  - restarted `cowork-dashboard.service` after Python compilation, with a recoverable backup at `/home/dna/Code/Cowork/dashboard_server.py.pre-admin-auth-selfheal-20260728`.
+- Verification:
+  - both `me@dnalevity.com` and `owner@dnalevity.local` receive all 12 active workspaces;
+  - every workspace endpoint returns `200` for the admin accounts after the tenant-ID pin;
+  - clean browser verification shows all 12 workspace options, loads 42 Chakra Point without `Tenant not found`, and switches to Hope And The Honeybee with its workspace and preview link.
+
+# Relax & Roam Travel Smart Todo Setup (2026-07-28)
+
+## Plan
+
+- [x] Inspect the target site/repo or Vercel project and normalize the tenant slug.
+- [x] Provision the Smart Todo tenant and Sandra's client access with a live backup first.
+- [x] Wire Cowork preview routing and prepare the app for `/preview/<slug>` asset paths.
+- [x] Audit every rendered preview image in a clean browser session and repair broken assets.
+- [x] Verify live login, tenant/workspace, preview, and image responses.
+- [x] Update the `smart-todo-setup` skill with the browser-level image audit requirement.
+- [x] Send Sandra the verified credentials by email.
+
+## Review
+
+- Tenant slug: `relax-and-roam-travel`; local app: `/Users/daniellevy/Code/relax-and-roam-travel`; live preview checkout: `/home/dna/Code/relax-and-roam-travel`.
+- Live Cowork tenant ID: `836f47b7-e07e-4e43-bca9-0826f0108833`; Sandra's login `Sandra.hodes@fora.travel` returns `200` and the expected `client_user` membership.
+- Took the live pre-setup backup at `/home/dna/Code/Cowork/.dashboard_state/backups/relax-and-roam-pre-setup-20260729T031745Z`.
+- Preview route: `https://piko.dnalevity.com/preview/relax-and-roam-travel`; port `3111`; nginx config installed and `nginx -t` passed.
+- Preview image audit passed after scrolling full pages: homepage (21 images), About (17), Journeys (13), Services (23), Blog (16), Kenya article (19), and Portugal itinerary (4), all with `naturalWidth > 0` and no image-load errors.
+- Root cause fixed in the app: preview-only `images.unoptimized` plus `assetPath()` for root-relative public assets. Local and piko production builds passed.
+- Workspace endpoint and preview route both return `200`.
+- Todo Vercel project: `relax-and-roam-travel-todo`; deployment: `https://relax-and-roam-travel-todo.vercel.app`.
+- Credentials emailed to Sandra; Gmail Sent readback confirmed message `19fabeeefa13fa5e` to `Sandra.hodes@fora.travel`.
+
+# Cowork API CORS Repair (2026-07-06)
+
+## Plan
+
+- [x] Reproduce the failing live preflight/request for Eufloria requests from `https://smart-todo.dnalevity.com`.
+- [x] Inspect the local and piko Cowork backend CORS allowlist and shared tenant request route.
+- [x] Patch the smallest root cause so Smart Todo browser requests receive CORS headers.
+- [x] Deploy/restart only the required live Cowork API service.
+- [x] Verify live `OPTIONS` and unauthenticated request behavior from the Smart Todo origin.
+- [x] Document final results and evidence here.
+
+## Review
+
+- Root cause: the Cowork API CORS allowlist accepted `https://smart-todo.dnalevity.com`, but `Access-Control-Allow-Headers` did not include `X-Portal-Email`, which the Smart Todo sign-in flow can send with `X-Portal-Password`.
+- Fix: updated `/Users/daniellevy/Code/Cowork/dashboard_server.py` and the live piko copy at `/home/dna/Code/Cowork/dashboard_server.py` so CORS allows `Content-Type, X-Portal-Email, X-Portal-Password, Authorization`.
+- Deployment: ran `python3 -m py_compile dashboard_server.py` on piko and restarted `cowork-dashboard.service`; the service returned `active` with fresh Gunicorn workers.
+- Verification:
+  - Live `OPTIONS https://cowork-api.dnalevity.com/api/app/tenants/bf8de553-a7fd-4b55-908b-59c3b2f5d08a/requests` from origin `https://smart-todo.dnalevity.com` returns `204`.
+  - The `GET` and `POST` preflight checks with requested headers `x-portal-email,x-portal-password,content-type` now return `Access-Control-Allow-Headers: Content-Type, X-Portal-Email, X-Portal-Password, Authorization`.
+  - Live unauthenticated `GET` to the same requests endpoint returns the expected `401 Unauthorized` while still including `Access-Control-Allow-Origin: https://smart-todo.dnalevity.com`, so browsers can read the auth failure instead of surfacing a CORS failure.
 
 # Smart Todo Epic Landing Page (2026-07-03)
 
@@ -2493,3 +2756,107 @@
   - `owner@dnalevity.local` -> `owner`
   - `me@dnalevity.com` -> `owner`
   - `misseufloria@gmail.com` -> `client_user`
+## Send Video Downloader Skill To Eufloria
+
+- [x] Resolve the live Eufloria tenant and its request-delivery path.
+- [x] Cancel the mistakenly created tenant-agent request after the user clarified that delivery should be by email only.
+- [x] Email the complete `app-video-downloader` skill to Eufloria.
+- [x] Verify the message in the sender's Sent mailbox.
+
+### Review
+
+- The initial Smart Todo request was canceled before execution after the delivery-channel correction; live task `69c07ca5-b4c5-4a16-8817-4dd4fa9aa95d` now has status `canceled`.
+- Sent `Codex app-video-downloader skill` from `humandalayoga@gmail.com` to `misseufloria@gmail.com` with the original `SKILL.md` attached.
+- Gmail Sent readback returned message `19f866fcd7a8d1c6` with the correct recipient, subject, and a 1,053-byte Markdown attachment named `SKILL.md`.
+# 42 Chakra Supabase Chat Administration (2026-08-10)
+
+## Plan
+
+- [x] Inspect the live 42chakra tenant, user memberships, Cowork agent configuration, and the app's Supabase setup.
+- [x] Identify the least-privilege server-side access path that lets authorized 42chakra chat users manage task records without exposing privileged credentials to the browser.
+- [x] Back up affected live configuration and implement the tenant-scoped Supabase integration.
+- [x] Verify authenticated chat can list records and the guarded helper can create, update, and delete a disposable record while another tenant cannot access the 42chakra integration.
+- [x] Confirm the live tenant/user access remains intact and document the evidence in this review.
+
+## Review
+
+- Live tenant/user state:
+  - tenant `42chakra` remains active with id `b261623a-ce12-4060-8bcf-3aff81902e05`.
+  - `maytoomuch@gmail.com` remains active with a `client_user` membership; the canonical operator remains an owner.
+- Implementation:
+  - added a reusable `agentInstructions` capability field to Cowork tenant-to-site normalization and both initial/reply chat prompts.
+  - added `/home/dna/Code/42chakra/scripts/chat-supabase-admin.mjs`, which supports schema discovery and exact-filter select/insert/update/delete operations using the existing server-only Supabase credential.
+  - updates and deletes require a non-empty exact-match filter, a matching `--confirm-count`, and no more than 25 matched rows; the helper never prints credentials.
+  - stored five 42 Chakra-specific database administration rules in both the tenant workspace and live site registry. The chat prompt explicitly forbids exposing keys or giving Supabase's developer MCP to portal users.
+- Verification:
+  - local Cowork instruction/normalization tests: 4 passed; `dashboard_server.py` and `portal_multi_tenant.py` compile; the Node helper passes syntax validation.
+  - live helper discovered 14 exposed tables.
+  - reversible CRUD smoke on unique coupon `CODEX_CHAT_ADMIN_SMOKE_20260811_0043`: select 0 -> insert 1 -> update 1 -> read back value `42` -> delete 1 -> select 0.
+  - a broad delete with `{}` was rejected with `Filter must contain at least one exact-match condition.`
+  - authenticated chat request `021aa20a-767c-4dc9-b3ff-18292cc99892` invoked the helper, returned table count 14, made no data changes, and exposed no credentials. The request was archived after verification and its unnecessary evidence-retry task was removed.
+  - live `/api/auth/me`, tenant list, and 42 Chakra workspace returned `200`; the same client session received `404 Tenant not found` for a tenant without membership.
+  - Cowork restarted cleanly and remains active; both live configuration sources read back five agent instructions.
+- Backups:
+  - `/home/dna/Code/Cowork/.dashboard_state/backups/dashboard_server.pre-42chakra-supabase.20260811T004107Z.py`
+  - `/home/dna/Code/Cowork/.dashboard_state/backups/portal_tenants.pre-42chakra-supabase.20260811T004107Z.json`
+  - `/home/dna/Code/Cowork/.dashboard_state/backups/portal-sites.pre-42chakra-supabase.20260811T004107Z.json`
+  - `/home/dna/Code/Cowork/.dashboard_state/backups/portal_multi_tenant.pre-agent-instructions.20260811T004756Z.py`
+# 42 Chakra Video Upload And Editor Support (2026-08-10)
+
+## Plan
+
+- [x] Inspect and mark the live Morayana / 42 Chakra CRM action in progress.
+- [x] Reproduce the failed Smart Todo video handoff and trace upload/media restrictions across the portal, Cowork, and 42 Chakra editor.
+- [x] Add the smallest durable video upload, preview, and looping-video rendering support without weakening image handling.
+- [x] Restore the supplied video asset from the live request or report the exact reattachment requirement if it never reached the server.
+- [x] Verify build/tests plus hosted desktop and 320px preview playback, with no deployment to the public site.
+- [x] Complete the CRM action and record the evidence and any remaining client-side handoff.
+
+## Review
+
+- Root causes:
+  - Cowork's portal attachment allowlist omitted `.mov`, `.mp4`, and `.m4v`, while the live API proxy limited requests to 25 MB.
+  - The 42 Chakra content editor used an image-only file input and browser data URLs, so it had no durable large-video upload path.
+  - 42 Chakra middleware bypassed authentication only for image extensions; the valid MOV was redirected to the homepage and could not load in the browser.
+- Live fixes:
+  - Cowork now accepts MOV, MP4, M4V, and WebM attachments up to 250 MB; nginx and Flask enforce the same cap.
+  - The chakra-man editor field now supports server-backed image/video uploads, preserves the prior still as the poster, and exposes a clear media-type control.
+  - The landing page renders video with muted autoplay, looping, inline mobile playback, no controls, `object-fit: contain`, and a static poster when reduced motion is requested.
+  - Static video paths now bypass the authentication redirect just like public images.
+- Exact supplied asset verified from live request `883b9cf4-55e8-4d1d-bca4-46b7e1fd9c11`: `video-output-60C78784-181C-47BD-A12A-AE62DE7C0A91-1.mov`, 65,032,807 bytes, H.264/AAC, 1080×1524, 38.1 seconds.
+- Verification:
+  - Cowork video-upload unit tests: 3/3 passed; a live server-side MOV save/readback/cleanup smoke passed.
+  - Smart Todo build passed.
+  - 42 Chakra TypeScript and preview-base-path production build passed, including `/api/admin/page-media`.
+  - Hosted MOV returns `200`, `content-type: video/quicktime`, the full content length, and byte-range support.
+  - Clean hosted browser checks passed at desktop and 320 px: the video reached readyState 4, advanced playback time, remained muted/looped/inline/control-free, used contain sizing, and produced no console errors.
+  - Reduced-motion emulation rendered `/chakracanvas.png` and no video element.
+- Preview remains at `https://piko.dnalevity.com/preview/42chakra`; no public production deployment was performed.
+- Recoverable backups:
+  - `/home/dna/Code/42chakra/.backups/20260810T160000HST-video-media`
+  - `/home/dna/Code/Cowork/.dashboard_state/backups/dashboard_server.pre-video-uploads.20260810T160000HST.py`
+  - `/etc/nginx/sites-available/cowork-api.dnalevity.com.pre-video-uploads.20260810T160000HST`
+- CRM task `a5a693c2-2c13-4bdb-acd4-362883ba15a7` is `done`; completion activity `094c4bd2-9640-4926-87dd-00dd4642e5d6` was verified by production readback.
+
+# Smart Todo Plain-Language Bot Replies (2026-08-10)
+
+## Plan
+
+- [x] Inspect the Smart Todo frontend and Cowork task prompts that produce customer-visible bot messages.
+- [x] Add one shared plain-language rule set for new requests, follow-up replies, and retries.
+- [x] Add focused tests that prevent technical or overly complex bot instructions from returning.
+- [x] Deploy the narrow backend change to piko and verify the live service uses the new instructions.
+- [x] Review the final diff and record verification evidence.
+
+## Review
+
+- Added one reusable customer-language contract in Cowork and injected it into all seven portal agent paths: generic, Gray, and Soulfire initial/follow-up prompts plus screenshot-verification retries.
+- The contract requires everyday words, short sentences, result-first updates, a maximum of three short sentences for normal updates, and no internal code/files/commands/tests/logs/API/Git/build/deployment/model detail unless the customer asks.
+- Added seven focused tests covering the shared rule itself, every initial/follow-up/legacy/retry prompt path, and removal of internal screenshot-proof lines from customer-visible messages; all seven pass.
+- Customer-facing agent messages now omit the internal `Evidence route`, `Evidence focus`, `Evidence height`, and `Evidence why` lines while the raw task output remains available for backend screenshot processing.
+- Three existing screenshot-evidence checks pass. The broader evidence suite still has one pre-existing unrelated assertion that expects `agent_task_id` while the implementation intentionally records `verification_retry_task_id`; it was not changed here.
+- Cowork Python compilation passed. Smart Todo build plus `app.js`, `shared-app.js`, `shared-chat-app.js`, and `portal.config.js` syntax checks passed.
+- Deployed `/Users/daniellevy/Code/Cowork/dashboard_server.py` to piko after backing up the previous live file at `/home/dna/Code/Cowork/.dashboard_state/backups/dashboard_server.pre-plain-language-20260811T020500Z.py`.
+- Backed up the first deployed version before adding the customer-message filter at `/home/dna/Code/Cowork/.dashboard_state/backups/dashboard_server.pre-public-message-filter-20260811T020900Z.py`.
+- Live readback through the service's own virtual environment confirmed the plain-language contract appears exactly once in a generated 42 Chakra request prompt while request details remain unchanged.
+- The deployed SHA-256 matches the local backend file, `cowork-dashboard.service` is active with two freshly booted workers, Smart Todo returns `200`, and the unauthenticated Cowork auth probe returns the expected `401`.

@@ -1,0 +1,25 @@
+[    4639ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ https://piko.dnalevity.com/preview/relax-and-roam-travel/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    5577ms] [ERROR] WebSocket connection to 'wss://piko.dnalevity.com/preview/relax-and-roam-travel/_next/webpack-hmr?id=sl8_6mn1Vl7VeLSaJKiWG' failed: Error during WebSocket handshake: Invalid status line @ https://piko.dnalevity.com/preview/relax-and-roam-travel/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[    7358ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/four-seasons.svg:0
+[    7360ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/belmond.svg:0
+[    7360ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/virtuoso.svg:0
+[    7360ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/rocco-forte.svg:0
+[    7360ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/rosewood.svg:0
+[    7360ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/aman.svg:0
+[    7360ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/mandarin-oriental.svg:0
+[    7360ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/peninsula.svg:0
+[    7361ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/relais-chateaux.svg:0
+[    7361ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/one-and-only.png:0
+[    7376ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/singita.svg:0
+[    7376ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/auberge.png:0
+[    7376ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/leading-hotels.svg:0
+[    7376ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/ritz-carlton.webp:0
+[    7376ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/waldorf-astoria.svg:0
+[    7387ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/oetker.png:0
+[    7388ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/preferred-hotels.png:0
+[    7389ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/dorchester-diamond-club.png:0
+[    7389ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/hyatt.svg:0
+[    7389ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/partners/high-res/slh.png:0
+[    8361ms] [ERROR] WebSocket connection to 'wss://piko.dnalevity.com/preview/relax-and-roam-travel/_next/webpack-hmr?id=sl8_6mn1Vl7VeLSaJKiWG' failed: Error during WebSocket handshake: Invalid status line @ https://piko.dnalevity.com/preview/relax-and-roam-travel/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   10924ms] [ERROR] WebSocket connection to 'wss://piko.dnalevity.com/preview/relax-and-roam-travel/_next/webpack-hmr?id=sl8_6mn1Vl7VeLSaJKiWG' failed: Error during WebSocket handshake: Invalid status line @ https://piko.dnalevity.com/preview/relax-and-roam-travel/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   13410ms] [ERROR] WebSocket connection to 'wss://piko.dnalevity.com/preview/relax-and-roam-travel/_next/webpack-hmr?id=sl8_6mn1Vl7VeLSaJKiWG' failed: Error during WebSocket handshake: Invalid status line @ https://piko.dnalevity.com/preview/relax-and-roam-travel/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299

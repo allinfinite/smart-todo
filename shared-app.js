@@ -831,7 +831,7 @@
                 ` : ""}
                 <form class="shared-reply-form" data-request-id="${escapeHtml(requestId)}" ${passwordManagerIgnoreAttrs()}>
                   <textarea name="reply" rows="3" placeholder="Add a reply or clarification" ${passwordManagerIgnoreAttrs()}>${escapeHtml(replyDraft.text || "")}</textarea>
-                  <input class="shared-file-input" id="sharedReplyFiles-${escapeAttribute(requestId)}" name="files" type="file" multiple data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
+                  <input class="shared-file-input" id="sharedReplyFiles-${escapeAttribute(requestId)}" name="files" type="file" multiple accept="image/*,video/mp4,video/quicktime,video/webm,.mov,.mp4,.m4v,.webm,.pdf,.txt,.md,.m4a,.mp3,.wav" data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
                   <div
                     class="shared-dropzone"
                     data-dropzone="reply"
@@ -1037,7 +1037,7 @@
                   <option value="low">Low</option>
                 </select>
               </label>
-              <input class="shared-file-input" id="sharedRequestFiles" name="files" type="file" multiple data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
+              <input class="shared-file-input" id="sharedRequestFiles" name="files" type="file" multiple accept="image/*,video/mp4,video/quicktime,video/webm,.mov,.mp4,.m4v,.webm,.pdf,.txt,.md,.m4a,.mp3,.wav" data-bwignore="true" data-1p-ignore="true" data-lpignore="true" />
               <div class="shared-dropzone" data-dropzone="request" tabindex="0" role="button" aria-label="Attach files to request">
                 <div class="shared-dropzone-copy">
                   <strong>Drop files here</strong>
@@ -1455,9 +1455,14 @@
     setWorkspaceStatus(`${action[0].toUpperCase()}${action.slice(1)} in progress...`);
     renderApp();
     try {
+      const actionBody = { action };
+      if (action === "discard" || action === "deploy") {
+        actionBody.expected_head = String(state.workspace?.head_sha || "");
+        actionBody.expected_changes_digest = String(state.workspace?.changes_digest || "");
+      }
       const payload = await apiFetch(`/api/app/tenants/${tenant.id}/actions`, {
         method: "POST",
-        body: JSON.stringify({ action }),
+        body: JSON.stringify(actionBody),
       });
       const actionMessage = messageFromActionResult(action, payload);
       setWorkspaceStatus(actionMessage.text, "success", {

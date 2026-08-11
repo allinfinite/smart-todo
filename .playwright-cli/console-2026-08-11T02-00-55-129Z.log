@@ -1,0 +1,104 @@
+[   11238ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   11327ms] [LOG] Initializing app services... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   11327ms] [LOG] Checking email templates... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   12541ms] [LOG] Template exists: booking_confirmation_customer @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   12840ms] [LOG] [HMR] connected @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   13288ms] [LOG] Template exists: booking_confirmation_admin @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   13942ms] [LOG] Template exists: invoice_generated @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   14577ms] [LOG] Template exists: welcome_email @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   15373ms] [LOG] Template exists: video_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   15443ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/favicon.ico:0
+[   16031ms] [LOG] Template exists: module_reminder @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   16749ms] [LOG] Template exists: journey_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   16750ms] [LOG] Email template check complete @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[   16750ms] [LOG] App services initialized successfully @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  126189ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  126627ms] [LOG] [Fast Refresh] done in 543ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  127866ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/__nextjs_font/geist-latin.woff2:0
+[  133251ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  133669ms] [LOG] [Fast Refresh] done in 520ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  153072ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  153600ms] [LOG] [Fast Refresh] done in 628ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  190627ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  191213ms] [LOG] Initializing app services... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  191214ms] [LOG] Checking email templates... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  192144ms] [LOG] [HMR] connected @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  192647ms] [LOG] Template exists: booking_confirmation_customer @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  193089ms] [LOG] Template exists: booking_confirmation_admin @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  193535ms] [LOG] Template exists: invoice_generated @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  193962ms] [LOG] Template exists: welcome_email @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  194381ms] [LOG] Template exists: video_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  194817ms] [LOG] Template exists: module_reminder @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  195285ms] [LOG] Template exists: journey_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  195285ms] [LOG] Email template check complete @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  195285ms] [LOG] App services initialized successfully @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  207840ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  207869ms] [LOG] [Fast Refresh] done in 130ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  209969ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  210415ms] [LOG] Initializing app services... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  210415ms] [LOG] Checking email templates... @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  210879ms] [LOG] Template exists: booking_confirmation_customer @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  211218ms] [LOG] [HMR] connected @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  211296ms] [LOG] Template exists: booking_confirmation_admin @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  211720ms] [LOG] Template exists: invoice_generated @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  212127ms] [LOG] Template exists: welcome_email @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  212543ms] [LOG] Template exists: video_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  212944ms] [LOG] Template exists: module_reminder @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  213352ms] [LOG] Template exists: journey_completion @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  213352ms] [LOG] Email template check complete @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  213352ms] [LOG] App services initialized successfully @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  341007ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  341062ms] [LOG] [Fast Refresh] done in 156ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  343025ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  343026ms] [LOG] [Fast Refresh] done in 102ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  436380ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  436387ms] [LOG] [Fast Refresh] done in 107ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  479482ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  479490ms] [LOG] [Fast Refresh] done in 109ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  613793ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[  613796ms] [LOG] [Fast Refresh] done in 105ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 1039387ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 1039412ms] [LOG] [Fast Refresh] done in 126ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 1126375ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 1126453ms] [LOG] [Fast Refresh] done in 179ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 1925379ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 1925493ms] [LOG] [Fast Refresh] done in 218ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 2569367ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 2569383ms] [LOG] [Fast Refresh] done in 117ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3265550ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3266301ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://piko.dnalevity.com/__nextjs_font/geist-latin.woff2:0
+[ 3266515ms] [LOG] [Fast Refresh] done in 1066ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3266617ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3266651ms] [LOG] [Fast Refresh] done in 135ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3267278ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3267315ms] [LOG] [Fast Refresh] done in 137ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3308456ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3309144ms] [LOG] [Fast Refresh] done in 789ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3319358ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3320558ms] [LOG] [Fast Refresh] done in 1301ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3392284ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3393264ms] [LOG] [Fast Refresh] done in 1081ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3393365ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3393434ms] [LOG] [Fast Refresh] done in 170ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3394205ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3394309ms] [LOG] [Fast Refresh] done in 206ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3523013ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3523552ms] [LOG] [Fast Refresh] done in 645ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3562996ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3563399ms] [LOG] [Fast Refresh] done in 503ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3597116ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3598013ms] [LOG] [Fast Refresh] done in 993ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3620336ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 3620803ms] [LOG] [Fast Refresh] done in 568ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4007831ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4008253ms] [LOG] [Fast Refresh] done in 525ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4123372ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4123806ms] [LOG] [Fast Refresh] done in 534ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4134905ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4134937ms] [LOG] [Fast Refresh] done in 135ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4160363ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4161663ms] [LOG] [Fast Refresh] done in 1400ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4162414ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4162498ms] [LOG] [Fast Refresh] done in 185ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4306033ms] [LOG] [Fast Refresh] rebuilding @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287
+[ 4307409ms] [LOG] [Fast Refresh] done in 1477ms @ https://piko.dnalevity.com/preview/42chakra/_next/static/chunks/node_modules_next_dist_7a8122d0._.js:2287

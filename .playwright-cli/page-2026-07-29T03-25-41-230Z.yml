@@ -1,0 +1,4 @@
+- generic [active] [ref=f9e1]:
+  - heading "502 Bad Gateway" [level=1] [ref=f9e3]
+  - separator [ref=f9e4]
+  - generic [ref=f9e5]: nginx
