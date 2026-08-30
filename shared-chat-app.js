@@ -1331,13 +1331,14 @@
     const workspace = state.workspace || {};
     const enabledActions = Array.isArray(workspace.enabledActions) ? workspace.enabledActions : ["preview", "sync", "discard", "deploy"];
     const actionInFlight = String(state.activeAction || "");
+    const recoveryLocked = state.tenantLoading || ["checking", "syncing"].includes(String(state.updateGateStatus || ""));
     const locked = workspaceGateLocked();
     return `
-      <button class="board-action" data-workspace-action="sync" ${(enabledActions.includes("sync") && !actionInFlight && !locked) ? "" : "disabled"}>${actionInFlight === "sync" ? "Syncing..." : "Sync"}</button>
+      <button class="board-action" data-workspace-action="sync" ${(enabledActions.includes("sync") && !actionInFlight && !recoveryLocked) ? "" : "disabled"}>${actionInFlight === "sync" ? "Syncing..." : "Sync"}</button>
       <button class="board-action" data-workspace-action="preview" ${(enabledActions.includes("preview") && !actionInFlight && !locked) ? "" : "disabled"}>${actionInFlight === "preview" ? "Starting..." : "Preview"}</button>
       <button class="board-action" data-workspace-action="discard" ${(enabledActions.includes("discard") && !actionInFlight && workspace.dirty && !locked) ? "" : "disabled"}>${actionInFlight === "discard" ? "Discarding..." : "Discard Changes"}</button>
-      <button class="board-action" data-workspace-action="deploy" ${(enabledActions.includes("deploy") && !actionInFlight && !locked) ? "" : "disabled"}>${actionInFlight === "deploy" ? "Deploying..." : "Deploy"}</button>
-      <button class="board-action" id="refreshWorkspaceButton" type="button" ${(actionInFlight || locked || state.updateGateStatus === "checking" || state.updateGateStatus === "syncing") ? "disabled" : ""}>Refresh</button>
+      <button class="board-action" data-workspace-action="deploy" ${(enabledActions.includes("deploy") && !actionInFlight && workspace.dirty && !locked) ? "" : "disabled"}>${actionInFlight === "deploy" ? "Deploying..." : "Deploy"}</button>
+      <button class="board-action" id="refreshWorkspaceButton" type="button" ${(actionInFlight || recoveryLocked) ? "disabled" : ""}>Refresh</button>
     `;
   }
 
@@ -2223,7 +2224,7 @@
   async function runWorkspaceAction(action) {
     const tenant = activeTenant();
     if (!tenant) return;
-    if (workspaceGateLocked()) {
+    if (state.tenantLoading || (workspaceGateLocked() && action !== "sync")) {
       setWorkspaceStatus(preventWorkspaceUseMessage(), "warn");
       renderApp();
       return;
@@ -2237,9 +2238,14 @@
     setWorkspaceStatus(`${action[0].toUpperCase()}${action.slice(1)} in progress...`);
     renderApp();
     try {
+      const actionBody = { action };
+      if (action === "discard" || action === "deploy") {
+        actionBody.expected_head = String(state.workspace?.head_sha || "");
+        actionBody.expected_changes_digest = String(state.workspace?.changes_digest || "");
+      }
       const payload = await apiFetch(`/api/app/tenants/${tenant.id}/actions`, {
         method: "POST",
-        body: JSON.stringify({ action }),
+        body: JSON.stringify(actionBody),
       });
       const actionMessage = messageFromActionResult(action, payload);
       setWorkspaceStatus(actionMessage.text, "success", {
