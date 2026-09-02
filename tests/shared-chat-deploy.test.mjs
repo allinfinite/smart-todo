@@ -18,3 +18,10 @@ test("deploy is enabled only for reviewed dirty work", () => {
   assert.match(source, /actionBody\.expected_changes_digest = String\(state\.workspace\?\.changes_digest/);
   assert.match(source, /body: JSON\.stringify\(actionBody\)/);
 });
+
+test("deploy reports success only with exact provider and production proof", () => {
+  assert.match(source, /deploy\.status === "ready" && deploy\.deployment_id && deploy\.production_url/);
+  assert.match(source, /text: "Deployment is live at"/);
+  assert.match(source, /Changes were pushed, but the live site was not verified\./);
+  assert.match(source, /setWorkspaceStatus\(actionMessage\.text, actionMessage\.tone \|\| "success"/);
+});

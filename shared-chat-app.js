@@ -281,7 +281,19 @@
       return { text: String(payload?.discard?.summary || "").trim() || "Local changes discarded." };
     }
     if (action === "deploy") {
-      return { text: String(payload?.deploy?.summary || "").trim() || "Deploy finished." };
+      const deploy = payload?.deploy || {};
+      if (deploy.status === "ready" && deploy.deployment_id && deploy.production_url) {
+        return {
+          text: "Deployment is live at",
+          href: String(deploy.production_url),
+          label: String(deploy.production_url),
+          tone: "success",
+        };
+      }
+      return {
+        text: String(deploy.summary || "").trim() || "Changes were pushed, but the live site was not verified.",
+        tone: "warn",
+      };
     }
     return { text: "Action completed." };
   }
@@ -1850,7 +1862,7 @@
       }
       state.updateGateStatus = "ready";
       const actionMessage = messageFromActionResult("sync", payload);
-      setWorkspaceStatus(actionMessage.text, "success", {
+      setWorkspaceStatus(actionMessage.text, actionMessage.tone || "success", {
         href: actionMessage.href,
         label: actionMessage.label,
       });
